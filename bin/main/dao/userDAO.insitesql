@@ -1,0 +1,48 @@
+@NAME(getUserById)
+	SELECT 
+	    u.user_id,
+	    u.first_name,
+	    u.last_name,
+	    u.email,
+	    u.app_access,
+	    wr.role_type,
+	    sr.region
+	FROM
+	    users u
+	        INNER JOIN
+	    web_roles wr ON u.web_role_id = wr.web_role_id
+	        INNER JOIN
+	    store_region sr ON u.store_region_id = sr.store_region_id
+	WHERE u.user_id = :userId:
+
+@NAME(getUsers)
+	SELECT 
+		up.id,
+		up.first_name,
+		up.last_name,
+		up.email,
+		up.insert_date_utc,
+		uc.password
+	FROM
+		user_profile up
+			JOIN
+		user_credentials uc ON up.id = uc.user_id
+	@WHERE(:id:)
+		up.id = :id:
+	@AND(:email:)
+		up.email = :email:
+
+@NAME(getUserApplications)
+	SELECT 
+		a.id AS 'app_id',
+		a.app_name AS 'app_name',
+		wraa.access AS 'access',
+		a.enabled AS 'enabled'
+	FROM
+		user_profile up
+			JOIN
+		web_role_app_access wraa ON up.role_id = wraa.role_id
+			JOIN
+		application a ON wraa.app_id = a.id
+    @WHERE(:id:)
+        up.id = :id:
