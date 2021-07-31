@@ -7,6 +7,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
+/**
+ * Used to add authenticationManagerBean for security.
+ * 
+ * @author Sam Butler
+ * @since July 30, 2021
+ */
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
 

@@ -1,19 +1,15 @@
 @NAME(getUserById)
 	SELECT 
-	    u.user_id,
-	    u.first_name,
-	    u.last_name,
-	    u.email,
-	    u.app_access,
-	    wr.role_type,
-	    sr.region
+		up.id,
+		up.first_name,
+		up.last_name,
+		up.email,
+		up.insert_date_utc
 	FROM
-	    users u
-	        INNER JOIN
-	    web_roles wr ON u.web_role_id = wr.web_role_id
-	        INNER JOIN
-	    store_region sr ON u.store_region_id = sr.store_region_id
-	WHERE u.user_id = :userId:
+		user_profile up
+			JOIN
+		user_credentials uc ON up.id = uc.user_id
+	WHERE up.id = :userId:
 
 @NAME(getUsers)
 	SELECT 

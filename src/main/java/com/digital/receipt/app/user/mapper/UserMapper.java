@@ -22,8 +22,13 @@ public class UserMapper implements RowMapper<User> {
         user.setFirstName(rs.getString("first_name"));
         user.setLastName(rs.getString("last_name"));
         user.setEmail(rs.getString("email"));
-        user.setPassword(rs.getString("password"));
         user.setInsertDate(rs.getDate("insert_date_utc"));
+
+        try {
+            user.setPassword(rs.getString("password"));
+        } catch (Exception e) {
+            System.out.println("Password not included in User object");
+        }
 
         return user;
     }
