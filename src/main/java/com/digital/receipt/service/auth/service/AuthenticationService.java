@@ -1,6 +1,7 @@
 package com.digital.receipt.service.auth.service;
 
 import java.util.HashSet;
+import java.util.List;
 
 import com.digital.receipt.app.user.client.UserClient;
 import com.digital.receipt.app.user.client.domain.User;
@@ -38,11 +39,15 @@ public class AuthenticationService {
         usernameSet.add(username);
 
         request.setEmail(usernameSet);
-        User requestedUser = userClient.getUsers(request).get(0);
+        List<User> userList = userClient.getUsers(request);
 
-        if (!PasswordHash.checkPassword(password, requestedUser.getPassword())) {
-            throw new Exception("Invalid Password!");
+        if (userList.isEmpty()) {
+            throw new Exception("Invalid Credentials!");
         }
-        return requestedUser;
+
+        if (!PasswordHash.checkPassword(password, userList.get(0).getPassword())) {
+            throw new Exception("Invalid Credentials!");
+        }
+        return userList.get(0);
     }
 }
