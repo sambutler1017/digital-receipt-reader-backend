@@ -29,7 +29,6 @@ public class AuthenticationService {
      *
      * @param username - Entered username at login.
      * @param password - Password entered at login.
-     * @return requestedUser - the user which matches the credentials above.
      * @throws Exception - Throw an exception if the credentials do not match.
      */
     public User verifyUser(String username, String password) throws Exception {

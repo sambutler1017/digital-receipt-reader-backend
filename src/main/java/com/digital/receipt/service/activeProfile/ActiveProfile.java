@@ -11,8 +11,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ActiveProfile {
-    private static final String PROD_ENV = "/app/src/main";
-    private static final String LOCAL_ENV = "../digital-receipt-reader-backend/src/main";
+    private static final String PROD_ENV = "production";
+    private static final String LOCAL_ENV = "local";
+    private static final String PROD_ENV_PATH = "/app/src/main";
+    private static final String LOCAL_ENV_PATH = "../digital-receipt-reader-backend/src/main";
 
     /**
      * Method to set the current active profile the application is running in
@@ -33,9 +35,9 @@ public class ActiveProfile {
     public String getPropertyFilePath() {
         String profile = System.getProperty("spring.profiles.active");
         if (profile != null && profile.equals("production")) {
-            return PROD_ENV + "/resources/application.properties";
+            return String.format("%s/resources/application.properties", PROD_ENV_PATH);
         } else {
-            return LOCAL_ENV + "/resources/application.properties";
+            return String.format("%s/resources/application.local.properties", LOCAL_ENV_PATH);
         }
     }
 
@@ -48,7 +50,7 @@ public class ActiveProfile {
         if (System.getenv("APP_ENVIRONMENT") != null) {
             return System.getenv("APP_ENVIRONMENT");
         } else
-            return "local";
+            return LOCAL_ENV;
     }
 
     /**
@@ -59,9 +61,9 @@ public class ActiveProfile {
     public String getEnvironmentUrl() {
         String profile = System.getProperty("spring.profiles.active");
         if (profile != null && profile.equals("production"))
-            return PROD_ENV;
+            return PROD_ENV_PATH;
         else
-            return LOCAL_ENV;
+            return LOCAL_ENV_PATH;
     }
 
     /**
@@ -88,5 +90,14 @@ public class ActiveProfile {
             return "marcs-microservice.herokuapp.com";
         else
             return "localhost:8080.com";
+    }
+
+    /**
+     * Determines if a local environment instance is being run.
+     * 
+     * @return boolean if the local instance is being run.
+     */
+    public boolean isLocalEnvironment() {
+        return getEnvironment().equals(LOCAL_ENV);
     }
 }
