@@ -1,4 +1,4 @@
-package com.digital.receipt.service.enums;
+package com.digital.receipt.common.enums;
 
 public enum InsiteSqlTags {
 	NAME("@NAME"), INCLUDE("@INCLUDE"), VALUE_ID(":");

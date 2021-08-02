@@ -1,4 +1,4 @@
-package com.digital.receipt.service.enums;
+package com.digital.receipt.common.enums;
 
 import java.util.Arrays;
 import java.util.List;

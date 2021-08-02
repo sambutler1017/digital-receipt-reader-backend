@@ -1,8 +1,8 @@
 package com.digital.receipt.service.sql;
 
-import static com.digital.receipt.service.enums.InsiteSqlTags.NAME;
-import static com.digital.receipt.service.enums.InsiteSqlTags.VALUE_ID;
-import static com.digital.receipt.service.enums.QueryStatements.WHERE;
+import static com.digital.receipt.common.enums.InsiteSqlTags.NAME;
+import static com.digital.receipt.common.enums.InsiteSqlTags.VALUE_ID;
+import static com.digital.receipt.common.enums.QueryStatements.WHERE;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.digital.receipt.common.enums.QueryStatements;
 import com.digital.receipt.service.activeProfile.ActiveProfile;
-import com.digital.receipt.service.enums.QueryStatements;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

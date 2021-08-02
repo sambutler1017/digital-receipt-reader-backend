@@ -1,4 +1,4 @@
-package com.digital.receipt.service.enums;
+package com.digital.receipt.common.enums;
 
 public enum APIRequests {
 	GET("get"), POST("post"), UPDATE("update"), DELETE("delete");

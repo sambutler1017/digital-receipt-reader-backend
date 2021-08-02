@@ -8,7 +8,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.digital.receipt.service.exceptions.BaseException;
+import com.digital.receipt.common.exceptions.BaseException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

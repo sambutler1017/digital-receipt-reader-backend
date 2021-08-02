@@ -2,6 +2,8 @@ package com.digital.receipt.app.user.client.domain;
 
 import java.util.Date;
 
+import com.digital.receipt.common.enums.WebRole;
+
 /**
  * Class to create a user profile object
  * 
@@ -17,6 +19,8 @@ public class User {
     private String lastName;
 
     private String email;
+
+    private WebRole webRole;
 
     private String password;
 
@@ -52,6 +56,14 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public WebRole getWebRole() {
+        return webRole;
+    }
+
+    public void setWebRole(WebRole webRole) {
+        this.webRole = webRole;
     }
 
     public String getPassword() {

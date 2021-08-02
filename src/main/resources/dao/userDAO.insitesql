@@ -4,6 +4,7 @@
 		up.first_name,
 		up.last_name,
 		up.email,
+		up.web_role_id,
 		up.insert_date_utc
 	FROM
 		user_profile up
@@ -17,6 +18,7 @@
 		up.first_name,
 		up.last_name,
 		up.email,
+		up.web_role_id,
 		up.insert_date_utc,
 		uc.password
 	FROM

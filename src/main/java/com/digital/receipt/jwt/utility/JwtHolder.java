@@ -2,6 +2,8 @@ package com.digital.receipt.jwt.utility;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.digital.receipt.common.enums.WebRole;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -50,13 +52,13 @@ public class JwtHolder {
 	}
 
 	/**
-	 * Get the current username from the request headers token
+	 * Get the current email from the request headers token
 	 * 
-	 * @return String of the username from the current token
+	 * @return String of the email from the current token
 	 */
-	public String getRequiredUsername() {
+	public String getRequiredEmail() {
 		try {
-			return jwtParser.parseClaimsJws(getToken()).getBody().get("username").toString();
+			return jwtParser.parseClaimsJws(getToken()).getBody().get("email").toString();
 		} catch (Exception e) {
 			System.out.println("Invalid Token");
 			return "";
@@ -64,17 +66,46 @@ public class JwtHolder {
 	}
 
 	/**
-	 * Get the username from the passed in token
+	 * Get the email from the passed in token
 	 * 
 	 * @param token - String of the token to decode
-	 * @return String of the username from the current token
+	 * @return String of the email from the current token
 	 */
-	public String getRequiredUsername(String token) {
+	public String getRequiredEmail(String token) {
 		try {
-			return jwtParser.parseClaimsJws(token).getBody().get("username").toString();
+			return jwtParser.parseClaimsJws(token).getBody().get("email").toString();
 		} catch (Exception e) {
 			System.out.println("Invalid Token");
 			return "";
+		}
+	}
+
+	/**
+	 * Get the current webRole from the request headers token
+	 * 
+	 * @return String of the webRole from the current token
+	 */
+	public WebRole getWebRole() {
+		try {
+			return WebRole.valueOf(jwtParser.parseClaimsJws(getToken()).getBody().get("webRole").toString());
+		} catch (Exception e) {
+			System.out.println("Invalid Token");
+			return WebRole.USER;
+		}
+	}
+
+	/**
+	 * Get the webRole from the passed in token
+	 * 
+	 * @param token - String of the token to decode
+	 * @return String of the webRole from the current token
+	 */
+	public WebRole getWebRole(String token) {
+		try {
+			return WebRole.valueOf(jwtParser.parseClaimsJws(token).getBody().get("webRole").toString());
+		} catch (Exception e) {
+			System.out.println("Invalid Token");
+			return WebRole.USER;
 		}
 	}
 

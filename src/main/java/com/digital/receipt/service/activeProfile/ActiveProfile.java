@@ -1,5 +1,7 @@
 package com.digital.receipt.service.activeProfile;
 
+import com.digital.receipt.common.enums.Environment;
+
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,8 +13,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class ActiveProfile {
-    private static final String PROD_ENV = "production";
-    private static final String LOCAL_ENV = "local";
     private static final String PROD_ENV_PATH = "/app/src/main";
     private static final String LOCAL_ENV_PATH = "../digital-receipt-reader-backend/src/main";
 
@@ -21,9 +21,10 @@ public class ActiveProfile {
      */
     public void setPropertyFile() {
         if (System.getenv("APP_ENVIRONMENT") != null) {
-            System.setProperty("spring.profiles.active", System.getenv("APP_ENVIRONMENT"));
+            System.setProperty("spring.profiles.active",
+                    Environment.getRole(System.getenv("APP_ENVIRONMENT")).toString());
         } else {
-            System.setProperty("spring.profiles.active", "local");
+            System.setProperty("spring.profiles.active", Environment.LOCAL.toString());
         }
     }
 
@@ -46,11 +47,11 @@ public class ActiveProfile {
      *
      * @return string of the environment currently running
      */
-    public String getEnvironment() {
+    public Environment getEnvironment() {
         if (System.getenv("APP_ENVIRONMENT") != null) {
-            return System.getenv("APP_ENVIRONMENT");
+            return Environment.getRole(System.getenv("APP_ENVIRONMENT").toString());
         } else
-            return LOCAL_ENV;
+            return Environment.LOCAL;
     }
 
     /**
@@ -98,6 +99,6 @@ public class ActiveProfile {
      * @return boolean if the local instance is being run.
      */
     public boolean isLocalEnvironment() {
-        return getEnvironment().equals(LOCAL_ENV);
+        return getEnvironment().equals(Environment.LOCAL);
     }
 }

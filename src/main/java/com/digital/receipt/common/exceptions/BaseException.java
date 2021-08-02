@@ -1,4 +1,4 @@
-package com.digital.receipt.service.exceptions;
+package com.digital.receipt.common.exceptions;
 
 import java.io.IOException;
 

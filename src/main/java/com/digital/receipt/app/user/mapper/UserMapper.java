@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.digital.receipt.app.user.client.domain.User;
+import com.digital.receipt.common.enums.WebRole;
 
 import org.springframework.jdbc.core.RowMapper;
 
@@ -22,6 +23,7 @@ public class UserMapper implements RowMapper<User> {
         user.setFirstName(rs.getString("first_name"));
         user.setLastName(rs.getString("last_name"));
         user.setEmail(rs.getString("email"));
+        user.setWebRole(WebRole.getRole(rs.getInt("web_role_id")));
         user.setInsertDate(rs.getDate("insert_date_utc"));
 
         try {
