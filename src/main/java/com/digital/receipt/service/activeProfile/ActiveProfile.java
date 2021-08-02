@@ -20,7 +20,9 @@ public class ActiveProfile {
      * Method to set the current active profile the application is running in
      */
     public void setPropertyFile() {
-        if (System.getenv("APP_ENVIRONMENT") == null) {
+        System.out.println(System.getenv("APP_ENVIRONMENT"));
+        System.out.println(System.getenv(Environment.getRole(System.getenv("APP_ENVIRONMENT")).toString()));
+        if (System.getenv("APP_ENVIRONMENT") != null) {
             System.setProperty("spring.profiles.active",
                     Environment.getRole(System.getenv("APP_ENVIRONMENT")).toString());
         } else {

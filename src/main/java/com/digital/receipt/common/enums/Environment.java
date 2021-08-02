@@ -28,7 +28,7 @@ public enum Environment {
 
     public static Environment getRole(String text) {
         for (Environment w : Environment.values())
-            if (w.toString().equals(text))
+            if (w.toString().equals(text.toUpperCase()))
                 return w;
         return LOCAL;
     }
