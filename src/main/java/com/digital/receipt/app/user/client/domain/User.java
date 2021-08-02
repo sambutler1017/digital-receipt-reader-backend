@@ -22,8 +22,6 @@ public class User {
 
     private WebRole webRole;
 
-    private String password;
-
     private Date insertDate;
 
     public int getId() {
@@ -64,14 +62,6 @@ public class User {
 
     public void setWebRole(WebRole webRole) {
         this.webRole = webRole;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public Date getInsertDate() {

@@ -8,8 +8,6 @@
 		up.insert_date_utc
 	FROM
 		user_profile up
-			JOIN
-		user_credentials uc ON up.id = uc.user_id
 	WHERE up.id = :userId:
 
 @NAME(getUsers)
@@ -19,28 +17,10 @@
 		up.last_name,
 		up.email,
 		up.web_role_id,
-		up.insert_date_utc,
-		uc.password
+		up.insert_date_utc
 	FROM
 		user_profile up
-			JOIN
-		user_credentials uc ON up.id = uc.user_id
 	@WHERE(:id:)
 		up.id = :id:
 	@AND(:email:)
 		up.email = :email:
-
-@NAME(getUserApplications)
-	SELECT 
-		a.id AS 'app_id',
-		a.app_name AS 'app_name',
-		wraa.access AS 'access',
-		a.enabled AS 'enabled'
-	FROM
-		user_profile up
-			JOIN
-		web_role_app_access wraa ON up.role_id = wraa.role_id
-			JOIN
-		application a ON wraa.app_id = a.id
-    @WHERE(:id:)
-        up.id = :id:

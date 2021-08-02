@@ -66,4 +66,23 @@ public class UserDao {
 
         return sqlClient.getTemplate(sqlBuilder.getSql("getUserById"), USER_MAPPER);
     }
+
+    /**
+     * Not an exposed endpoint, strictly used by the authentication controller to
+     * autheticate a user.
+     * 
+     * @param username To search for in the database
+     * @param password The password to validate against
+     * @return User object if the user credentials are correct.
+     */
+    public User authenticateUser(String username, String password) {
+        Map<String, Set<?>> params = new HashMap<>();
+        params.put("username", Sets.newHashSet(username));
+        params.put("password", Sets.newHashSet(password));
+
+        sqlBuilder.setQueryFile("userDAO");
+        sqlBuilder.setParams(params);
+
+        return sqlClient.getTemplate(sqlBuilder.getSql("authenticateUser"), USER_MAPPER);
+    }
 }

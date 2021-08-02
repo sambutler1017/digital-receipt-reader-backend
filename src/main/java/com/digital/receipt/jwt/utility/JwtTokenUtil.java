@@ -1,4 +1,4 @@
-package com.digital.receipt.jwt.config;
+package com.digital.receipt.jwt.utility;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -11,24 +11,32 @@ import javax.xml.bind.DatatypeConverter;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.service.activeProfile.ActiveProfile;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-@Component
+/**
+ * Token util to create and manage jwt tokens.
+ * 
+ * @author Sam Butler
+ * @since July 31, 2021
+ */
+@Service
 public class JwtTokenUtil implements Serializable {
 
-    private static final long serialVersionUID = -2550185165626007488L;
+    public long JWT_TOKEN_VALIDITY;
 
-    public static final long JWT_TOKEN_VALIDITY = 18000000;
+    private String secret;
 
-    private final String secret = "CA024AFFB510011EB554F04721BFB4279D11B06A";
-
-    @Autowired
     private ActiveProfile activeProfile;
+
+    public JwtTokenUtil(ActiveProfile profile) {
+        activeProfile = profile;
+        secret = activeProfile.getSigningKey();
+        JWT_TOKEN_VALIDITY = 18000000;
+    }
 
     /**
      * Pulls the username (Subject Field) from the token

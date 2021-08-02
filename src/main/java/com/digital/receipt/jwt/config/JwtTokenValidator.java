@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.digital.receipt.common.enums.Environment;
 import com.digital.receipt.common.exceptions.BaseException;
+import com.digital.receipt.jwt.utility.JwtTokenUtil;
 import com.digital.receipt.service.activeProfile.ActiveProfile;
 
 import org.springframework.beans.factory.annotation.Autowired;

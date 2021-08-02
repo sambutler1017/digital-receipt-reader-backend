@@ -1,4 +1,4 @@
-package com.digital.receipt.app.user.mapper;
+package com.digital.receipt.app.auth.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,10 +12,10 @@ import org.springframework.jdbc.core.RowMapper;
  * Mapper class to map a User Profile Object {@link User}
  * 
  * @author Sam Butler
- * @since June 25, 2020
+ * @since June 25, 2021
  */
-public class UserMapper implements RowMapper<User> {
-    public static UserMapper USER_MAPPER = new UserMapper();
+public class AuthenticationMapper implements RowMapper<User> {
+    public static AuthenticationMapper AUTH_MAPPER = new AuthenticationMapper();
 
     public User mapRow(ResultSet rs, int rowNum) throws SQLException {
         User user = new User();

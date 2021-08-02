@@ -42,4 +42,15 @@ public class UserClient {
     public User getUserById(int id) throws Exception {
         return userController.getUserById(id);
     }
+
+    /**
+     * Client method to authenticate a user.
+     * 
+     * @param username To search for in the database
+     * @param password The password to validate against
+     * @return User object if the user credentials are correct.
+     */
+    public User authenticateUser(String username, String password) {
+        return userController.authenticateUser(username, password);
+    }
 }

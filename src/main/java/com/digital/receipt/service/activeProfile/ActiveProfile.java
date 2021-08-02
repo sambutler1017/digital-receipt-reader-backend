@@ -59,6 +59,10 @@ public class ActiveProfile {
         return isLocalEnvironment() ? LOCAL_ENV_PATH : PROD_ENV_PATH;
     }
 
+    public String getSigningKey() {
+        return isLocalEnvironment() ? "local-key" : System.getenv("JWT_SIGNING_KEY");
+    }
+
     /**
      * Determines if a local environment instance is being run.
      * 

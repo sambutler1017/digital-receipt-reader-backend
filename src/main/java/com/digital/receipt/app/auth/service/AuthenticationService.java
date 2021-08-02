@@ -1,11 +1,7 @@
-package com.digital.receipt.service.auth.service;
+package com.digital.receipt.app.auth.service;
 
-import java.util.HashSet;
-import java.util.List;
-
-import com.digital.receipt.app.user.client.UserClient;
+import com.digital.receipt.app.auth.dao.AuthenticationDao;
 import com.digital.receipt.app.user.client.domain.User;
-import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.service.util.PasswordHash;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +12,13 @@ import org.springframework.stereotype.Service;
  * credentials against known values in the database. If correct credentials are
  * passed, it will grant access to the user requested.
  *
- * @author Kiyle Winborne
- * @since 8/2/2020
+ * @author Sam Butler
+ * @since August 2, 2021
  */
 @Service
 public class AuthenticationService {
     @Autowired
-    private UserClient userClient;
+    private AuthenticationDao authDao;
 
     /**
      * Verifies user credentials passed as a JWTRequest
@@ -32,21 +28,12 @@ public class AuthenticationService {
      * @throws Exception - Throw an exception if the credentials do not match.
      */
     public User verifyUser(String username, String password) throws Exception {
-        UserGetRequest request = new UserGetRequest();
+        User authenticatedUser = authDao.authenticateUser(username, PasswordHash.hashPassword(password));
 
-        HashSet<String> usernameSet = new HashSet<String>();
-        usernameSet.add(username);
-
-        request.setEmail(usernameSet);
-        List<User> userList = userClient.getUsers(request);
-
-        if (userList.isEmpty()) {
+        if (authenticatedUser == null) {
             throw new Exception("Invalid Credentials!");
         }
 
-        if (!PasswordHash.checkPassword(password, userList.get(0).getPassword())) {
-            throw new Exception("Invalid Credentials!");
-        }
-        return userList.get(0);
+        return authenticatedUser;
     }
 }

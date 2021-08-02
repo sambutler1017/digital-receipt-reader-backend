@@ -3,8 +3,9 @@ package com.digital.receipt.jwt.utility;
 import javax.servlet.http.HttpServletRequest;
 
 import com.digital.receipt.common.enums.WebRole;
+import com.digital.receipt.service.activeProfile.ActiveProfile;
 
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -17,10 +18,17 @@ import io.jsonwebtoken.Jwts;
  * @author Sam Butler
  * @since 8/04/2020
  */
-@Component("JwtHolder")
+@Service("JwtHolder")
 public class JwtHolder {
 
-	private JwtParser jwtParser = Jwts.parser().setSigningKey("CA024AFFB510011EB554F04721BFB4279D11B06A");
+	private JwtParser jwtParser;
+
+	private ActiveProfile activeProfile;
+
+	public JwtHolder(ActiveProfile profile) {
+		activeProfile = profile;
+		jwtParser = Jwts.parser().setSigningKey(activeProfile.getSigningKey());
+	}
 
 	/**
 	 * Get the current userId from the request headers token

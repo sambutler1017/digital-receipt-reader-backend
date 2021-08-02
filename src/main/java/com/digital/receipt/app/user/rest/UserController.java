@@ -39,4 +39,16 @@ public class UserController {
     public User getUserById(@PathVariable int id) {
         return userService.getUserById(id);
     }
+
+    /**
+     * Not an exposed endpoint, strictly used by the authentication controller to
+     * autheticate a user.
+     * 
+     * @param username To search for in the database
+     * @param password The password to validate against
+     * @return User object if the user credentials are correct.
+     */
+    public User authenticateUser(String username, String password) {
+        return userService.authenticateUser(username, password);
+    }
 }

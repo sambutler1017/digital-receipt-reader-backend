@@ -1,8 +1,8 @@
-package com.digital.receipt.service.auth.client.domain;
+package com.digital.receipt.app.auth.client.domain;
 
 import java.util.Date;
 
-import com.digital.receipt.common.enums.Environment;
+import com.digital.receipt.app.user.client.domain.User;
 
 /**
  * Authentication token to be used within the app.
@@ -14,14 +14,17 @@ public class DigitalReceiptToken {
 
     private String token;
 
-    private Environment environment;
-
     private Date createDate;
 
-    public DigitalReceiptToken(String t, Environment env, Date creation) {
+    private Date expireDate;
+
+    private User user;
+
+    public DigitalReceiptToken(String t, Date creation, Date expire, User u) {
         token = t;
-        environment = env;
+        expireDate = expire;
         createDate = creation;
+        user = u;
     }
 
     public String getToken() {
@@ -32,19 +35,27 @@ public class DigitalReceiptToken {
         this.token = token;
     }
 
-    public Environment getEnvironment() {
-        return environment;
-    }
-
-    public void setEnvironment(Environment environment) {
-        this.environment = environment;
-    }
-
     public Date getCreateDate() {
         return createDate;
     }
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public Date getExpireDate() {
+        return expireDate;
+    }
+
+    public void setExpireDate(Date expireDate) {
+        this.expireDate = expireDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
