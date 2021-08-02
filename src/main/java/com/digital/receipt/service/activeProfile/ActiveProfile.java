@@ -20,7 +20,7 @@ public class ActiveProfile {
      * Method to set the current active profile the application is running in
      */
     public void setPropertyFile() {
-        if (System.getenv("APP_ENVIRONMENT") != null) {
+        if (System.getenv("APP_ENVIRONMENT") == null) {
             System.setProperty("spring.profiles.active",
                     Environment.getRole(System.getenv("APP_ENVIRONMENT")).toString());
         } else {
@@ -35,7 +35,7 @@ public class ActiveProfile {
      */
     public String getPropertyFilePath() {
         String profile = System.getProperty("spring.profiles.active");
-        if (profile != null && profile.equals("production")) {
+        if (profile != null && profile.equals(Environment.PRODUCTION.toString())) {
             return String.format("%s/resources/application.properties", PROD_ENV_PATH);
         } else {
             return String.format("%s/resources/application.local.properties", LOCAL_ENV_PATH);
@@ -61,7 +61,7 @@ public class ActiveProfile {
      */
     public String getEnvironmentUrl() {
         String profile = System.getProperty("spring.profiles.active");
-        if (profile != null && profile.equals("production"))
+        if (profile != null && profile.equals(Environment.PRODUCTION.toString()))
             return PROD_ENV_PATH;
         else
             return LOCAL_ENV_PATH;
@@ -74,7 +74,7 @@ public class ActiveProfile {
      */
     public String getWebUrl() {
         String profile = System.getProperty("spring.profiles.active");
-        if (profile != null && profile.equals("production"))
+        if (profile != null && profile.equals(Environment.PRODUCTION.toString()))
             return "https://marcs-app.herokuapp.com";
         else
             return "localhost:8080";
@@ -87,7 +87,7 @@ public class ActiveProfile {
      */
     public String getMicroserviceUrl() {
         String profile = System.getProperty("spring.profiles.active");
-        if (profile != null && profile.equals("production"))
+        if (profile != null && profile.equals(Environment.PRODUCTION.toString()))
             return "marcs-microservice.herokuapp.com";
         else
             return "localhost:8080.com";
