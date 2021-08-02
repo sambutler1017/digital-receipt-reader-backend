@@ -29,7 +29,7 @@ public class ActiveProfile {
      * @return string of the path to the set property file
      */
     public String getPropertyFilePath() {
-        return String.format("%s/resources/application.local.properties", getEnvironmentUrl());
+        return String.format("%s/resources/%s", getEnvironmentUrl(), getAppPropertiesName());
     }
 
     /**
@@ -39,6 +39,15 @@ public class ActiveProfile {
      */
     public Environment getEnvironment() {
         return System.getenv("APP_ENVIRONMENT") != null ? Environment.PRODUCTION : Environment.LOCAL;
+    }
+
+    /**
+     * Gets the application propteries file name.
+     * 
+     * @return String of the application file name
+     */
+    public String getAppPropertiesName() {
+        return isLocalEnvironment() ? "application.local.properties" : "application.properties";
     }
 
     /**
