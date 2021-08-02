@@ -2,6 +2,8 @@ package com.digital.receipt.jwt.model;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * JWT Request model.
  *
@@ -10,10 +12,13 @@ import java.io.Serializable;
  */
 public class JwtRequest implements Serializable {
     private static final long serialVersionUID = 5926468583005169420L;
+
+    @NotNull
     private String username;
+
+    @NotNull
     private String password;
 
-    // Default Contructor for JSON parsing
     public JwtRequest() {
     }
 
