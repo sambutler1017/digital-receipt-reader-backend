@@ -8,8 +8,8 @@ import java.util.function.Function;
 
 import javax.xml.bind.DatatypeConverter;
 
-import com.digital.receipt.app.user.client.UserClient;
 import com.digital.receipt.app.user.client.domain.User;
+import com.digital.receipt.service.activeProfile.ActiveProfile;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ public class JwtTokenUtil implements Serializable {
     private final String secret = "CA024AFFB510011EB554F04721BFB4279D11B06A";
 
     @Autowired
-    private UserClient userClient;
+    private ActiveProfile activeProfile;
 
     /**
      * Pulls the username (Subject Field) from the token
@@ -69,7 +69,7 @@ public class JwtTokenUtil implements Serializable {
      * @param token - The token to inspect and pull the claims from
      * @return Claims object is returned
      */
-    private Claims getAllClaimsFromToken(String token) {
+    public Claims getAllClaimsFromToken(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 
@@ -97,6 +97,7 @@ public class JwtTokenUtil implements Serializable {
         claims.put("lastName", user.getLastName());
         claims.put("email", user.getEmail());
         claims.put("webRole", user.getWebRole());
+        claims.put("env", activeProfile.getEnvironment());
 
         return doGenerateToken(claims);
     }

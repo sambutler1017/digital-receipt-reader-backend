@@ -8,7 +8,9 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.digital.receipt.common.enums.Environment;
 import com.digital.receipt.common.exceptions.BaseException;
+import com.digital.receipt.service.activeProfile.ActiveProfile;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,6 +26,9 @@ public class JwtTokenValidator {
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
+    @Autowired
+    private ActiveProfile activeProfile;
+
     /**
      * Confirms that the request has a valid JWT token. If it does not need a token
      * for the endpoint it will pass on through.
@@ -38,6 +43,7 @@ public class JwtTokenValidator {
         if (tokenHeader != null && tokenHeader.startsWith("Bearer: ")) {
             String jwtToken = tokenHeader.substring(7);
 
+            isCorrectEnvironment(jwtToken);
             confirmTokenFields(jwtToken);
             if (jwtTokenUtil.isTokenExpired(jwtToken)) {
                 throw new BaseException("JWT Token is Expired. Please Login again.");
@@ -87,6 +93,20 @@ public class JwtTokenValidator {
             jwtTokenUtil.isTokenExpired(token);
         } catch (Exception e) {
             throw new BaseException("Could not process JWT token.");
+        }
+    }
+
+    /**
+     * Validates that the environemnt is correct.
+     * 
+     * @param token to be parsed
+     * @throws BaseException
+     */
+    private void isCorrectEnvironment(String token) throws BaseException {
+        Environment environment = Environment.valueOf(jwtTokenUtil.getAllClaimsFromToken(token).get("env").toString());
+
+        if (!activeProfile.getEnvironment().equals(environment)) {
+            throw new BaseException("JWT token doesn't match accessing environment!");
         }
     }
 }
