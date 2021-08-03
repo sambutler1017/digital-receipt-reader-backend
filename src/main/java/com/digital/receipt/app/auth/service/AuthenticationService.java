@@ -1,7 +1,9 @@
 package com.digital.receipt.app.auth.service;
 
 import com.digital.receipt.app.auth.dao.AuthenticationDao;
+import com.digital.receipt.app.user.client.UserClient;
 import com.digital.receipt.app.user.client.domain.User;
+import com.digital.receipt.jwt.utility.JwtHolder;
 import com.digital.receipt.service.util.PasswordHash;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,12 @@ public class AuthenticationService {
     @Autowired
     private AuthenticationDao authDao;
 
+    @Autowired
+    private JwtHolder jwtHolder;
+
+    @Autowired
+    private UserClient userClient;
+
     /**
      * Verifies user credentials passed as a JWTRequest
      *
@@ -35,5 +43,15 @@ public class AuthenticationService {
         }
 
         return authenticatedUser;
+    }
+
+    /**
+     * Gets the user id from the jwtholder that needs to be reauthenticated.
+     * 
+     * @return {@link User} from the token.
+     * @throws Exception If the user for that id does not exist
+     */
+    public User getUserToAuthenticate() throws Exception {
+        return userClient.getUserById(jwtHolder.getRequiredUserId());
     }
 }

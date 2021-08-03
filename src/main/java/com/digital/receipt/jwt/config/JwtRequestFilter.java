@@ -1,7 +1,6 @@
 package com.digital.receipt.jwt.config;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -16,15 +15,13 @@ import org.springframework.stereotype.Component;
 
 /**
  * All Request get filtered here to confirm that it has a valid jwt token before
- * accessing data
+ * accessing data.
  * 
  * @author Sam butler
  * @since Aug 6, 2021
  */
 @Component
 public class JwtRequestFilter implements Filter {
-    private final static Logger LOGGER = Logger.getLogger(JwtRequestFilter.class.getName());
-
     @Autowired
     private JwtTokenValidator JWTValidator;
 
@@ -36,8 +33,6 @@ public class JwtRequestFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) res;
 
         if (JWTValidator.isVoidEndpoint(request.getRequestURI(), request.getMethod())) {
-            LOGGER.info(
-                    "No Token needed for endpoint: " + request.getMethod() + " -> '" + request.getRequestURI() + "'");
             chain.doFilter(request, response);
         } else {
             JWTValidator.isValidJwt(request);

@@ -31,8 +31,8 @@ public class JwtTokenValidator {
     private ActiveProfile activeProfile;
 
     /**
-     * Confirms that the request has a valid JWT token. If it does not need a token
-     * for the endpoint it will pass on through.
+     * Checks to see if the token on the request is valid. If it is not valid then
+     * it wil throw an exception, otherwise it wil continue.
      * 
      * @param request - The request that is being made to the endpint
      * @return boolean saying if it is a valid token or not
@@ -45,16 +45,11 @@ public class JwtTokenValidator {
             String jwtToken = tokenHeader.substring(7);
 
             isCorrectEnvironment(jwtToken);
-            confirmTokenFields(jwtToken);
-            if (jwtTokenUtil.isTokenExpired(jwtToken)) {
-                throw new BaseException("JWT Token is Expired. Please Login again.");
-            }
+            hasCorrectFields(jwtToken);
+            isTokenExpired(jwtToken);
+
         } else {
-            if (tokenHeader != null) {
-                throw new BaseException("JWT Token does not begin with 'Bearer: '");
-            } else {
-                throw new BaseException("Missing JWT Token.");
-            }
+            doesTokenExist(tokenHeader);
         }
     }
 
@@ -82,16 +77,45 @@ public class JwtTokenValidator {
     }
 
     /**
-     * Checks to see if it has the required fields
+     * Checks to see if the token that the request pulled is expired. If it is then
+     * it will throw an exception.
+     * 
+     * @param token The token to confirm if it is expired or not.
+     * @throws BaseException Throws exception if the token is expired.
+     */
+    private void isTokenExpired(String token) throws BaseException {
+        if (jwtTokenUtil.isTokenExpired(token)) {
+            throw new BaseException("JWT Token is Expired. Please Login again.");
+        }
+    }
+
+    /**
+     * Checks to see if a token exists or if the token does not contain the bearer
+     * keyword.
+     * 
+     * @param tokenHeader Header to of the token.
+     * @throws BaseException Throws exception based on status of token.
+     */
+    private void doesTokenExist(String tokenHeader) throws BaseException {
+        if (tokenHeader != null) {
+            throw new BaseException("JWT Token does not begin with 'Bearer:'");
+        } else {
+            throw new BaseException("Missing JWT Token.");
+        }
+    }
+
+    /**
+     * Checks to see if it has the required fields on the token.
      * 
      * @param token - Token to confirm field claims on
-     * @throws IOException
+     * @throws IOException Throws exception if it can't read the fields or if it is
+     *                     an invalid token.
      */
-    private void confirmTokenFields(String token) throws IOException {
+    private void hasCorrectFields(String token) throws IOException {
         try {
             jwtTokenUtil.getIdFromToken(token);
             jwtTokenUtil.getExpirationDateFromToken(token);
-            jwtTokenUtil.isTokenExpired(token);
+            jwtTokenUtil.getAllClaimsFromToken(token);
         } catch (Exception e) {
             throw new BaseException("Could not process JWT token.");
         }

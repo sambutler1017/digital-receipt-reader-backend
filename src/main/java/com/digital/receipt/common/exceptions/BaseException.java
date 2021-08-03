@@ -1,8 +1,12 @@
 package com.digital.receipt.common.exceptions;
 
-import java.io.IOException;
-
-public class BaseException extends IOException {
+/**
+ * Base Exception class. Will omit stack trace and only display exception.
+ * 
+ * @author Sam Butler
+ * @since July 31, 2021
+ */
+public class BaseException extends RuntimeException{
 
     public BaseException(String message) {
         super(message);

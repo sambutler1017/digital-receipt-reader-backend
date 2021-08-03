@@ -14,7 +14,7 @@ import com.google.common.collect.Sets;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
  * Class that handles all the dao calls to the database for users
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
  * @author Sam Butler
  * @since June 25, 2021
  */
-@Component
+@Repository
 public class AuthenticationDao {
 
     @Autowired

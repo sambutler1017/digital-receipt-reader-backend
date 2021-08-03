@@ -14,7 +14,7 @@ import com.digital.receipt.service.sql.SqlClient;
 import com.google.common.collect.Sets;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 /**
  * Class that handles all the dao calls to the database for users
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
  * @author Sam Butler
  * @since June 25, 2021
  */
-@Component
+@Repository
 public class UserDao {
 
     @Autowired
@@ -65,24 +65,5 @@ public class UserDao {
         sqlBuilder.setParams(params);
 
         return sqlClient.getTemplate(sqlBuilder.getSql("getUserById"), USER_MAPPER);
-    }
-
-    /**
-     * Not an exposed endpoint, strictly used by the authentication controller to
-     * autheticate a user.
-     * 
-     * @param username To search for in the database
-     * @param password The password to validate against
-     * @return User object if the user credentials are correct.
-     */
-    public User authenticateUser(String username, String password) {
-        Map<String, Set<?>> params = new HashMap<>();
-        params.put("username", Sets.newHashSet(username));
-        params.put("password", Sets.newHashSet(password));
-
-        sqlBuilder.setQueryFile("userDAO");
-        sqlBuilder.setParams(params);
-
-        return sqlClient.getTemplate(sqlBuilder.getSql("authenticateUser"), USER_MAPPER);
     }
 }

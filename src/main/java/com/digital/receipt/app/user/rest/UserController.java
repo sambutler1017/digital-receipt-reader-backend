@@ -2,18 +2,20 @@ package com.digital.receipt.app.user.rest;
 
 import java.util.List;
 
+import com.digital.receipt.annotations.interfaces.HasAccess;
+import com.digital.receipt.annotations.interfaces.RestApiController;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.app.user.service.UserService;
+import com.digital.receipt.common.enums.WebRole;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 @RequestMapping("api/user-app/users")
-@RestController
+@RestApiController
 public class UserController {
     @Autowired
     private UserService userService;
@@ -25,6 +27,7 @@ public class UserController {
      * @return list of user objects
      */
     @GetMapping()
+    @HasAccess(WebRole.ADMIN)
     public List<User> getUsers(UserGetRequest request) {
         return userService.getUsers(request);
     }
@@ -36,19 +39,8 @@ public class UserController {
      * @return user associated to that id
      */
     @GetMapping("/{id}")
+    @HasAccess(WebRole.ADMIN)
     public User getUserById(@PathVariable int id) {
         return userService.getUserById(id);
-    }
-
-    /**
-     * Not an exposed endpoint, strictly used by the authentication controller to
-     * autheticate a user.
-     * 
-     * @param username To search for in the database
-     * @param password The password to validate against
-     * @return User object if the user credentials are correct.
-     */
-    public User authenticateUser(String username, String password) {
-        return userService.authenticateUser(username, password);
     }
 }

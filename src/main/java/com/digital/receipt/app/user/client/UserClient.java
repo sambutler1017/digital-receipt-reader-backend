@@ -2,12 +2,12 @@ package com.digital.receipt.app.user.client;
 
 import java.util.List;
 
+import com.digital.receipt.annotations.interfaces.Client;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.app.user.rest.UserController;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * This class exposes the user endpoint's to other app's to pull data across the
@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * @author Sam Butler
  * @since June 25, 2020
  */
-@Component
+@Client
 public class UserClient {
 
     @Autowired
@@ -41,16 +41,5 @@ public class UserClient {
      */
     public User getUserById(int id) throws Exception {
         return userController.getUserById(id);
-    }
-
-    /**
-     * Client method to authenticate a user.
-     * 
-     * @param username To search for in the database
-     * @param password The password to validate against
-     * @return User object if the user credentials are correct.
-     */
-    public User authenticateUser(String username, String password) {
-        return userController.authenticateUser(username, password);
     }
 }

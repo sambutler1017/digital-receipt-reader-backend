@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
  * @author Seth Hancock
  * @since August 1, 2020
  */
-public class JwtRequest implements Serializable {
+public class AuthenticationRequest implements Serializable {
     private static final long serialVersionUID = 5926468583005169420L;
 
     @NotNull
@@ -19,10 +19,10 @@ public class JwtRequest implements Serializable {
     @NotNull
     private String password;
 
-    public JwtRequest() {
+    public AuthenticationRequest() {
     }
 
-    public JwtRequest(String username, String password) {
+    public AuthenticationRequest(String username, String password) {
         this.setUsername(username);
         this.setPassword(password);
     }
