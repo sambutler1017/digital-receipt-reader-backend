@@ -152,4 +152,6 @@ gradle-app.setting
 # End of https://www.toptal.com/developers/gitignore/api/java,gradle,intellij
 
 #local
+.settings
+.vscode
 application.local.properties
