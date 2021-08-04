@@ -1,32 +1,16 @@
 # Digital Receipt Reader API
-The backend for the Digital Receipt Reader. This exposes endpoints to the mobile app in order to access and modify data in the database.
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Thanks again! Now go create something AMAZING! :D
-***
-***
-***
-*** To avoid retyping too much info. Do a search and replace for the following:
-*** github_username, repo_name, twitter_handle, email, project_title, project_description
--->
+The backend for the Digital Receipt Reader. This exposes endpoints to the mobile app in order to access and modify data in the database. This is a Senior Design project for a class at the University of Toledo Ridge Campus. The following memebers of the group are `Seth Hancock`, `Luke Lengel`, `Sam Butler`, and `Miah Hale`.
+
 
 <!-- ABOUT THE PROJECT -->
 ## About The Project
-
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
-
-Here's a blank template to get started:
-**To avoid retyping too much info. Do a search and replace with your text editor for the following:**
-`github_username`, `repo_name`, `twitter_handle`, `email`, `project_title`, `project_description`
-
 
 ### Built With
 
 * Java
 * Gradle
 * Spring Boot framework
+
 
 
 
@@ -37,21 +21,31 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-This is an example of how to list things you need to use the software and how to install them.
-* npm
-  ```sh
-  npm install npm@latest -g
-  ```
+1. You will first have to make sure that you have gradle installed on your computer. If not then you will want to go to the following link.
+    ```sh
+    https://gradle.org/install/
+    ```
+2. If you are not sure if you have gradle installed, run the following command in the command prompt.
+    ```sh
+    gradle -v
+    ```
+    * If a version of gradle is displayed then you have gradle on your system.
+3. Next you will need an IDE, you can either use Vscode or Eclipse for this (It does not matter, both work the same)
+4. Then you will need a jdk installed in your computer of 11 or higher. You can go to the following link to do this.
+    ```sh
+    https://jdk.java.net/java-se-ri/14
+    ```
 
 ### Installation
 
 1. Clone the repo
    ```sh
-   git clone https://github.com/github_username/repo_name.git
+   git clone https://github.com/sambutler1017/digital-receipt-reader-backend.git
    ```
-2. Install NPM packages
+
+2. Build and install packages provided in `build.gradle` file
    ```sh
-   npm install
+   gradle build
    ```
 
 
@@ -61,49 +55,41 @@ This is an example of how to list things you need to use the software and how to
 
 Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+* Using and running the endpoints you will want an API client such as postman or some extension of chrome that allows you to consume endpoints.
 
+1. The following link is to download postman on your local machine. You will be asked to create an account (it's free)
+    ```sh
+    https://www.postman.com/downloads/
+    ```
 
+2. Next, in the project you will want to copy the `application.local.template.propteries` file and paste it and rename it to `application.local.properties`.
 
-<!-- ROADMAP -->
-## Roadmap
+3. Then inside you will want to update the following fields:
+    ```sh
+    spring.datasource.username=<MYSQL_USERNAME>
+    spring.datasource.password=<MYSQL_PASSWORD>
+    ```
+4. Finally, everything is set up and you can run the following command to start a local instance of the project.
+    ```sh
+    gradle bootrun
+    ```
+5. If it stood up successfully you should be able to hit the endpoints in the project at the route of `localhost:8080`
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a list of proposed features (and known issues).
-
-
-
-<!-- CONTRIBUTING -->
-## Contributing
-
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE` for more information.
 
 
 
 <!-- CONTACT -->
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email
+Samuel Butler - sambutler1017@icloud.com
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Project Link: [https://github.com/sambutler1017/digital-receipt-reader-backend](https://github.com/sambutler1017/digital-receipt-reader-backend)
 
 
 
 <!-- ACKNOWLEDGEMENTS -->
 ## Acknowledgements
 
-* []()
-* []()
-* []()
+* Seth Hancock
+* Luke Lengel
+* Miah Hale
