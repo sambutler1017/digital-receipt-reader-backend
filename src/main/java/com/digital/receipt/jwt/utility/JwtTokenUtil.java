@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
-import javax.xml.bind.DatatypeConverter;
-
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.service.activeProfile.ActiveProfile;
 
@@ -130,6 +128,6 @@ public class JwtTokenUtil implements Serializable {
      * @return the decoded token
      */
     public Claims decodeToken(String token) {
-        return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secret)).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
     }
 }
