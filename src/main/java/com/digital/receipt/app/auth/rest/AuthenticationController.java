@@ -56,7 +56,7 @@ public class AuthenticationController {
      * @throws Exception - If user does not exist.
      */
     @PostMapping("/reauthenticate")
-    @HasAccess(WebRole.USER)
+    @HasAccess(WebRole.ADMIN)
     public ResponseEntity<DigitalReceiptToken> reauthenticateUser() throws Exception {
         User user = authService.getUserToAuthenticate();
         final String token = jwtTokenUtil.generateToken(user);

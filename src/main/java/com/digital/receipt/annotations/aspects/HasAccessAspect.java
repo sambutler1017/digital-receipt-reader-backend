@@ -11,7 +11,6 @@ import com.google.common.collect.Lists;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -36,7 +35,6 @@ public class HasAccessAspect {
      * @return The arguements originally passed into the method.
      * @throws Throwable Exception if they don't have access
      */
-    @Before("args(access)")
     @Around(value = "@annotation(anno)", argNames = "jp, anno")
     public Object access(ProceedingJoinPoint joinPoint, HasAccess access) throws Throwable {
         if (isClientCall(Thread.currentThread().getStackTrace()))
