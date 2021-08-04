@@ -8,8 +8,9 @@ import java.util.Set;
 
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.common.exceptions.BaseException;
-import com.digital.receipt.service.sql.SqlBuilder;
-import com.digital.receipt.service.sql.SqlClient;
+import com.digital.receipt.sql.AbstractInsiteSqlDao;
+import com.digital.receipt.sql.SqlBuilder;
+import com.digital.receipt.sql.SqlClient;
 import com.google.common.collect.Sets;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,13 +24,17 @@ import org.springframework.stereotype.Repository;
  * @since June 25, 2021
  */
 @Repository
-public class AuthenticationDao {
+public class AuthenticationDao extends AbstractInsiteSqlDao {
 
     @Autowired
     private SqlClient sqlClient;
 
     @Autowired
     private SqlBuilder sqlBuilder;
+
+    public AuthenticationDao() {
+        super("authDAO");
+    }
 
     /**
      * Not an exposed endpoint, strictly used by the authentication controller to

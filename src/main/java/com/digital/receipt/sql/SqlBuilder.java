@@ -1,4 +1,4 @@
-package com.digital.receipt.service.sql;
+package com.digital.receipt.sql;
 
 import static com.digital.receipt.common.enums.InsiteSqlTags.NAME;
 import static com.digital.receipt.common.enums.InsiteSqlTags.VALUE_ID;
@@ -24,6 +24,9 @@ import org.springframework.stereotype.Service;
  *
  * @author Sam Butler
  * @since July 25, 2020
+ * @deprecated Please use {@link AbstractInsiteSqlDao} instead to get querys and
+ *             params. Then use the {@link InsiteSqlBundle} to build out the
+ *             query.
  */
 @Service
 public class SqlBuilder {

@@ -1,4 +1,4 @@
-package com.digital.receipt.service.sql;
+package com.digital.receipt.sql;
 
 import java.io.FileInputStream;
 import java.io.IOException;

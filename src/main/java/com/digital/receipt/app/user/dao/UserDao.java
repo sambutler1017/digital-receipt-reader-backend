@@ -9,8 +9,8 @@ import java.util.Set;
 
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
-import com.digital.receipt.service.sql.SqlBuilder;
-import com.digital.receipt.service.sql.SqlClient;
+import com.digital.receipt.sql.SqlBuilder;
+import com.digital.receipt.sql.SqlClient;
 import com.google.common.collect.Sets;
 
 import org.springframework.beans.factory.annotation.Autowired;
