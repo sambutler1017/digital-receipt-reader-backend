@@ -1,11 +1,13 @@
 package com.digital.receipt.app.user.client;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.digital.receipt.annotations.interfaces.Client;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.app.user.rest.UserController;
+import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -27,8 +29,10 @@ public class UserClient {
      * 
      * @param request of the user
      * @return User profile object {@link User}
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
      */
-    public List<User> getUsers(UserGetRequest request) {
+    public List<User> getUsers(UserGetRequest request) throws SqlFragmentNotFoundException, IOException {
         return userController.getUsers(request);
     }
 
@@ -37,9 +41,11 @@ public class UserClient {
      * 
      * @param id of the user
      * @return User profile object
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
      * @throws Exception
      */
-    public User getUserById(int id) throws Exception {
+    public User getUserById(int id) throws SqlFragmentNotFoundException, IOException {
         return userController.getUserById(id);
     }
 }

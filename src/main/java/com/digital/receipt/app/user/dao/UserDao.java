@@ -2,16 +2,15 @@ package com.digital.receipt.app.user.dao;
 
 import static com.digital.receipt.app.user.mapper.UserMapper.USER_MAPPER;
 
-import java.util.HashMap;
+import java.io.IOException;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
-import com.digital.receipt.sql.SqlBuilder;
+import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
+import com.digital.receipt.sql.AbstractSqlDao;
+import com.digital.receipt.sql.SqlBundler;
 import com.digital.receipt.sql.SqlClient;
-import com.google.common.collect.Sets;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -23,31 +22,27 @@ import org.springframework.stereotype.Repository;
  * @since June 25, 2021
  */
 @Repository
-public class UserDao {
+public class UserDao extends AbstractSqlDao {
 
     @Autowired
     private SqlClient sqlClient;
 
     @Autowired
-    private SqlBuilder sqlBuilder;
+    private SqlBundler bundler;
 
     /**
      * Get users based on given request filter
      * 
      * @param request of the user
      * @return User profile object {@link User}
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
      */
-    public List<User> getUsers(UserGetRequest request) {
-        Map<String, Set<?>> params = new HashMap<>();
-        if (request.getId() != null)
-            params.put("id", request.getId());
-        if (request.getEmail() != null)
-            params.put("email", request.getEmail());
-
-        sqlBuilder.setQueryFile("UserDao");
-        sqlBuilder.setParams(params);
-
-        return sqlClient.getPage(sqlBuilder.getSql("getUsers"), USER_MAPPER);
+    public List<User> getUsers(UserGetRequest request) throws SqlFragmentNotFoundException, IOException {
+        return sqlClient.getPage(
+                bundler.bundle(getSql("getUsers"), params("id", request.getId()).addValue("email", request.getEmail())
+                        .addValue("firstName", request.getFirstName()).addValue("lastName", request.getLastName())),
+                USER_MAPPER);
     }
 
     /**
@@ -56,14 +51,10 @@ public class UserDao {
      * 
      * @param id of the user
      * @return User profile object {@link UserProfile}
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
      */
-    public User getUserById(int id) {
-        Map<String, Set<?>> params = new HashMap<>();
-        params.put("userId", Sets.newHashSet(id));
-
-        sqlBuilder.setQueryFile("userDAO");
-        sqlBuilder.setParams(params);
-
-        return sqlClient.getTemplate(sqlBuilder.getSql("getUserById"), USER_MAPPER);
+    public User getUserById(int id) throws SqlFragmentNotFoundException, IOException {
+        return sqlClient.getTemplate(bundler.bundle(getSql("getUserById"), params("userId", id)), USER_MAPPER);
     }
 }

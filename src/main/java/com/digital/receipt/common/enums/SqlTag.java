@@ -1,11 +1,11 @@
 package com.digital.receipt.common.enums;
 
-public enum InsiteSqlTags {
+public enum SqlTag {
 	NAME("@NAME"), INCLUDE("@INCLUDE"), VALUE_ID(":");
 
 	private String annotation;
 
-	InsiteSqlTags(String annotation) {
+	SqlTag(String annotation) {
 		this.annotation = annotation;
 	}
 

@@ -3,13 +3,13 @@ package com.digital.receipt.common.enums;
 import java.util.Arrays;
 import java.util.List;
 
-public enum QueryStatements {
+public enum QueryStatement {
 	NONE("@NONE", "NONE"), AND("@AND", "AND"), WHERE("@WHERE", "WHERE"), IF("@IF", "IF");
 
 	private String annotation;
 	private String type;
 
-	QueryStatements(String annotation, String type) {
+	QueryStatement(String annotation, String type) {
 		this.annotation = annotation;
 		this.type = type;
 	}
@@ -39,9 +39,8 @@ public enum QueryStatements {
 	 * @param str - String value to search
 	 * @return QueryStatement enum that the string contains (If one exists)
 	 */
-	public static QueryStatements getEnumFromString(String str) {
-		List<QueryStatements> values = Arrays.asList(QueryStatements.values());
-		for (QueryStatements value : values) {
+	public static QueryStatement getEnumFromString(String str) {
+		for (QueryStatement value : QueryStatement.values()) {
 			if (str.contains(value.annotation()))
 				return value;
 		}

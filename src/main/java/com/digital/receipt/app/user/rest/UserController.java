@@ -1,5 +1,6 @@
 package com.digital.receipt.app.user.rest;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.digital.receipt.annotations.interfaces.HasAccess;
@@ -8,6 +9,7 @@ import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.app.user.service.UserService;
 import com.digital.receipt.common.enums.WebRole;
+import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,10 +33,12 @@ public class UserController {
      * 
      * @param request to filter on
      * @return list of user objects
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
      */
     @GetMapping()
     @HasAccess(WebRole.ADMIN)
-    public List<User> getUsers(UserGetRequest request) {
+    public List<User> getUsers(UserGetRequest request) throws SqlFragmentNotFoundException, IOException {
         return userService.getUsers(request);
     }
 
@@ -43,10 +47,12 @@ public class UserController {
      * 
      * @param id of the user
      * @return user associated to that id
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
      */
     @GetMapping("/{id}")
     @HasAccess(WebRole.ADMIN)
-    public User getUserById(@PathVariable int id) {
+    public User getUserById(@PathVariable int id) throws SqlFragmentNotFoundException, IOException {
         return userService.getUserById(id);
     }
 }

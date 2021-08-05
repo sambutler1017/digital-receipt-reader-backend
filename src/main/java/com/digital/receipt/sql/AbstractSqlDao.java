@@ -3,12 +3,13 @@ package com.digital.receipt.sql;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Collectors;
 
-import com.digital.receipt.common.enums.InsiteSqlTags;
+import com.digital.receipt.common.enums.SqlTag;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
 import com.digital.receipt.service.activeProfile.ActiveProfile;
-import com.digital.receipt.sql.domain.InsiteSqlParams;
+import com.digital.receipt.sql.domain.SqlParams;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,9 +22,9 @@ import org.springframework.stereotype.Service;
  * @since July 31, 2021
  */
 @Service
-public abstract class AbstractInsiteSqlDao {
+public abstract class AbstractSqlDao {
 
-    private final String defaultSqlPath = "%s/resources/dao/%s.insitesql";
+    private final String defaultSqlPath = "%s/resources/dao/%s.sql";
 
     @Autowired
     private ActiveProfile activeProfile;
@@ -32,45 +33,36 @@ public abstract class AbstractInsiteSqlDao {
     private boolean endOfFragmentFound;
 
     /**
-     * Default constructor to set the inital values for the start of fragment and
-     * end of fragment booleans.
-     * 
-     * @see #isContainedInFragment(String, String)
-     */
-    public AbstractInsiteSqlDao() {
-        startOfFragmentFound = false;
-        endOfFragmentFound = false;
-    }
-
-    /**
      * Gets the sql based on the given fragment name.
      * 
      * @param fragmentName Name of the sql fragment to search for.
-     * @return {@link AbstractInsiteSqlDao} instance containing the sql string.
+     * @return {@link AbstractSqlDao} instance containing the sql string.
      * @throws SqlFragmentNotFoundException If the fragment can not be found in the
      *                                      given file.
      * @throws IOException
      */
-    public String getSql(String fragmentName) throws SqlFragmentNotFoundException, IOException {
+    public List<String> getSql(String fragmentName) throws SqlFragmentNotFoundException, IOException {
+        resetFragmentStatus();
+
         String filePath = String.format(defaultSqlPath, activeProfile.getEnvironmentUrl(), getChildClassName());
         BufferedReader br = new BufferedReader(new FileReader(filePath));
 
-        String result = br.lines().filter(s -> isContainedInFragment(s, fragmentName))
-                .collect(Collectors.joining("\n"));
+        List<String> result = br.lines().filter(s -> isContainedInFragment(s, fragmentName))
+                .collect(Collectors.toList());
         br.close();
         return result;
     }
 
     /**
-     * Gets a {@link InsiteSqlParams} object to store the params to be used on the
-     * sql query.
+     * Gets a {@link SqlParams} object to store the params to be used on the sql
+     * query.
      * 
      * @param name  The name of the field to store the object under.
      * @param value The object to store in the params.
-     * @return Instance of {@link InsiteSqlParams} object with the added param.
+     * @return Instance of {@link SqlParams} object with the added param.
      */
-    public InsiteSqlParams params(String name, Object value) {
-        return new InsiteSqlParams(name, value);
+    public SqlParams params(String name, Object value) {
+        return new SqlParams(name, value);
     }
 
     /**
@@ -94,16 +86,28 @@ public abstract class AbstractInsiteSqlDao {
      * @see #getSql(String)
      */
     private boolean isContainedInFragment(String value, String fragmentName) {
-        if (startOfFragmentFound && !endOfFragmentFound) {
-            return true;
-        }
-
-        if (value.contains(String.format("%s(%s)", InsiteSqlTags.NAME.toString(), fragmentName))) {
-            startOfFragmentFound = true;
-        } else if (startOfFragmentFound && !endOfFragmentFound && value.contains(InsiteSqlTags.NAME.toString())) {
+        if (startOfFragmentFound && !endOfFragmentFound && value.contains(SqlTag.NAME.toString())) {
             endOfFragmentFound = true;
         }
 
+        if (value.contains(String.format("%s(%s)", SqlTag.NAME.toString(), fragmentName))) {
+            startOfFragmentFound = true;
+        } else if (startOfFragmentFound && !endOfFragmentFound) {
+            return true;
+        }
+
         return false;
+    }
+
+    /**
+     * Resets the variables to their original values. This is so if a back to back
+     * request is called with the same object then it will not use the previously
+     * set values.
+     * 
+     * @see #getSql(String)
+     */
+    private void resetFragmentStatus() {
+        startOfFragmentFound = false;
+        endOfFragmentFound = false;
     }
 }

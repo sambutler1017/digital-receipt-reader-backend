@@ -2,17 +2,13 @@ package com.digital.receipt.app.auth.dao;
 
 import static com.digital.receipt.app.auth.mapper.AuthenticationMapper.AUTH_MAPPER;
 
-import java.io.FileNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.io.IOException;
 
 import com.digital.receipt.app.user.client.domain.User;
-import com.digital.receipt.common.exceptions.BaseException;
-import com.digital.receipt.sql.AbstractInsiteSqlDao;
-import com.digital.receipt.sql.SqlBuilder;
+import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
+import com.digital.receipt.sql.AbstractSqlDao;
+import com.digital.receipt.sql.SqlBundler;
 import com.digital.receipt.sql.SqlClient;
-import com.google.common.collect.Sets;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -25,13 +21,13 @@ import org.springframework.stereotype.Repository;
  * @since June 25, 2021
  */
 @Repository
-public class AuthenticationDao extends AbstractInsiteSqlDao {
+public class AuthenticationDao extends AbstractSqlDao {
 
     @Autowired
     private SqlClient sqlClient;
 
     @Autowired
-    private SqlBuilder sqlBuilder;
+    private SqlBundler bundler;
 
     /**
      * Not an exposed endpoint, strictly used by the authentication controller to
@@ -40,19 +36,13 @@ public class AuthenticationDao extends AbstractInsiteSqlDao {
      * @param username To search for in the database
      * @param password The password to validate against
      * @return User object if the user credentials are correct.
-     * @throws BaseException
-     * @throws FileNotFoundException
+     * @throws SqlFragmentNotFoundException
+     * @throws IOException
      */
-    public User authenticateUser(String username, String password) throws BaseException, FileNotFoundException {
-        Map<String, Set<?>> params = new HashMap<>();
-        params.put("username", Sets.newHashSet(username));
-        params.put("password", Sets.newHashSet(password));
-
-        sqlBuilder.setQueryFile("AuthenticationDao");
-        sqlBuilder.setParams(params);
-
+    public User authenticateUser(String username, String password) throws SqlFragmentNotFoundException, IOException {
         try {
-            return sqlClient.getTemplate(sqlBuilder.getSql("authenticateUser"), AUTH_MAPPER);
+            return sqlClient.getTemplate(bundler.bundle(getSql("authenticateUser"),
+                    params("username", username).addValue("password", password)), AUTH_MAPPER);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }

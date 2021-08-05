@@ -13,7 +13,7 @@ import org.springframework.util.Assert;
  * @author Sam Butler
  * @since July 31, 2021
  */
-public class InsiteSqlParams {
+public class SqlParams {
 
     private final Map<String, Object> values = new LinkedHashMap<>();
 
@@ -22,7 +22,7 @@ public class InsiteSqlParams {
      * 
      * @see #addValue(String, Object)
      */
-    public InsiteSqlParams() {
+    public SqlParams() {
     }
 
     /**
@@ -33,7 +33,7 @@ public class InsiteSqlParams {
      * @param value     the value of the parameter
      * @see #addValue(String, Object)
      */
-    public InsiteSqlParams(String paramName, @Nullable Object value) {
+    public SqlParams(String paramName, @Nullable Object value) {
         addValue(paramName, value);
     }
 
@@ -45,7 +45,7 @@ public class InsiteSqlParams {
      * @return a reference to this parameter source, so it's possible to chain
      *         several calls together
      */
-    public InsiteSqlParams addValue(String paramName, @Nullable Object value) {
+    public SqlParams addValue(String paramName, @Nullable Object value) {
         Assert.notNull(paramName, "Parameter name must not be null");
         this.values.put(paramName, value);
         return this;
@@ -77,9 +77,9 @@ public class InsiteSqlParams {
      * @throws IllegalArgumentException If the paramName does not exist in the map.
      */
     @Nullable
-    public Object getValue(String paramName) throws IllegalArgumentException {
+    public Object getValue(String paramName) {
         if (!hasValue(paramName)) {
-            throw new IllegalArgumentException(String.format("No param value for '%s'", paramName));
+            return null;
         }
         return this.values.get(paramName);
     }
