@@ -44,7 +44,7 @@ public class UserDao {
         if (request.getEmail() != null)
             params.put("email", request.getEmail());
 
-        sqlBuilder.setQueryFile("userDAO");
+        sqlBuilder.setQueryFile("UserDao");
         sqlBuilder.setParams(params);
 
         return sqlClient.getPage(sqlBuilder.getSql("getUsers"), USER_MAPPER);

@@ -2,6 +2,7 @@ package com.digital.receipt.app.auth.dao;
 
 import static com.digital.receipt.app.auth.mapper.AuthenticationMapper.AUTH_MAPPER;
 
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -32,10 +33,6 @@ public class AuthenticationDao extends AbstractInsiteSqlDao {
     @Autowired
     private SqlBuilder sqlBuilder;
 
-    public AuthenticationDao() {
-        super("authDAO");
-    }
-
     /**
      * Not an exposed endpoint, strictly used by the authentication controller to
      * autheticate a user.
@@ -44,13 +41,14 @@ public class AuthenticationDao extends AbstractInsiteSqlDao {
      * @param password The password to validate against
      * @return User object if the user credentials are correct.
      * @throws BaseException
+     * @throws FileNotFoundException
      */
-    public User authenticateUser(String username, String password) throws BaseException {
+    public User authenticateUser(String username, String password) throws BaseException, FileNotFoundException {
         Map<String, Set<?>> params = new HashMap<>();
         params.put("username", Sets.newHashSet(username));
         params.put("password", Sets.newHashSet(password));
 
-        sqlBuilder.setQueryFile("authDAO");
+        sqlBuilder.setQueryFile("AuthenticationDao");
         sqlBuilder.setParams(params);
 
         try {
