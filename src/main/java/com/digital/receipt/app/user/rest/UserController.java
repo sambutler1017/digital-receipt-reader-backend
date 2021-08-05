@@ -14,6 +14,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+/**
+ * User Controller for dealing with user request and modifications.
+ * 
+ * @author Sam Butler
+ * @since August 1, 2021
+ */
 @RequestMapping("api/user-app/users")
 @RestApiController
 public class UserController {
