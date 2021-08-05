@@ -47,10 +47,8 @@ public class SqlClient {
 
 		source.setDriverClassName(prop.getProperty("spring.datasource.driver-class-name"));
 		source.setUrl(prop.getProperty("spring.datasource.url"));
-		source.setUsername(profile.isLocalEnvironment() ? prop.getProperty("spring.datasource.username")
-				: System.getenv("MYSQL_USERNAME"));
-		source.setPassword(profile.isLocalEnvironment() ? prop.getProperty("spring.datasource.password")
-				: System.getenv("MYSQL_PASSWORD"));
+		source.setUsername(prop.getProperty("spring.datasource.username"));
+		source.setPassword(prop.getProperty("spring.datasource.password"));
 		jdbcTemplateObject = new JdbcTemplate(source);
 	}
 
