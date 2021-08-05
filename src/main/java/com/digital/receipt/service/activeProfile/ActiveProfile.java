@@ -59,6 +59,11 @@ public class ActiveProfile {
         return isLocalEnvironment() ? LOCAL_ENV_PATH : PROD_ENV_PATH;
     }
 
+    /**
+     * Gets the signing key for jwt tokens
+     * 
+     * @return String of the signing key to use.
+     */
     public String getSigningKey() {
         return isLocalEnvironment() ? "local-key" : System.getenv("JWT_SIGNING_KEY");
     }

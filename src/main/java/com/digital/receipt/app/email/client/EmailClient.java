@@ -5,6 +5,7 @@ import com.digital.receipt.app.email.client.domain.UserEmail;
 import com.digital.receipt.app.email.rest.EmailController;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Class to expose the email client to other services.
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @since June 25, 2020
  */
 @Client
+@Component
 public class EmailClient {
 
     @Autowired

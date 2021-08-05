@@ -7,7 +7,7 @@ import com.digital.receipt.app.email.client.domain.UserEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 /**
  * Service class for doing all the dirty work for sending a message.
@@ -15,8 +15,9 @@ import org.springframework.stereotype.Service;
  * @author Sam Butler
  * @since August 1, 2021
  */
-@Service
+@Component
 public class EmailService {
+
     @Autowired
     private JavaMailSender javaMailSender;
 
