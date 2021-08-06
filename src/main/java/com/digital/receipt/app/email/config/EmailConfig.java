@@ -43,11 +43,13 @@ public class EmailConfig {
             io.printStackTrace();
         }
 
-        mailSender.setHost(prop.getProperty("spring.mail.host"));
-        mailSender.setPort(Integer.parseInt(prop.getProperty("spring.mail.port")));
-        mailSender.setUsername(prop.getProperty("spring.mail.username"));
-        mailSender.setPassword(prop.getProperty("spring.mail.password"));
-        mailSender.setProtocol("smtp");
+        if (profile.isLocalEnvironment()) {
+            mailSender.setHost(prop.getProperty("spring.mail.host"));
+            mailSender.setPort(Integer.parseInt(prop.getProperty("spring.mail.port")));
+            mailSender.setUsername(prop.getProperty("spring.mail.username"));
+            mailSender.setPassword(prop.getProperty("spring.mail.password"));
+            mailSender.setProtocol("smtp");
+        }
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.smtp.auth", "true");
