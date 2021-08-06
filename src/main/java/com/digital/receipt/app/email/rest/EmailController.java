@@ -61,7 +61,6 @@ public class EmailController {
      *                                      found.
      */
     @PutMapping("/forgot-password")
-    @HasAccess(WebRole.USER)
     public User forgotPassword(@RequestBody String email)
             throws SqlFragmentNotFoundException, MessagingException, IOException {
         return emailService.forgotPassword(email);
