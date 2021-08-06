@@ -2,11 +2,15 @@ package com.digital.receipt.app.email.service;
 
 import java.util.Date;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import com.digital.receipt.app.email.client.domain.UserEmail;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
 /**
@@ -27,14 +31,23 @@ public class EmailService {
      * 
      * @param userEmail UserEmail object to get the mail properties from
      * @return {@link UserEmail} object with the time it sent.
+     * @throws MessagingException
      */
-    public UserEmail sendEmail(UserEmail userEmail) {
+    public UserEmail sendEmail(UserEmail userEmail) throws MessagingException {
         SimpleMailMessage mail = new SimpleMailMessage();
-        mail.setTo(userEmail.getRecipient());
-        mail.setFrom(userEmail.getFrom());
-        mail.setSubject(userEmail.getSubject());
-        mail.setText(userEmail.getBody());
-        javaMailSender.send(mail);
+        MimeMessage mm = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mm, true);
+
+        helper.setFrom(userEmail.getFrom());
+        helper.setTo(userEmail.getRecipient());
+        helper.setSubject(userEmail.getSubject());
+        helper.setText("<h3>Hello World!</h3>");
+
+        // mail.setTo(userEmail.getRecipient());
+        // mail.setFrom(userEmail.getFrom());
+        // mail.setSubject(userEmail.getSubject());
+        // mail.setText(userEmail.getBody());
+        javaMailSender.send(mm);
 
         userEmail.setSentDate(new Date());
         return userEmail;

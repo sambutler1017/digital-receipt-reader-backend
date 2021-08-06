@@ -1,5 +1,7 @@
 package com.digital.receipt.app.email.client;
 
+import javax.mail.MessagingException;
+
 import com.digital.receipt.annotations.interfaces.Client;
 import com.digital.receipt.app.email.client.domain.UserEmail;
 import com.digital.receipt.app.email.rest.EmailController;
@@ -26,8 +28,9 @@ public class EmailClient {
      * 
      * @param userEmail UserEmail object to get the mail properties from
      * @return {@link UserEmail} object with the time it sent.
+     * @throws MessagingException
      */
-    public UserEmail sendEmail(UserEmail userEmail) {
+    public UserEmail sendEmail(UserEmail userEmail) throws MessagingException {
         return emailController.sendEmail(userEmail);
     }
 }

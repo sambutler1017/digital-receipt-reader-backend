@@ -1,5 +1,7 @@
 package com.digital.receipt.app.email.rest;
 
+import javax.mail.MessagingException;
+
 import com.digital.receipt.annotations.interfaces.RestApiController;
 import com.digital.receipt.app.email.client.domain.UserEmail;
 import com.digital.receipt.app.email.service.EmailService;
@@ -27,9 +29,10 @@ public class EmailController {
      * 
      * @param userEmail UserEmail object to get the mail properties from
      * @return {@link UserEmail} object with the time it sent.
+     * @throws MessagingException
      */
     @PostMapping()
-    public UserEmail sendEmail(@RequestBody UserEmail userEmail) {
+    public UserEmail sendEmail(@RequestBody UserEmail userEmail) throws MessagingException {
         userEmail.setFrom("ridgecampusdigitalreceipt@outlook.com");
         return emailService.sendEmail(userEmail);
     }
