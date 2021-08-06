@@ -20,7 +20,7 @@ public class ActiveProfile {
      * Method to set the current active profile the application is running in
      */
     public void setPropertyFile() {
-        System.setProperty("spring.profiles.active", getEnvironment().toString());
+        System.setProperty("spring.profiles.active", getEnvironment().toString().toLowerCase());
     }
 
     /**
@@ -38,7 +38,7 @@ public class ActiveProfile {
      * @return string of the environment currently running
      */
     public Environment getEnvironment() {
-        return System.getenv("APP_ENVIRONMENT") != null ? Environment.PRODUCTION : Environment.LOCAL;
+        return System.getenv("APP_ENVIRONMENT") != null ? Environment.PROD : Environment.DEV;
     }
 
     /**
@@ -47,7 +47,7 @@ public class ActiveProfile {
      * @return String of the application file name
      */
     public String getAppPropertiesName() {
-        return isLocalEnvironment() ? "application.local.properties" : "application.properties";
+        return isLocalEnvironment() ? "application-dev.properties" : "application-prod.properties";
     }
 
     /**
@@ -74,6 +74,6 @@ public class ActiveProfile {
      * @return boolean if the local instance is being run.
      */
     public boolean isLocalEnvironment() {
-        return getEnvironment().equals(Environment.LOCAL);
+        return getEnvironment().equals(Environment.DEV);
     }
 }

@@ -1,8 +1,5 @@
 package com.digital.receipt.sql;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.List;
@@ -10,11 +7,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
-import com.digital.receipt.service.activeProfile.ActiveProfile;
+import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Service;
@@ -29,28 +26,17 @@ import org.springframework.stereotype.Service;
 public class SqlClient {
 
 	private static JdbcTemplate jdbcTemplateObject;
-	private static final DriverManagerDataSource source = new DriverManagerDataSource();
-	private static final ActiveProfile profile = new ActiveProfile();
 
 	Properties prop = new Properties();
 
 	/**
-	 * Constructor method to intialize all the objects and datasource values
+	 * Constructor to autowire the datasource with the template object so it can be
+	 * used to make database calls
+	 * 
+	 * @see {@link DataSource}
 	 */
-	public SqlClient() {
-
-		try (InputStream input = new FileInputStream(profile.getPropertyFilePath())) {
-			prop.load(input);
-		} catch (IOException io) {
-			io.printStackTrace();
-		}
-
-		source.setDriverClassName(prop.getProperty("spring.datasource.driver-class-name"));
-		source.setUrl(prop.getProperty("spring.datasource.url"));
-		source.setUsername(profile.isLocalEnvironment() ? prop.getProperty("spring.datasource.username")
-				: System.getenv("MYSQL_USERNAME"));
-		source.setPassword(profile.isLocalEnvironment() ? prop.getProperty("spring.datasource.password")
-				: System.getenv("MYSQL_PASSWORD"));
+	@Autowired
+	public SqlClient(DataSource source) {
 		jdbcTemplateObject = new JdbcTemplate(source);
 	}
 
