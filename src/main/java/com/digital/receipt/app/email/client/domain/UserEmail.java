@@ -16,6 +16,9 @@ public class UserEmail {
 
     private Date sentDate;
 
+    public UserEmail() {
+    }
+
     public UserEmail(String recipient, String subject, String body) {
         this.recipient = recipient;
         this.subject = subject;
