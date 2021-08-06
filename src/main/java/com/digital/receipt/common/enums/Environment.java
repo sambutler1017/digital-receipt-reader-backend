@@ -7,7 +7,7 @@ package com.digital.receipt.common.enums;
  * @since July 31, 2021
  */
 public enum Environment {
-    PROD(1), DEV(2);
+    PROD(1), LOCAL(2);
 
     private int id;
 
@@ -23,14 +23,14 @@ public enum Environment {
         for (Environment w : Environment.values())
             if (w.id == id)
                 return w;
-        return DEV;
+        return LOCAL;
     }
 
     public static Environment getRole(String text) {
         for (Environment w : Environment.values())
             if (w.toString().equals(text.toUpperCase()))
                 return w;
-        return DEV;
+        return LOCAL;
     }
 
     public int getValue() {

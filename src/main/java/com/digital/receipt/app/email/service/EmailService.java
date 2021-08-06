@@ -41,7 +41,7 @@ public class EmailService {
         helper.setFrom(userEmail.getFrom());
         helper.setTo(userEmail.getRecipient());
         helper.setSubject(userEmail.getSubject());
-        helper.setText("<h3>Hello World!</h3>");
+        helper.setText("<h3>Hello World!</h3>", true);
 
         // mail.setTo(userEmail.getRecipient());
         // mail.setFrom(userEmail.getFrom());

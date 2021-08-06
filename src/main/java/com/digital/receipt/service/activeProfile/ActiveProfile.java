@@ -38,7 +38,7 @@ public class ActiveProfile {
      * @return string of the environment currently running
      */
     public Environment getEnvironment() {
-        return System.getenv("APP_ENVIRONMENT") != null ? Environment.PROD : Environment.DEV;
+        return System.getenv("APP_ENVIRONMENT") != null ? Environment.PROD : Environment.LOCAL;
     }
 
     /**
@@ -74,6 +74,6 @@ public class ActiveProfile {
      * @return boolean if the local instance is being run.
      */
     public boolean isLocalEnvironment() {
-        return getEnvironment().equals(Environment.DEV);
+        return getEnvironment().equals(Environment.LOCAL);
     }
 }
