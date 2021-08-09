@@ -18,12 +18,13 @@ import org.springframework.stereotype.Component;
 
 /**
  * JWT token validator class
- * 
+ *
  * @author Sam butler
  * @since Dec 5, 2020
  */
 @Component
 public class JwtTokenValidator {
+
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
 
@@ -33,7 +34,7 @@ public class JwtTokenValidator {
     /**
      * Checks to see if the token on the request is valid. If it is not valid then
      * it wil throw an exception, otherwise it wil continue.
-     * 
+     *
      * @param request - The request that is being made to the endpint
      * @return boolean saying if it is a valid token or not
      * @throws IOException
@@ -46,7 +47,7 @@ public class JwtTokenValidator {
 
             isCorrectEnvironment(jwtToken);
             hasCorrectFields(jwtToken);
-            isTokenExpired(jwtToken);
+            isReauthenticating(request.getRequestURI(), jwtToken);
 
         } else {
             doesTokenExist(tokenHeader);
@@ -55,7 +56,7 @@ public class JwtTokenValidator {
 
     /**
      * Checks to see if the endpoint that was called is a void endpoint or not.
-     * 
+     *
      * @param URI  - URI of the endpoint that was called
      * @param type - What type of request was made (GET, POST, etc.)
      * @return boolean based on if it is a void endpoint or not
@@ -77,22 +78,37 @@ public class JwtTokenValidator {
     }
 
     /**
+     * This will check if the endpoint that was called was the /reauthenticate. If
+     * it was then we don't care if the token is expired and it will return.
+     * Otherwise check if the token is expired.
+     *
+     * @param endpoint The endpoint that was called.
+     * @param token    The token to confirm if it is expired if need be.
+     * @throws BaseException Throws exception if the token is expired.
+     */
+    private void isReauthenticating(String endpoint, String token) throws BaseException {
+        if (!endpoint.equals("/reauthenticate")) {
+            isTokenExpired(token);
+        }
+    }
+
+    /**
      * Checks to see if the token that the request pulled is expired. If it is then
      * it will throw an exception.
-     * 
+     *
      * @param token The token to confirm if it is expired or not.
      * @throws BaseException Throws exception if the token is expired.
      */
     private void isTokenExpired(String token) throws BaseException {
         if (jwtTokenUtil.isTokenExpired(token)) {
-            throw new BaseException("JWT Token is Expired. Please Login again.");
+            throw new BaseException("JWT Token is Expired. Please re-authenticate.");
         }
     }
 
     /**
      * Checks to see if a token exists or if the token does not contain the bearer
      * keyword.
-     * 
+     *
      * @param tokenHeader Header to of the token.
      * @throws BaseException Throws exception based on status of token.
      */
@@ -106,7 +122,7 @@ public class JwtTokenValidator {
 
     /**
      * Checks to see if it has the required fields on the token.
-     * 
+     *
      * @param token - Token to confirm field claims on
      * @throws IOException Throws exception if it can't read the fields or if it is
      *                     an invalid token.
@@ -123,7 +139,7 @@ public class JwtTokenValidator {
 
     /**
      * Validates that the environemnt is correct.
-     * 
+     *
      * @param token to be parsed
      * @throws BaseException
      */
