@@ -1,5 +1,7 @@
 package com.digital.receipt.app.user.rest;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -25,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("api/user-app/users")
 @RestApiController
 public class UserController {
+
     @Autowired
     private UserService userService;
 
@@ -36,7 +39,7 @@ public class UserController {
      * @throws IOException
      * @throws SqlFragmentNotFoundException
      */
-    @GetMapping()
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
     @HasAccess(WebRole.ADMIN)
     public List<User> getUsers(UserGetRequest request) throws SqlFragmentNotFoundException, IOException {
         return userService.getUsers(request);
@@ -50,7 +53,7 @@ public class UserController {
      * @throws IOException
      * @throws SqlFragmentNotFoundException
      */
-    @GetMapping("/{id}")
+    @GetMapping(path = "/{id}", produces = APPLICATION_JSON_VALUE)
     @HasAccess(WebRole.ADMIN)
     public User getUserById(@PathVariable int id) throws SqlFragmentNotFoundException, IOException {
         return userService.getUserById(id);

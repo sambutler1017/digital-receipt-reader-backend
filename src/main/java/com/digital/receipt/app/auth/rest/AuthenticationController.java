@@ -1,5 +1,7 @@
 package com.digital.receipt.app.auth.rest;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import java.util.Date;
 
 import com.digital.receipt.annotations.interfaces.HasAccess;
@@ -37,7 +39,7 @@ public class AuthenticationController {
      * @return a new JWT.
      * @throws Exception - if authentication request does not match a user.
      */
-    @PostMapping("/authenticate")
+    @PostMapping(path = "/authenticate", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<DigitalReceiptToken> authenticateUser(
             @RequestBody AuthenticationRequest authenticationRequest) throws Exception {
         User user = authService.verifyUser(authenticationRequest.getUsername(), authenticationRequest.getPassword());
@@ -55,7 +57,7 @@ public class AuthenticationController {
      * @return a new JWT.
      * @throws Exception - If user does not exist.
      */
-    @PostMapping("/reauthenticate")
+    @PostMapping(path = "/reauthenticate", produces = APPLICATION_JSON_VALUE)
     @HasAccess(WebRole.ADMIN)
     public ResponseEntity<DigitalReceiptToken> reauthenticateUser() throws Exception {
         User user = authService.getUserToAuthenticate();
