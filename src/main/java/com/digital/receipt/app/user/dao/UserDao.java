@@ -6,9 +6,9 @@ import java.io.IOException;
 import java.util.List;
 
 import com.digital.receipt.app.user.client.domain.User;
-import com.digital.receipt.app.user.client.domain.UserCredentials;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
+import com.digital.receipt.jwt.model.AuthenticationRequest;
 import com.digital.receipt.sql.AbstractSqlDao;
 import com.digital.receipt.sql.SqlBundler;
 import com.digital.receipt.sql.SqlClient;
@@ -79,7 +79,8 @@ public class UserDao extends AbstractSqlDao {
      * @throws IOException
      * @throws SqlFragmentNotFoundException
      */
-    public User updateUserCredentials(UserCredentials user) throws SqlFragmentNotFoundException, IOException {
+    public User updateUserCredentials(AuthenticationRequest authRequest)
+            throws SqlFragmentNotFoundException, IOException {
         return null;
     }
 }

@@ -8,11 +8,11 @@ import java.util.List;
 import com.digital.receipt.annotations.interfaces.HasAccess;
 import com.digital.receipt.annotations.interfaces.RestApiController;
 import com.digital.receipt.app.user.client.domain.User;
-import com.digital.receipt.app.user.client.domain.UserCredentials;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.app.user.service.UserService;
 import com.digital.receipt.common.enums.WebRole;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
+import com.digital.receipt.jwt.model.AuthenticationRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -87,8 +87,8 @@ public class UserController {
      */
     @PutMapping(path = "/credentials", produces = APPLICATION_JSON_VALUE)
     @HasAccess(WebRole.USER)
-    public User updateUserCredentials(@RequestBody UserCredentials user)
+    public User updateUserCredentials(@RequestBody AuthenticationRequest authRequest)
             throws SqlFragmentNotFoundException, IOException {
-        return userService.updateUserCredentials(user);
+        return userService.updateUserCredentials(authRequest);
     }
 }

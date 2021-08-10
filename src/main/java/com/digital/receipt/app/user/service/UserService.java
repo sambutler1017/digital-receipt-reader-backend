@@ -4,10 +4,10 @@ import java.io.IOException;
 import java.util.List;
 
 import com.digital.receipt.app.user.client.domain.User;
-import com.digital.receipt.app.user.client.domain.UserCredentials;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.app.user.dao.UserDao;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
+import com.digital.receipt.jwt.model.AuthenticationRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -68,7 +68,8 @@ public class UserService {
      * @throws IOException
      * @throws SqlFragmentNotFoundException
      */
-    public User updateUserCredentials(UserCredentials user) throws SqlFragmentNotFoundException, IOException {
-        return userDao.updateUserCredentials(user);
+    public User updateUserCredentials(AuthenticationRequest authRequest)
+            throws SqlFragmentNotFoundException, IOException {
+        return userDao.updateUserCredentials(authRequest);
     }
 }
