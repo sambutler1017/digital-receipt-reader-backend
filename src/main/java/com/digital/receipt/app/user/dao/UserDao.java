@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.digital.receipt.app.user.client.domain.User;
+import com.digital.receipt.app.user.client.domain.UserCredentials;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
 import com.digital.receipt.sql.AbstractSqlDao;
@@ -56,5 +57,29 @@ public class UserDao extends AbstractSqlDao {
      */
     public User getUserById(int id) throws SqlFragmentNotFoundException, IOException {
         return sqlClient.getTemplate(bundler.bundle(getSql("getUserById"), params("userId", id)), USER_MAPPER);
+    }
+
+    /**
+     * Update the user for the given user object
+     * 
+     * @param user what information on the user needs to be updated.
+     * @return user associated to that id with the updated information
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
+     */
+    public User updateUserById(User user) throws SqlFragmentNotFoundException, IOException {
+        return null;
+    }
+
+    /**
+     * Update the users credentials
+     * 
+     * @param user what information on the user needs to be updated.
+     * @return user associated to that id with the updated information
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
+     */
+    public User updateUserCredentials(UserCredentials user) throws SqlFragmentNotFoundException, IOException {
+        return null;
     }
 }
