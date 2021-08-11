@@ -3,18 +3,14 @@ package com.digital.receipt.app.user.dao;
 import static com.digital.receipt.app.user.mapper.UserMapper.USER_MAPPER;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Optional;
 
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
-import com.digital.receipt.common.exceptions.BaseException;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
 import com.digital.receipt.common.exceptions.UserNotFoundException;
-import com.digital.receipt.jwt.model.AuthenticationRequest;
 import com.digital.receipt.jwt.utility.JwtHolder;
-import com.digital.receipt.service.util.PasswordHash;
 import com.digital.receipt.sql.AbstractSqlDao;
 import com.digital.receipt.sql.SqlBundler;
 import com.digital.receipt.sql.SqlClient;
@@ -69,7 +65,8 @@ public class UserDao extends AbstractSqlDao {
     }
 
     /**
-     * Update the user for the given user object
+     * Update the user for the given user object. Null out password field so that it
+     * is not returned on the {@link User} object
      * 
      * @param user what information on the user needs to be updated.
      * @return user associated to that id with the updated information
@@ -79,6 +76,8 @@ public class UserDao extends AbstractSqlDao {
     public User updateUserProfile(User user) throws SqlFragmentNotFoundException, IOException {
         User userProfile = getUserById(jwtHolder.getRequiredUserId());
         int userId = userProfile.getId();
+
+        user.setPassword(null);
         user = mapNonNullUserFields(user, userProfile);
 
         Optional<Integer> updatedRow = sqlClient.update(bundler.bundle(getSql("updateUserProfile"),
@@ -100,17 +99,13 @@ public class UserDao extends AbstractSqlDao {
      * @throws IOException
      * @throws SqlFragmentNotFoundException
      */
-    public User updateUserPassword(AuthenticationRequest authRequest) throws SqlFragmentNotFoundException, IOException {
+    public User updateUserPassword(String password) throws SqlFragmentNotFoundException, IOException {
         User userProfile = getUserById(jwtHolder.getRequiredUserId());
         int userId = userProfile.getId();
         Optional<Integer> updatedRow = Optional.of(0);
 
-        try {
-            updatedRow = sqlClient.update(bundler.bundle(getSql("updateUserPassword"),
-                    params("password", PasswordHash.hashPassword(authRequest.getPassword())).addValue("id", userId)));
-        } catch (NoSuchAlgorithmException e) {
-            throw new BaseException("Could not hash password!");
-        }
+        updatedRow = sqlClient.update(
+                bundler.bundle(getSql("updateUserPassword"), params("password", password).addValue("id", userId)));
 
         if (!updatedRow.isPresent()) {
             throw new UserNotFoundException(

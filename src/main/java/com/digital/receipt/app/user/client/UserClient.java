@@ -8,7 +8,6 @@ import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.app.user.rest.UserController;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
-import com.digital.receipt.jwt.model.AuthenticationRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -51,26 +50,27 @@ public class UserClient {
     }
 
     /**
-     * Update the user for the given user object
+     * Gets the current logged in user information.
      * 
-     * @param user what information on the user needs to be updated.
-     * @return user associated to that id with the updated information
+     * @return The user currently logged in.
      * @throws IOException
      * @throws SqlFragmentNotFoundException
      */
-    public User updateUserProfile(User user) throws SqlFragmentNotFoundException, IOException {
-        return userController.updateUserProfile(user);
+    public User getCurrentUser() throws SqlFragmentNotFoundException, IOException {
+        return userController.getCurrentUser();
     }
 
     /**
-     * Update the users credentials
+     * Update the user's information such as email, first name, last name, and
+     * password
      * 
+     * @param id   of the user
      * @param user what information on the user needs to be updated.
      * @return user associated to that id with the updated information
      * @throws IOException
      * @throws SqlFragmentNotFoundException
      */
-    public User updateUserPassword(AuthenticationRequest authRequest) throws SqlFragmentNotFoundException, IOException {
-        return userController.updateUserPassword(authRequest);
+    public User updateUser(User user) throws SqlFragmentNotFoundException, IOException {
+        return userController.updateUser(user);
     }
 }

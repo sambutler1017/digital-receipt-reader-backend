@@ -12,7 +12,6 @@ import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.app.user.service.UserService;
 import com.digital.receipt.common.enums.WebRole;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
-import com.digital.receipt.jwt.model.AuthenticationRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -63,7 +62,21 @@ public class UserController {
     }
 
     /**
-     * Update the user profile for the given user profile data.
+     * Gets the current logged in user information.
+     * 
+     * @return The user currently logged in.
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
+     */
+    @GetMapping(path = "/current-user", produces = APPLICATION_JSON_VALUE)
+    @HasAccess(WebRole.ADMIN)
+    public User getCurrentUser() throws SqlFragmentNotFoundException, IOException {
+        return userService.getCurrentUser();
+    }
+
+    /**
+     * Update the user's information such as email, first name, last name, and
+     * password
      * 
      * @param id   of the user
      * @param user what information on the user needs to be updated.
@@ -71,24 +84,9 @@ public class UserController {
      * @throws IOException
      * @throws SqlFragmentNotFoundException
      */
-    @PutMapping(path = "/profile", produces = APPLICATION_JSON_VALUE)
+    @PutMapping(produces = APPLICATION_JSON_VALUE)
     @HasAccess(WebRole.USER)
-    public User updateUserProfile(@RequestBody User user) throws SqlFragmentNotFoundException, IOException {
-        return userService.updateUserProfile(user);
-    }
-
-    /**
-     * Update the users credentials
-     * 
-     * @param user what information on the user needs to be updated.
-     * @return user associated to that id with the updated information
-     * @throws IOException
-     * @throws SqlFragmentNotFoundException
-     */
-    @PutMapping(path = "/password", produces = APPLICATION_JSON_VALUE)
-    @HasAccess(WebRole.USER)
-    public User updateUserPassword(@RequestBody AuthenticationRequest authRequest)
-            throws SqlFragmentNotFoundException, IOException {
-        return userService.updateUserPassword(authRequest);
+    public User updateUser(@RequestBody User user) throws SqlFragmentNotFoundException, IOException {
+        return userService.updateUser(user);
     }
 }

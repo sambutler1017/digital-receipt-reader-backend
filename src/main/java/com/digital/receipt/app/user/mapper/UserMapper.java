@@ -24,6 +24,7 @@ public class UserMapper implements RowMapper<User> {
         user.setLastName(rs.getString("last_name"));
         user.setEmail(rs.getString("email"));
         user.setWebRole(WebRole.getRole(rs.getInt("web_role_id")));
+        user.setForgotPassword(rs.getBoolean("forgot_password_flag"));
         user.setInsertDate(rs.getDate("insert_date_utc"));
 
         return user;
