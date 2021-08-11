@@ -106,7 +106,7 @@ public class UserDao extends AbstractSqlDao {
         Optional<Integer> updatedRow = Optional.of(0);
 
         try {
-            updatedRow = sqlClient.update(bundler.bundle(getSql("updateUserCredentials"),
+            updatedRow = sqlClient.update(bundler.bundle(getSql("updateUserPassword"),
                     params("password", PasswordHash.hashPassword(authRequest.getPassword())).addValue("id", userId)));
         } catch (NoSuchAlgorithmException e) {
             throw new BaseException("Could not hash password!");

@@ -39,7 +39,7 @@
 	WHERE
 		id = :id:
 
-@NAME(updateUserCredentials)
+@NAME(updateUserPassword)
     UPDATE user_credentials 
 	SET 
     	password = :password:
