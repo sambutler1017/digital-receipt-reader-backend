@@ -3,12 +3,18 @@ package com.digital.receipt.app.user.dao;
 import static com.digital.receipt.app.user.mapper.UserMapper.USER_MAPPER;
 
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
+import java.util.Optional;
 
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
+import com.digital.receipt.common.exceptions.BaseException;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
+import com.digital.receipt.common.exceptions.UserNotFoundException;
 import com.digital.receipt.jwt.model.AuthenticationRequest;
+import com.digital.receipt.jwt.utility.JwtHolder;
+import com.digital.receipt.service.util.PasswordHash;
 import com.digital.receipt.sql.AbstractSqlDao;
 import com.digital.receipt.sql.SqlBundler;
 import com.digital.receipt.sql.SqlClient;
@@ -30,6 +36,9 @@ public class UserDao extends AbstractSqlDao {
 
     @Autowired
     private SqlBundler bundler;
+
+    @Autowired
+    private JwtHolder jwtHolder;
 
     /**
      * Get users based on given request filter
@@ -67,20 +76,69 @@ public class UserDao extends AbstractSqlDao {
      * @throws IOException
      * @throws SqlFragmentNotFoundException
      */
-    public User updateUserById(User user) throws SqlFragmentNotFoundException, IOException {
-        return null;
+    public User updateUserProfile(User user) throws SqlFragmentNotFoundException, IOException {
+        User userProfile = getUserById(jwtHolder.getRequiredUserId());
+        int userId = userProfile.getId();
+        user = mapNonNullUserFields(user, userProfile);
+
+        Optional<Integer> updatedRow = sqlClient.update(bundler.bundle(getSql("updateUserProfile"),
+                params("firstName", user.getFirstName()).addValue("lastName", user.getLastName())
+                        .addValue("email", user.getEmail()).addValue("id", userId)));
+
+        if (!updatedRow.isPresent()) {
+            throw new UserNotFoundException(
+                    String.format("User not found! Could not update user for id: '%i'", userId));
+        }
+        return user;
     }
 
     /**
-     * Update the users credentials
+     * Update the users password
      * 
      * @param user what information on the user needs to be updated.
      * @return user associated to that id with the updated information
      * @throws IOException
      * @throws SqlFragmentNotFoundException
      */
-    public User updateUserCredentials(AuthenticationRequest authRequest)
-            throws SqlFragmentNotFoundException, IOException {
-        return null;
+    public User updateUserPassword(AuthenticationRequest authRequest) throws SqlFragmentNotFoundException, IOException {
+        User userProfile = getUserById(jwtHolder.getRequiredUserId());
+        int userId = userProfile.getId();
+        Optional<Integer> updatedRow = Optional.of(0);
+
+        try {
+            updatedRow = sqlClient.update(bundler.bundle(getSql("updateUserCredentials"),
+                    params("password", PasswordHash.hashPassword(authRequest.getPassword())).addValue("id", userId)));
+        } catch (NoSuchAlgorithmException e) {
+            throw new BaseException("Could not hash password!");
+        }
+
+        if (!updatedRow.isPresent()) {
+            throw new UserNotFoundException(
+                    String.format("User not found! Could not update user for id: '%i'", userId));
+        }
+        return userProfile;
+    }
+
+    /**
+     * Maps non null user fields from the source to the desitnation.
+     * 
+     * @param destination Where the null fields should be replaced.
+     * @param source      Where to get the replacements for the null fields.
+     * @return {@link User} with the replaced fields.
+     */
+    private User mapNonNullUserFields(User destination, User source) {
+        if (destination.getId() == 0)
+            destination.setId(source.getId());
+        if (destination.getFirstName() == null)
+            destination.setFirstName(source.getFirstName());
+        if (destination.getLastName() == null)
+            destination.setLastName(source.getLastName());
+        if (destination.getEmail() == null)
+            destination.setEmail(source.getEmail());
+        if (destination.getWebRole() == null)
+            destination.setWebRole(source.getWebRole());
+        if (destination.getInsertDate() == null)
+            destination.setInsertDate(source.getInsertDate());
+        return destination;
     }
 }

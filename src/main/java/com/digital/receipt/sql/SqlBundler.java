@@ -83,7 +83,7 @@ public class SqlBundler {
      * @return {@link Matcher} of the regex
      */
     private Matcher getParamTagMatcher(String line) {
-        return Pattern.compile(":\\w.*:").matcher(line);
+        return Pattern.compile(":([\\w]+):").matcher(line);
     }
 
     private String replaceCondition(String line, SqlParams params) {
@@ -97,19 +97,34 @@ public class SqlBundler {
             paramCondition.find();
             String paramField = paramCondition.group(0).trim();
             if (params.getValue(paramField) != null) {
-                QueryStatement replacingCondition = condition;
-                if (!hasWhereCondition) {
-                    replacingCondition = QueryStatement.WHERE;
-                    hasWhereCondition = true;
+                if (condition.equals(QueryStatement.IF)) {
+                    return hasIfCondition(line, paramField);
+                } else {
+                    QueryStatement replacingCondition = condition;
+                    if (!hasWhereCondition) {
+                        replacingCondition = QueryStatement.WHERE;
+                        hasWhereCondition = true;
+                    }
+                    return line.replace(String.format("%s(:%s:)", condition.annotation(), paramField),
+                            replacingCondition.text());
                 }
-                return line.replace(String.format("%s(:%s:)", condition.annotation(), paramField),
-                        replacingCondition.text());
             } else {
                 deleteNextLine = true;
                 return line.replace(String.format("%s(:%s:)", condition.annotation(), paramField), "");
             }
         }
         return line;
+    }
+
+    /**
+     * Get rid of the IF statement and keep the logic inside.
+     * 
+     * @param line       The query line to be updated
+     * @param paramField The field that we are looking for in the map.
+     * @return {@link String} of the updated line.
+     */
+    public String hasIfCondition(String line, String paramField) {
+        return line.replace(String.format("%s(:%s:)", QueryStatement.IF.annotation(), paramField), "");
     }
 
     /**
@@ -122,13 +137,22 @@ public class SqlBundler {
     private String replaceParam(String line, SqlParams params) {
         Matcher m = getParamTagMatcher(line);
 
-        if (m.find()) {
+        while (m.find()) {
             String paramField = m.group(0).replace(":", "").trim();
             Object paramValue = params.getValue(paramField);
 
-            if (deleteNextLine) {
-                deleteNextLine = false;
+            if (paramValue == null) {
                 return "";
+            }
+
+            if (deleteNextLine) {
+                long tabCount = line.chars().filter(c -> c == (int) '\t').count();
+                if (tabCount >= 2) {
+                    return "";
+                } else {
+                    deleteNextLine = false;
+                    return "";
+                }
             }
 
             if (paramValue instanceof List)

@@ -29,3 +29,19 @@
 		up.first_name = :firstName:
 	@AND(:lastName:)
 		up.lastr_name = :lastName:
+
+@NAME(updateUserProfile)
+    UPDATE user_profile 
+	SET 
+    	first_name = :firstName:,
+    	last_name  = :lastName:,
+		email      = :email:
+	WHERE
+		id = :id:
+
+@NAME(updateUserCredentials)
+    UPDATE user_credentials 
+	SET 
+    	password = :password:
+	WHERE
+		user_id = :id:

@@ -131,8 +131,12 @@ fabric.properties
 hs_err_pid*
 
 ### Gradle ###
-.gradle
+bin/
 build/
+.gradle
+.gradletasknamecache
+gradle-app.setting
+!gradle-wrapper.jar
 
 # Ignore Gradle GUI config
 gradle-app.setting

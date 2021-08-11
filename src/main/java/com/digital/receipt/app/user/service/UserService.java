@@ -57,7 +57,7 @@ public class UserService {
      * @throws SqlFragmentNotFoundException
      */
     public User updateUserProfile(User user) throws SqlFragmentNotFoundException, IOException {
-        return userDao.updateUserById(user);
+        return userDao.updateUserProfile(user);
     }
 
     /**
@@ -68,8 +68,7 @@ public class UserService {
      * @throws IOException
      * @throws SqlFragmentNotFoundException
      */
-    public User updateUserCredentials(AuthenticationRequest authRequest)
-            throws SqlFragmentNotFoundException, IOException {
-        return userDao.updateUserCredentials(authRequest);
+    public User updateUserPassword(AuthenticationRequest authRequest) throws SqlFragmentNotFoundException, IOException {
+        return userDao.updateUserPassword(authRequest);
     }
 }

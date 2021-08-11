@@ -85,10 +85,10 @@ public class UserController {
      * @throws IOException
      * @throws SqlFragmentNotFoundException
      */
-    @PutMapping(path = "/credentials", produces = APPLICATION_JSON_VALUE)
+    @PutMapping(path = "/password", produces = APPLICATION_JSON_VALUE)
     @HasAccess(WebRole.USER)
-    public User updateUserCredentials(@RequestBody AuthenticationRequest authRequest)
+    public User updateUserPassword(@RequestBody AuthenticationRequest authRequest)
             throws SqlFragmentNotFoundException, IOException {
-        return userService.updateUserCredentials(authRequest);
+        return userService.updateUserPassword(authRequest);
     }
 }
