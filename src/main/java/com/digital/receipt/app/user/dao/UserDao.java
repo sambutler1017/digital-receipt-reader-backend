@@ -92,7 +92,7 @@ public class UserDao extends AbstractSqlDao {
     }
 
     /**
-     * Update the users password
+     * Update the users password, for the given password.
      * 
      * @param user what information on the user needs to be updated.
      * @return user associated to that id with the updated information
