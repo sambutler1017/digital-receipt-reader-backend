@@ -84,6 +84,16 @@ public class SqlClient {
 	}
 
 	/**
+	 * Update method for a query.
+	 * 
+	 * @param query - The insert query to be run
+	 * @return Integer value of the auto_increment id if there is one
+	 */
+	public Optional<Integer> update(String query) {
+		return post(query);
+	}
+
+	/**
 	 * Common post method to be used when doing inserts into the database
 	 * 
 	 * @param query - The insert query to be run
@@ -100,6 +110,5 @@ public class SqlClient {
 		} catch (Exception e) {
 			return Optional.of(-1);
 		}
-
 	}
 }

@@ -31,12 +31,12 @@ public class AuthenticationService {
     /**
      * Verifies user credentials passed as a JWTRequest
      *
-     * @param username - Entered username at login.
-     * @param password - Password entered at login.
-     * @throws Exception - Throw an exception if the credentials do not match.
+     * @param email    Entered email at login.
+     * @param password Password entered at login.
+     * @throws Exception Throw an exception if the credentials do not match.
      */
-    public User verifyUser(String username, String password) throws Exception {
-        User authenticatedUser = authDao.authenticateUser(username, PasswordHash.hashPassword(password));
+    public User verifyUser(String email, String password) throws Exception {
+        User authenticatedUser = authDao.authenticateUser(email, PasswordHash.hashPassword(password));
 
         if (authenticatedUser == null) {
             throw new Exception("Invalid Credentials!");

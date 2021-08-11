@@ -11,6 +11,6 @@
 			JOIN
 		user_credentials uc ON up.id = uc.user_id
 	WHERE
-		up.email = :username:
+		up.email = :email:
 	AND
 		uc.password = :password:

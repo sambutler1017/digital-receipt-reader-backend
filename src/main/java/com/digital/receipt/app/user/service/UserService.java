@@ -7,6 +7,7 @@ import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.app.user.dao.UserDao;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
+import com.digital.receipt.jwt.model.AuthenticationRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -45,5 +46,29 @@ public class UserService {
      */
     public User getUserById(int id) throws SqlFragmentNotFoundException, IOException {
         return userDao.getUserById(id);
+    }
+
+    /**
+     * Update the user for the given user object
+     * 
+     * @param user what information on the user needs to be updated.
+     * @return user associated to that id with the updated information
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
+     */
+    public User updateUserProfile(User user) throws SqlFragmentNotFoundException, IOException {
+        return userDao.updateUserProfile(user);
+    }
+
+    /**
+     * Update the users credentials
+     * 
+     * @param user what information on the user needs to be updated.
+     * @return user associated to that id with the updated information
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
+     */
+    public User updateUserPassword(AuthenticationRequest authRequest) throws SqlFragmentNotFoundException, IOException {
+        return userDao.updateUserPassword(authRequest);
     }
 }
