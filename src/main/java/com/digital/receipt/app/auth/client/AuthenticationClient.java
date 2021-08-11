@@ -22,18 +22,18 @@ public class AuthenticationClient {
     /**
      * Verifies user credentials passed as a JWTRequest
      *
-     * @param username - Entered username at login.
+     * @param email    - Entered email at login.
      * @param password - Password entered at login.
      * @throws Exception - Throw an exception if the credentials do not match.
      */
-    public ResponseEntity<DigitalReceiptToken> verifyUser(String username, String password) throws Exception {
-        return authController.authenticateUser(new AuthenticationRequest(username, password));
+    public ResponseEntity<DigitalReceiptToken> verifyUser(String email, String password) throws Exception {
+        return authController.authenticateUser(new AuthenticationRequest(email, password));
     }
 
     /**
      * Reauthenticates a user and generates a new token.
      *
-     * @param authenticationRequest - JWT request. A username and password.
+     * @param authenticationRequest A email and password request.
      * @return a new JWT.
      * @throws Exception - If user does not exist.
      */

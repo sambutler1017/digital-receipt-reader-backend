@@ -37,7 +37,7 @@ public class JwtTokenUtil implements Serializable {
     }
 
     /**
-     * Pulls the username (Subject Field) from the token
+     * Pulls the email (Subject Field) from the token
      * 
      * @param token - The token being inspected
      * @return String of the subject field

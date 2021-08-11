@@ -35,14 +35,14 @@ public class AuthenticationController {
     /**
      * Generates a JWT token from a request
      *
-     * @param authenticationRequest - JWT request. A username and password.
+     * @param authenticationRequest A email and password request.
      * @return a new JWT.
      * @throws Exception - if authentication request does not match a user.
      */
     @PostMapping(path = "/authenticate", produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<DigitalReceiptToken> authenticateUser(
             @RequestBody AuthenticationRequest authenticationRequest) throws Exception {
-        User user = authService.verifyUser(authenticationRequest.getUsername(), authenticationRequest.getPassword());
+        User user = authService.verifyUser(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
         final String token = jwtTokenUtil.generateToken(user);
         return ResponseEntity
@@ -53,9 +53,9 @@ public class AuthenticationController {
     /**
      * Reauthenticates a user and generates a new token.
      *
-     * @param authenticationRequest - JWT request. A username and password.
+     * @param authenticationRequest A email and password request.
      * @return a new JWT.
-     * @throws Exception - If user does not exist.
+     * @throws Exception If user does not exist.
      */
     @PostMapping(path = "/reauthenticate", produces = APPLICATION_JSON_VALUE)
     @HasAccess(WebRole.ADMIN)

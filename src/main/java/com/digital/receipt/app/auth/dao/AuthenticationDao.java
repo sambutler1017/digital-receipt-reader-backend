@@ -33,16 +33,17 @@ public class AuthenticationDao extends AbstractSqlDao {
      * Not an exposed endpoint, strictly used by the authentication controller to
      * autheticate a user.
      * 
-     * @param username To search for in the database
+     * @param email    To search for in the database
      * @param password The password to validate against
      * @return User object if the user credentials are correct.
      * @throws SqlFragmentNotFoundException
      * @throws IOException
      */
-    public User authenticateUser(String username, String password) throws SqlFragmentNotFoundException, IOException {
+    public User authenticateUser(String email, String password) throws SqlFragmentNotFoundException, IOException {
         try {
-            return sqlClient.getTemplate(bundler.bundle(getSql("authenticateUser"),
-                    params("username", username).addValue("password", password)), AUTH_MAPPER);
+            return sqlClient.getTemplate(
+                    bundler.bundle(getSql("authenticateUser"), params("email", email).addValue("password", password)),
+                    AUTH_MAPPER);
         } catch (EmptyResultDataAccessException e) {
             return null;
         }
