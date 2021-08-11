@@ -51,3 +51,10 @@
     	password = :password:
 	WHERE
 		user_id = :id:
+
+@NAME(updateUserForgotPassword)
+    UPDATE user_credentials 
+	SET 
+    	forgot_password_flag = :flag:
+	WHERE
+		user_id = :id:

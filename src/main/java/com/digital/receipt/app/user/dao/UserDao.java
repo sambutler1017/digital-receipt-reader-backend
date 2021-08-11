@@ -115,6 +115,29 @@ public class UserDao extends AbstractSqlDao {
     }
 
     /**
+     * Will set the forgot password flag to the given boolean value.
+     * 
+     * @param flag The flag to set the forgot password too.
+     * @return user associated to that id with the updated information
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
+     */
+    public User updateUserForgotPassword(boolean flag) throws SqlFragmentNotFoundException, IOException {
+        User userProfile = getUserById(jwtHolder.getRequiredUserId());
+        int userId = userProfile.getId();
+        Optional<Integer> updatedRow = Optional.of(0);
+
+        updatedRow = sqlClient.update(bundler.bundle(getSql("updateUserForgotPassword"),
+                params("flag", flag ? 1 : 0).addValue("id", userId)));
+
+        if (!updatedRow.isPresent()) {
+            throw new UserNotFoundException(
+                    String.format("User not found! Could not update user for id: '%i'", userId));
+        }
+        return userProfile;
+    }
+
+    /**
      * Maps non null user fields from the source to the desitnation.
      * 
      * @param destination Where the null fields should be replaced.
