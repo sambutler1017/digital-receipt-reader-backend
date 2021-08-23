@@ -58,3 +58,8 @@
     	forgot_password_flag = :flag:
 	WHERE
 		user_id = :id:
+
+@NAME(deleteUser)
+	DELETE FROM user_profile
+	WHERE
+    	id = :id:

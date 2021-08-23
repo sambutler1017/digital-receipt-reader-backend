@@ -14,6 +14,7 @@ import com.digital.receipt.common.enums.WebRole;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -88,5 +89,19 @@ public class UserController {
     @HasAccess(WebRole.USER)
     public User updateUser(@RequestBody User user) throws SqlFragmentNotFoundException, IOException {
         return userService.updateUser(user);
+    }
+
+    /**
+     * Will delete a user for the given id. This endpoint can only be accessed by a
+     * user with admin access.
+     * 
+     * @param id of the user that is to be deleted.
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
+     */
+    @DeleteMapping("/{id}")
+    @HasAccess(WebRole.ADMIN)
+    public void deleteUser(@PathVariable int id) throws SqlFragmentNotFoundException, IOException {
+        userService.deleteUser(id);
     }
 }

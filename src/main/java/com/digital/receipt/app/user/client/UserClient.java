@@ -73,4 +73,16 @@ public class UserClient {
     public User updateUser(User user) throws SqlFragmentNotFoundException, IOException {
         return userController.updateUser(user);
     }
+
+    /**
+     * Will delete a user for the given id. This endpoint can only be accessed by a
+     * user with admin access.
+     * 
+     * @param id of the user that is to be deleted.
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
+     */
+    public void deleteUser(int id) throws SqlFragmentNotFoundException, IOException {
+        userController.deleteUser(id);
+    }
 }
