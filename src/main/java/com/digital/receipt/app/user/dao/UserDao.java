@@ -61,7 +61,11 @@ public class UserDao extends AbstractSqlDao {
      * @throws SqlFragmentNotFoundException
      */
     public User getUserById(int id) throws SqlFragmentNotFoundException, IOException {
-        return sqlClient.getTemplate(bundler.bundle(getSql("getUserById"), params("userId", id)), USER_MAPPER);
+        try {
+            return sqlClient.getTemplate(bundler.bundle(getSql("getUserById"), params("userId", id)), USER_MAPPER);
+        } catch (Exception e) {
+            throw new UserNotFoundException(String.format("User not found for id: %d", id));
+        }
     }
 
     /**
@@ -112,6 +116,41 @@ public class UserDao extends AbstractSqlDao {
                     String.format("User not found! Could not update user for id: '%i'", userId));
         }
         return userProfile;
+    }
+
+    /**
+     * Will set the forgot password flag to the given boolean value.
+     * 
+     * @param flag The flag to set the forgot password too.
+     * @return user associated to that id with the updated information
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
+     */
+    public User updateUserForgotPassword(boolean flag) throws SqlFragmentNotFoundException, IOException {
+        User userProfile = getUserById(jwtHolder.getRequiredUserId());
+        int userId = userProfile.getId();
+        Optional<Integer> updatedRow = Optional.of(0);
+
+        updatedRow = sqlClient.update(bundler.bundle(getSql("updateUserForgotPassword"),
+                params("flag", flag ? 1 : 0).addValue("id", userId)));
+
+        if (!updatedRow.isPresent()) {
+            throw new UserNotFoundException(
+                    String.format("User not found! Could not update user for id: '%i'", userId));
+        }
+        return userProfile;
+    }
+
+    /**
+     * Will delete a user for the given id. This endpoint can only be accessed by a
+     * user with admin access.
+     * 
+     * @param id of the user that is to be deleted.
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
+     */
+    public void deleteUser(int id) throws SqlFragmentNotFoundException, IOException {
+        sqlClient.delete(bundler.bundle(getSql("deleteUser"), params("id", id)));
     }
 
     /**

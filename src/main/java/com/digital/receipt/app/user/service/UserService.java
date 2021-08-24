@@ -31,7 +31,7 @@ public class UserService {
     private JwtHolder jwtHolder;
 
     /**
-     * Get users based on given request filter
+     * Get users based on given request filter.
      * 
      * @param request of the user
      * @return User profile object {@link User}
@@ -43,7 +43,7 @@ public class UserService {
     }
 
     /**
-     * Service to get a users profile given the user id
+     * Service to get a users profile given the user id.
      * 
      * @param id of the user
      * @return User profile object {@link User}
@@ -55,7 +55,7 @@ public class UserService {
     }
 
     /**
-     * Get the current user from the jwt token
+     * Get the current user from the jwt token.
      * 
      * @return User profile object {@link User}
      * @throws IOException
@@ -75,11 +75,25 @@ public class UserService {
      */
     public User updateUser(User user) throws SqlFragmentNotFoundException, IOException {
         updateUserPassword(user.getPassword());
+        updateUserForgotPassword(user.isForgotPassword());
         return updateUserProfile(user);
     }
 
     /**
-     * Update the user for the given user object
+     * Will delete a user for the given id. This endpoint can only be accessed by a
+     * user with admin access.
+     * 
+     * @param id of the user that is to be deleted.
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
+     */
+    public void deleteUser(int id) throws SqlFragmentNotFoundException, IOException {
+        getUserById(id);
+        userDao.deleteUser(id);
+    }
+
+    /**
+     * Update the user for the given user object.
      * 
      * @param user what information on the user needs to be updated.
      * @return user associated to that id with the updated information
@@ -91,7 +105,7 @@ public class UserService {
     }
 
     /**
-     * Update the users credentials
+     * Update the users credentials.
      * 
      * @param user what information on the user needs to be updated.
      * @return user associated to that id with the updated information
@@ -108,5 +122,17 @@ public class UserService {
         } catch (NoSuchAlgorithmException e) {
             throw new BaseException("Could not hash password!");
         }
+    }
+
+    /**
+     * Will set the forgot password flag to the given boolean value.
+     * 
+     * @param flag The flag to set the forgot password too.
+     * @return user associated to that id with the updated information
+     * @throws IOException
+     * @throws SqlFragmentNotFoundException
+     */
+    public User updateUserForgotPassword(boolean flag) throws SqlFragmentNotFoundException, IOException {
+        return userDao.updateUserForgotPassword(flag);
     }
 }
