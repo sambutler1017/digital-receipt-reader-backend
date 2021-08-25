@@ -32,11 +32,9 @@ public class JwtRequestFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
-        if (JWTValidator.isVoidEndpoint(request.getRequestURI(), request.getMethod())) {
-            chain.doFilter(request, response);
-        } else {
+        if (!JWTValidator.isVoidEndpoint(request.getRequestURI(), request.getMethod())) {
             JWTValidator.isValidJwt(request);
-            chain.doFilter(request, response);
         }
+        chain.doFilter(request, response);
     }
 }

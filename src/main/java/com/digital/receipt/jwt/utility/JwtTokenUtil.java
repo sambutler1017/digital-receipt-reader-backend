@@ -9,6 +9,7 @@ import java.util.function.Function;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.service.activeProfile.ActiveProfile;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.jsonwebtoken.Claims;
@@ -30,10 +31,11 @@ public class JwtTokenUtil implements Serializable {
 
     private ActiveProfile activeProfile;
 
+    @Autowired
     public JwtTokenUtil(ActiveProfile profile) {
         activeProfile = profile;
         secret = activeProfile.getSigningKey();
-        JWT_TOKEN_VALIDITY = 18000000;
+        JWT_TOKEN_VALIDITY = 18000000; // 5 hours
     }
 
     /**
