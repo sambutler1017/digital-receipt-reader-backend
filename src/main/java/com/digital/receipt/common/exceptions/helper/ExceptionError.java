@@ -1,4 +1,4 @@
-package com.digital.receipt.common.exceptions;
+package com.digital.receipt.common.exceptions.helper;
 
 import java.util.Date;
 

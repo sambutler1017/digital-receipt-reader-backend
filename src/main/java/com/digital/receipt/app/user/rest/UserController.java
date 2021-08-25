@@ -86,6 +86,19 @@ public class UserController {
     }
 
     /**
+     * Updates a user role, this endpoint can only be used by Admins.
+     * 
+     * @param id of the user
+     * @return user associated to that id with the updated information
+     * @throws Exception
+     */
+    @PutMapping(path = "/{id}/role/{role}", produces = APPLICATION_JSON_VALUE)
+    @HasAccess(WebRole.ADMIN)
+    public User updateUserRole(@PathVariable int id, @PathVariable String role) throws Exception {
+        return userService.updateUserRole(id, WebRole.valueOf(role));
+    }
+
+    /**
      * Will delete a user for the given id. This endpoint can only be accessed by a
      * user with admin access.
      * 

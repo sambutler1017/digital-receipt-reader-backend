@@ -6,6 +6,7 @@ import java.util.List;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.app.user.dao.UserDao;
+import com.digital.receipt.common.enums.WebRole;
 import com.digital.receipt.common.exceptions.BaseException;
 import com.digital.receipt.jwt.utility.JwtHolder;
 import com.digital.receipt.service.util.PasswordHash;
@@ -69,8 +70,19 @@ public class UserService {
      */
     public User updateUser(User user) throws Exception {
         updateUserPassword(user.getPassword());
-        updateUserForgotPassword(user.isForgotPassword());
+        updateUserForgotPasswordFlag(user.isForgotPassword());
         return updateUserProfile(user);
+    }
+
+    /**
+     * Updates a user role, this endpoint can only be used by Admins.
+     * 
+     * @param id of the user
+     * @return user associated to that id with the updated information
+     * @throws Exception
+     */
+    public User updateUserRole(int id, WebRole role) throws Exception {
+        return userDao.updateUserRole(id, role);
     }
 
     /**
@@ -122,7 +134,7 @@ public class UserService {
      * @return user associated to that id with the updated information
      * @throws Exception
      */
-    public User updateUserForgotPassword(boolean flag) throws Exception {
-        return userDao.updateUserForgotPassword(flag);
+    public User updateUserForgotPasswordFlag(boolean flag) throws Exception {
+        return userDao.updateUserForgotPasswordFlag(flag);
     }
 }

@@ -3,10 +3,10 @@ package com.digital.receipt.app.user.dao;
 import static com.digital.receipt.app.user.mapper.UserMapper.USER_MAPPER;
 
 import java.util.List;
-import java.util.Optional;
 
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
+import com.digital.receipt.common.enums.WebRole;
 import com.digital.receipt.common.exceptions.UserNotFoundException;
 import com.digital.receipt.jwt.utility.JwtHolder;
 import com.digital.receipt.sql.AbstractSqlDao;
@@ -70,19 +70,14 @@ public class UserDao extends AbstractSqlDao {
      */
     public User updateUserProfile(User user) throws Exception {
         User userProfile = getUserById(jwtHolder.getRequiredUserId());
-        int userId = userProfile.getId();
 
         user.setPassword(null);
         user = mapNonNullUserFields(user, userProfile);
 
-        Optional<Integer> updatedRow = sqlClient.update(getSql("updateUserProfile"),
+        sqlClient.update(getSql("updateUserProfile"),
                 params("firstName", user.getFirstName()).addValue("lastName", user.getLastName())
-                        .addValue("email", user.getEmail()).addValue("id", userId));
+                        .addValue("email", user.getEmail()).addValue("id", userProfile.getId()));
 
-        if (!updatedRow.isPresent()) {
-            throw new UserNotFoundException(
-                    String.format("User not found! Could not update user for id: '%i'", userId));
-        }
         return user;
     }
 
@@ -95,16 +90,9 @@ public class UserDao extends AbstractSqlDao {
      */
     public User updateUserPassword(String password) throws Exception {
         User userProfile = getUserById(jwtHolder.getRequiredUserId());
-        int userId = userProfile.getId();
-        Optional<Integer> updatedRow = Optional.of(0);
 
-        updatedRow = sqlClient.update(getSql("updateUserPassword"),
-                params("password", password).addValue("id", userId));
-
-        if (!updatedRow.isPresent()) {
-            throw new UserNotFoundException(
-                    String.format("User not found! Could not update user for id: '%i'", userId));
-        }
+        sqlClient.update(getSql("updateUserPassword"),
+                params("password", password).addValue("id", userProfile.getId()));
         return userProfile;
     }
 
@@ -115,18 +103,26 @@ public class UserDao extends AbstractSqlDao {
      * @return user associated to that id with the updated information
      * @throws Exception
      */
-    public User updateUserForgotPassword(boolean flag) throws Exception {
+    public User updateUserForgotPasswordFlag(boolean flag) throws Exception {
         User userProfile = getUserById(jwtHolder.getRequiredUserId());
-        int userId = userProfile.getId();
-        Optional<Integer> updatedRow = Optional.of(0);
 
-        updatedRow = sqlClient.update(getSql("updateUserForgotPassword"),
-                params("flag", flag ? 1 : 0).addValue("id", userId));
+        sqlClient.update(getSql("updateUserForgotPassword"),
+                params("flag", flag ? 1 : 0).addValue("id", userProfile.getId()));
+        return userProfile;
+    }
 
-        if (!updatedRow.isPresent()) {
-            throw new UserNotFoundException(
-                    String.format("User not found! Could not update user for id: '%i'", userId));
-        }
+    /**
+     * Updates a user role, this endpoint can only be used by Admins.
+     * 
+     * @param id of the user
+     * @return user associated to that id with the updated information
+     * @throws Exception
+     */
+    public User updateUserRole(int id, WebRole role) throws Exception {
+        User userProfile = getUserById(id);
+
+        userProfile.setWebRole(role);
+        sqlClient.update(getSql("updateUserRole"), params("id", id).addValue("roleId", role.getValue()));
         return userProfile;
     }
 
@@ -138,6 +134,7 @@ public class UserDao extends AbstractSqlDao {
      * @throws Exception
      */
     public void deleteUser(int id) throws Exception {
+        getUserById(id);
         sqlClient.delete(getSql("deleteUser"), params("id", id));
     }
 

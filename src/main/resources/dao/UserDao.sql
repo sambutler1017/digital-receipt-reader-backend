@@ -59,6 +59,14 @@
 	WHERE
 		user_id = :id:
 
+@NAME(updateUserRole)
+	UPDATE user_profile
+	SET
+		web_role_id = :roleId:
+	WHERE
+		id = :id:
+
+
 @NAME(deleteUser)
 	DELETE FROM user_profile
 	WHERE

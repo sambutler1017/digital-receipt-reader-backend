@@ -1,4 +1,6 @@
-package com.digital.receipt.common.exceptions;
+package com.digital.receipt.common.exceptions.helper;
+
+import com.digital.receipt.common.exceptions.InvalidCredentialsException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
