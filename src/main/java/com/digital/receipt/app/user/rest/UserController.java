@@ -70,7 +70,7 @@ public class UserController {
      * @throws SqlFragmentNotFoundException
      */
     @GetMapping(path = "/current-user", produces = APPLICATION_JSON_VALUE)
-    @HasAccess(WebRole.ADMIN)
+    @HasAccess(WebRole.USER)
     public User getCurrentUser() throws SqlFragmentNotFoundException, IOException {
         return userService.getCurrentUser();
     }
