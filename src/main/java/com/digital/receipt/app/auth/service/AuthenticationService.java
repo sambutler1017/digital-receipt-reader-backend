@@ -3,6 +3,7 @@ package com.digital.receipt.app.auth.service;
 import com.digital.receipt.app.auth.dao.AuthenticationDao;
 import com.digital.receipt.app.user.client.UserClient;
 import com.digital.receipt.app.user.client.domain.User;
+import com.digital.receipt.common.exceptions.InvalidCredentialsException;
 import com.digital.receipt.jwt.utility.JwtHolder;
 import com.digital.receipt.service.util.PasswordHash;
 
@@ -39,7 +40,7 @@ public class AuthenticationService {
         User authenticatedUser = authDao.authenticateUser(email, PasswordHash.hashPassword(password));
 
         if (authenticatedUser == null) {
-            throw new Exception("Invalid Credentials!");
+            throw new InvalidCredentialsException("Invalid Credentials!");
         }
 
         return authenticatedUser;
