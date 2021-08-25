@@ -26,11 +26,12 @@ public abstract class AbstractSqlDao {
 
     private final String defaultSqlPath = "%s/resources/dao/%s.sql";
 
+    private boolean startOfFragmentFound;
+
+    private boolean endOfFragmentFound;
+
     @Autowired
     private ActiveProfile activeProfile;
-
-    private boolean startOfFragmentFound;
-    private boolean endOfFragmentFound;
 
     /**
      * Gets the sql based on the given fragment name.
