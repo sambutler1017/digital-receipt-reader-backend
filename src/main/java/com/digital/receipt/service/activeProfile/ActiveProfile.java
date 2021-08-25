@@ -38,7 +38,7 @@ public class ActiveProfile {
      * @return string of the environment currently running
      */
     public Environment getEnvironment() {
-        return System.getenv("APP_ENVIRONMENT") != null ? Environment.PROD : Environment.LOCAL;
+        return System.getenv("APP_ENVIRONMENT") != null ? Environment.PRODUCTION : Environment.LOCAL;
     }
 
     /**
