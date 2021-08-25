@@ -3,7 +3,6 @@ package com.digital.receipt.app.auth.service;
 import com.digital.receipt.app.auth.dao.AuthenticationDao;
 import com.digital.receipt.app.user.client.UserClient;
 import com.digital.receipt.app.user.client.domain.User;
-import com.digital.receipt.common.exceptions.InvalidCredentialsException;
 import com.digital.receipt.jwt.utility.JwtHolder;
 import com.digital.receipt.service.util.PasswordHash;
 
@@ -37,13 +36,7 @@ public class AuthenticationService {
      * @throws Exception Throw an exception if the credentials do not match.
      */
     public User verifyUser(String email, String password) throws Exception {
-        User authenticatedUser = authDao.authenticateUser(email, PasswordHash.hashPassword(password));
-
-        if (authenticatedUser == null) {
-            throw new InvalidCredentialsException("Invalid Credentials!");
-        }
-
-        return authenticatedUser;
+        return authDao.authenticateUser(email, PasswordHash.hashPassword(password));
     }
 
     /**

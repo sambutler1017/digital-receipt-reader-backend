@@ -5,9 +5,9 @@ import static com.digital.receipt.app.auth.mapper.AuthenticationMapper.AUTH_MAPP
 import java.io.IOException;
 
 import com.digital.receipt.app.user.client.domain.User;
+import com.digital.receipt.common.exceptions.InvalidCredentialsException;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
 import com.digital.receipt.sql.AbstractSqlDao;
-import com.digital.receipt.sql.SqlBundler;
 import com.digital.receipt.sql.SqlClient;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +26,6 @@ public class AuthenticationDao extends AbstractSqlDao {
     @Autowired
     private SqlClient sqlClient;
 
-    @Autowired
-    private SqlBundler bundler;
-
     /**
      * Not an exposed endpoint, strictly used by the authentication controller to
      * autheticate a user.
@@ -41,11 +38,10 @@ public class AuthenticationDao extends AbstractSqlDao {
      */
     public User authenticateUser(String email, String password) throws SqlFragmentNotFoundException, IOException {
         try {
-            return sqlClient.getTemplate(
-                    bundler.bundle(getSql("authenticateUser"), params("email", email).addValue("password", password)),
-                    AUTH_MAPPER);
+            return sqlClient.getTemplate(getSql("authenticateUser"),
+                    params("email", email).addValue("password", password), AUTH_MAPPER);
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            throw new InvalidCredentialsException("Invalid Credentials!");
         }
     }
 }

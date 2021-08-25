@@ -12,7 +12,6 @@ import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
 import com.digital.receipt.common.exceptions.UserNotFoundException;
 import com.digital.receipt.jwt.utility.JwtHolder;
 import com.digital.receipt.sql.AbstractSqlDao;
-import com.digital.receipt.sql.SqlBundler;
 import com.digital.receipt.sql.SqlClient;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +30,6 @@ public class UserDao extends AbstractSqlDao {
     private SqlClient sqlClient;
 
     @Autowired
-    private SqlBundler bundler;
-
-    @Autowired
     private JwtHolder jwtHolder;
 
     /**
@@ -45,9 +41,9 @@ public class UserDao extends AbstractSqlDao {
      * @throws SqlFragmentNotFoundException
      */
     public List<User> getUsers(UserGetRequest request) throws SqlFragmentNotFoundException, IOException {
-        return sqlClient.getPage(
-                bundler.bundle(getSql("getUsers"), params("id", request.getId()).addValue("email", request.getEmail())
-                        .addValue("firstName", request.getFirstName()).addValue("lastName", request.getLastName())),
+        return sqlClient.getPage(getSql("getUsers"),
+                params("id", request.getId()).addValue("email", request.getEmail())
+                        .addValue("firstName", request.getFirstName()).addValue("lastName", request.getLastName()),
                 USER_MAPPER);
     }
 
@@ -62,7 +58,7 @@ public class UserDao extends AbstractSqlDao {
      */
     public User getUserById(int id) throws SqlFragmentNotFoundException, IOException {
         try {
-            return sqlClient.getTemplate(bundler.bundle(getSql("getUserById"), params("userId", id)), USER_MAPPER);
+            return sqlClient.getTemplate(getSql("getUserById"), params("userId", id), USER_MAPPER);
         } catch (Exception e) {
             throw new UserNotFoundException(String.format("User not found for id: %d", id));
         }
@@ -84,9 +80,9 @@ public class UserDao extends AbstractSqlDao {
         user.setPassword(null);
         user = mapNonNullUserFields(user, userProfile);
 
-        Optional<Integer> updatedRow = sqlClient.update(bundler.bundle(getSql("updateUserProfile"),
+        Optional<Integer> updatedRow = sqlClient.update(getSql("updateUserProfile"),
                 params("firstName", user.getFirstName()).addValue("lastName", user.getLastName())
-                        .addValue("email", user.getEmail()).addValue("id", userId)));
+                        .addValue("email", user.getEmail()).addValue("id", userId));
 
         if (!updatedRow.isPresent()) {
             throw new UserNotFoundException(
@@ -108,8 +104,8 @@ public class UserDao extends AbstractSqlDao {
         int userId = userProfile.getId();
         Optional<Integer> updatedRow = Optional.of(0);
 
-        updatedRow = sqlClient.update(
-                bundler.bundle(getSql("updateUserPassword"), params("password", password).addValue("id", userId)));
+        updatedRow = sqlClient.update(getSql("updateUserPassword"),
+                params("password", password).addValue("id", userId));
 
         if (!updatedRow.isPresent()) {
             throw new UserNotFoundException(
@@ -131,8 +127,8 @@ public class UserDao extends AbstractSqlDao {
         int userId = userProfile.getId();
         Optional<Integer> updatedRow = Optional.of(0);
 
-        updatedRow = sqlClient.update(bundler.bundle(getSql("updateUserForgotPassword"),
-                params("flag", flag ? 1 : 0).addValue("id", userId)));
+        updatedRow = sqlClient.update(getSql("updateUserForgotPassword"),
+                params("flag", flag ? 1 : 0).addValue("id", userId));
 
         if (!updatedRow.isPresent()) {
             throw new UserNotFoundException(
@@ -150,7 +146,7 @@ public class UserDao extends AbstractSqlDao {
      * @throws SqlFragmentNotFoundException
      */
     public void deleteUser(int id) throws SqlFragmentNotFoundException, IOException {
-        sqlClient.delete(bundler.bundle(getSql("deleteUser"), params("id", id)));
+        sqlClient.delete(getSql("deleteUser"), params("id", id));
     }
 
     /**
