@@ -36,7 +36,7 @@ public class AuthenticationDao extends AbstractSqlDao {
      * @throws SqlFragmentNotFoundException
      * @throws IOException
      */
-    public User authenticateUser(String email, String password) throws SqlFragmentNotFoundException, IOException {
+    public User authenticateUser(String email, String password) throws Exception {
         try {
             return sqlClient.getTemplate(getSql("authenticateUser"),
                     params("email", email).addValue("password", password), AUTH_MAPPER);

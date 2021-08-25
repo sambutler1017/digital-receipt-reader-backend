@@ -2,13 +2,11 @@ package com.digital.receipt.app.user.dao;
 
 import static com.digital.receipt.app.user.mapper.UserMapper.USER_MAPPER;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
-import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
 import com.digital.receipt.common.exceptions.UserNotFoundException;
 import com.digital.receipt.jwt.utility.JwtHolder;
 import com.digital.receipt.sql.AbstractSqlDao;
@@ -37,10 +35,9 @@ public class UserDao extends AbstractSqlDao {
      * 
      * @param request of the user
      * @return User profile object {@link User}
-     * @throws IOException
-     * @throws SqlFragmentNotFoundException
+     * @throws Exception
      */
-    public List<User> getUsers(UserGetRequest request) throws SqlFragmentNotFoundException, IOException {
+    public List<User> getUsers(UserGetRequest request) throws Exception {
         return sqlClient.getPage(getSql("getUsers"),
                 params("id", request.getId()).addValue("email", request.getEmail())
                         .addValue("firstName", request.getFirstName()).addValue("lastName", request.getLastName()),
@@ -53,10 +50,9 @@ public class UserDao extends AbstractSqlDao {
      * 
      * @param id of the user
      * @return User profile object {@link UserProfile}
-     * @throws IOException
-     * @throws SqlFragmentNotFoundException
+     * @throws Exception
      */
-    public User getUserById(int id) throws SqlFragmentNotFoundException, IOException {
+    public User getUserById(int id) throws Exception {
         try {
             return sqlClient.getTemplate(getSql("getUserById"), params("userId", id), USER_MAPPER);
         } catch (Exception e) {
@@ -70,10 +66,9 @@ public class UserDao extends AbstractSqlDao {
      * 
      * @param user what information on the user needs to be updated.
      * @return user associated to that id with the updated information
-     * @throws IOException
-     * @throws SqlFragmentNotFoundException
+     * @throws Exception
      */
-    public User updateUserProfile(User user) throws SqlFragmentNotFoundException, IOException {
+    public User updateUserProfile(User user) throws Exception {
         User userProfile = getUserById(jwtHolder.getRequiredUserId());
         int userId = userProfile.getId();
 
@@ -96,10 +91,9 @@ public class UserDao extends AbstractSqlDao {
      * 
      * @param user what information on the user needs to be updated.
      * @return user associated to that id with the updated information
-     * @throws IOException
-     * @throws SqlFragmentNotFoundException
+     * @throws Exception
      */
-    public User updateUserPassword(String password) throws SqlFragmentNotFoundException, IOException {
+    public User updateUserPassword(String password) throws Exception {
         User userProfile = getUserById(jwtHolder.getRequiredUserId());
         int userId = userProfile.getId();
         Optional<Integer> updatedRow = Optional.of(0);
@@ -119,10 +113,9 @@ public class UserDao extends AbstractSqlDao {
      * 
      * @param flag The flag to set the forgot password too.
      * @return user associated to that id with the updated information
-     * @throws IOException
-     * @throws SqlFragmentNotFoundException
+     * @throws Exception
      */
-    public User updateUserForgotPassword(boolean flag) throws SqlFragmentNotFoundException, IOException {
+    public User updateUserForgotPassword(boolean flag) throws Exception {
         User userProfile = getUserById(jwtHolder.getRequiredUserId());
         int userId = userProfile.getId();
         Optional<Integer> updatedRow = Optional.of(0);
@@ -142,10 +135,9 @@ public class UserDao extends AbstractSqlDao {
      * user with admin access.
      * 
      * @param id of the user that is to be deleted.
-     * @throws IOException
-     * @throws SqlFragmentNotFoundException
+     * @throws Exception
      */
-    public void deleteUser(int id) throws SqlFragmentNotFoundException, IOException {
+    public void deleteUser(int id) throws Exception {
         sqlClient.delete(getSql("deleteUser"), params("id", id));
     }
 

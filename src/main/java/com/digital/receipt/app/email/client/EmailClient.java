@@ -1,7 +1,6 @@
 package com.digital.receipt.app.email.client;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import javax.mail.MessagingException;
 
@@ -9,7 +8,6 @@ import com.digital.receipt.annotations.interfaces.Client;
 import com.digital.receipt.app.email.client.domain.UserEmail;
 import com.digital.receipt.app.email.rest.EmailController;
 import com.digital.receipt.app.user.client.domain.User;
-import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -44,14 +42,9 @@ public class EmailClient {
      * 
      * @param email Email to search for and send an email too.
      * @return {@link User} object of the found user
-     * @throws MessagingException           If an error occurs processing the
-     *                                      message
-     * @throws SqlFragmentNotFoundException The name of the fragment for sql is not
-     *                                      found.
-     * @throws IOException                  If the forgot password file can not be
-     *                                      found.
+     * @throws Exception
      */
-    public User forgotPassword(String email) throws SqlFragmentNotFoundException, MessagingException, IOException {
+    public User forgotPassword(String email) throws Exception {
         return emailController.forgotPassword(email);
     }
 }

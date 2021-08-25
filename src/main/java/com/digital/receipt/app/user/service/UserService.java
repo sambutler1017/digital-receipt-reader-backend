@@ -1,6 +1,5 @@
 package com.digital.receipt.app.user.service;
 
-import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
@@ -8,7 +7,6 @@ import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.app.user.dao.UserDao;
 import com.digital.receipt.common.exceptions.BaseException;
-import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
 import com.digital.receipt.jwt.utility.JwtHolder;
 import com.digital.receipt.service.util.PasswordHash;
 
@@ -35,10 +33,9 @@ public class UserService {
      * 
      * @param request of the user
      * @return User profile object {@link User}
-     * @throws IOException
-     * @throws SqlFragmentNotFoundException
+     * @throws Exception
      */
-    public List<User> getUsers(UserGetRequest request) throws SqlFragmentNotFoundException, IOException {
+    public List<User> getUsers(UserGetRequest request) throws Exception {
         return userDao.getUsers(request);
     }
 
@@ -47,10 +44,9 @@ public class UserService {
      * 
      * @param id of the user
      * @return User profile object {@link User}
-     * @throws IOException
-     * @throws SqlFragmentNotFoundException
+     * @throws Exception
      */
-    public User getUserById(int id) throws SqlFragmentNotFoundException, IOException {
+    public User getUserById(int id) throws Exception {
         return userDao.getUserById(id);
     }
 
@@ -58,10 +54,9 @@ public class UserService {
      * Get the current user from the jwt token.
      * 
      * @return User profile object {@link User}
-     * @throws IOException
-     * @throws SqlFragmentNotFoundException
+     * @throws Exception
      */
-    public User getCurrentUser() throws SqlFragmentNotFoundException, IOException {
+    public User getCurrentUser() throws Exception {
         return getUserById(jwtHolder.getRequiredUserId());
     }
 
@@ -70,10 +65,9 @@ public class UserService {
      * 
      * @param user what information on the user needs to be updated.
      * @return user associated to that id with the updated information
-     * @throws IOException
-     * @throws SqlFragmentNotFoundException
+     * @throws Exception
      */
-    public User updateUser(User user) throws SqlFragmentNotFoundException, IOException {
+    public User updateUser(User user) throws Exception {
         updateUserPassword(user.getPassword());
         updateUserForgotPassword(user.isForgotPassword());
         return updateUserProfile(user);
@@ -84,10 +78,9 @@ public class UserService {
      * user with admin access.
      * 
      * @param id of the user that is to be deleted.
-     * @throws IOException
-     * @throws SqlFragmentNotFoundException
+     * @throws Exception
      */
-    public void deleteUser(int id) throws SqlFragmentNotFoundException, IOException {
+    public void deleteUser(int id) throws Exception {
         getUserById(id);
         userDao.deleteUser(id);
     }
@@ -97,10 +90,9 @@ public class UserService {
      * 
      * @param user what information on the user needs to be updated.
      * @return user associated to that id with the updated information
-     * @throws IOException
-     * @throws SqlFragmentNotFoundException
+     * @throws Exception
      */
-    private User updateUserProfile(User user) throws SqlFragmentNotFoundException, IOException {
+    private User updateUserProfile(User user) throws Exception {
         return userDao.updateUserProfile(user);
     }
 
@@ -109,10 +101,9 @@ public class UserService {
      * 
      * @param user what information on the user needs to be updated.
      * @return user associated to that id with the updated information
-     * @throws IOException
-     * @throws SqlFragmentNotFoundException
+     * @throws Exception
      */
-    private User updateUserPassword(String password) throws SqlFragmentNotFoundException, IOException {
+    private User updateUserPassword(String password) throws Exception {
         try {
             if (password != null && password.trim() != "") {
                 return userDao.updateUserPassword(PasswordHash.hashPassword(password));
@@ -129,10 +120,9 @@ public class UserService {
      * 
      * @param flag The flag to set the forgot password too.
      * @return user associated to that id with the updated information
-     * @throws IOException
-     * @throws SqlFragmentNotFoundException
+     * @throws Exception
      */
-    public User updateUserForgotPassword(boolean flag) throws SqlFragmentNotFoundException, IOException {
+    public User updateUserForgotPassword(boolean flag) throws Exception {
         return userDao.updateUserForgotPassword(flag);
     }
 }

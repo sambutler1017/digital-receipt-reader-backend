@@ -75,7 +75,7 @@ public class EmailService {
      * @throws IOException                  If the forgot password file can not be
      *                                      found.
      */
-    public User forgotPassword(String email) throws MessagingException, SqlFragmentNotFoundException, IOException {
+    public User forgotPassword(String email) throws MessagingException, Exception {
         UserGetRequest request = new UserGetRequest();
         request.setEmail(Sets.newHashSet(email));
 

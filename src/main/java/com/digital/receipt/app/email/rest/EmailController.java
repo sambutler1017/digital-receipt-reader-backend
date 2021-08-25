@@ -1,7 +1,6 @@
 package com.digital.receipt.app.email.rest;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 
 import javax.mail.MessagingException;
 
@@ -11,7 +10,6 @@ import com.digital.receipt.app.email.client.domain.UserEmail;
 import com.digital.receipt.app.email.service.EmailService;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.common.enums.WebRole;
-import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,16 +51,10 @@ public class EmailController {
      * 
      * @param email Email to search for and send an email too.
      * @return {@link User} object of the found user
-     * @throws MessagingException           If an error occurs processing the
-     *                                      message
-     * @throws SqlFragmentNotFoundException The name of the fragment for sql is not
-     *                                      found.
-     * @throws IOException                  If the forgot password file can not be
-     *                                      found.
+     * @throws Exception
      */
     @PutMapping("/forgot-password")
-    public User forgotPassword(@RequestBody String email)
-            throws SqlFragmentNotFoundException, MessagingException, IOException {
+    public User forgotPassword(@RequestBody String email) throws Exception {
         return emailService.forgotPassword(email);
     }
 }

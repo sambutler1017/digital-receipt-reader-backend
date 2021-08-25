@@ -42,7 +42,7 @@ public abstract class AbstractSqlDao {
      *                                      given file.
      * @throws IOException
      */
-    public List<String> getSql(String fragmentName) throws SqlFragmentNotFoundException, IOException {
+    public List<String> getSql(String fragmentName) throws Exception {
         resetFragmentStatus();
 
         String filePath = String.format(defaultSqlPath, activeProfile.getEnvironmentUrl(), getChildClassName());

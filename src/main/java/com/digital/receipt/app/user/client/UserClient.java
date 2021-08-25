@@ -32,7 +32,7 @@ public class UserClient {
      * @throws IOException
      * @throws SqlFragmentNotFoundException
      */
-    public List<User> getUsers(UserGetRequest request) throws SqlFragmentNotFoundException, IOException {
+    public List<User> getUsers(UserGetRequest request) throws Exception {
         return userController.getUsers(request);
     }
 
@@ -45,7 +45,7 @@ public class UserClient {
      * @throws SqlFragmentNotFoundException
      * @throws Exception
      */
-    public User getUserById(int id) throws SqlFragmentNotFoundException, IOException {
+    public User getUserById(int id) throws Exception {
         return userController.getUserById(id);
     }
 
@@ -56,7 +56,7 @@ public class UserClient {
      * @throws IOException
      * @throws SqlFragmentNotFoundException
      */
-    public User getCurrentUser() throws SqlFragmentNotFoundException, IOException {
+    public User getCurrentUser() throws Exception {
         return userController.getCurrentUser();
     }
 
@@ -70,7 +70,7 @@ public class UserClient {
      * @throws IOException
      * @throws SqlFragmentNotFoundException
      */
-    public User updateUser(User user) throws SqlFragmentNotFoundException, IOException {
+    public User updateUser(User user) throws Exception {
         return userController.updateUser(user);
     }
 
@@ -82,7 +82,7 @@ public class UserClient {
      * @throws IOException
      * @throws SqlFragmentNotFoundException
      */
-    public void deleteUser(int id) throws SqlFragmentNotFoundException, IOException {
+    public void deleteUser(int id) throws Exception {
         userController.deleteUser(id);
     }
 }
