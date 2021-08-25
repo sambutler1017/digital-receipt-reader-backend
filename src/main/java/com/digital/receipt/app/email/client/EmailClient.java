@@ -44,7 +44,7 @@ public class EmailClient {
      * @return {@link User} object of the found user
      * @throws Exception
      */
-    public User forgotPassword(String email) throws Exception {
-        return emailController.forgotPassword(email);
+    public void forgotPassword(String email) throws Exception {
+        emailController.forgotPassword(email);
     }
 }

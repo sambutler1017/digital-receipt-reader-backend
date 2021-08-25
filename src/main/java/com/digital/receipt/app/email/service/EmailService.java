@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
@@ -14,10 +13,7 @@ import javax.mail.internet.MimeMessage;
 import com.digital.receipt.app.email.client.domain.UserEmail;
 import com.digital.receipt.app.user.client.UserClient;
 import com.digital.receipt.app.user.client.domain.User;
-import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
-import com.digital.receipt.common.exceptions.BaseException;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
-import com.google.common.collect.Sets;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -75,24 +71,13 @@ public class EmailService {
      * @throws IOException                  If the forgot password file can not be
      *                                      found.
      */
-    public User forgotPassword(String email) throws MessagingException, Exception {
-        UserGetRequest request = new UserGetRequest();
-        request.setEmail(Sets.newHashSet(email));
+    public void forgotPassword(String email) throws MessagingException, Exception {
+        String filePath = "src/main/java/com/digital/receipt/app/email/client/domain/ForgotPasswordEmail.html";
+        BufferedReader br = new BufferedReader(new FileReader(filePath));
 
-        List<User> userList = userClient.getUsers(request);
-
-        if (!userList.isEmpty()) {
-            String filePath = "src/main/java/com/digital/receipt/app/email/client/domain/ForgotPasswordEmail.html";
-            BufferedReader br = new BufferedReader(new FileReader(filePath));
-
-            sendEmail(buildUserEmail("ridgecampusdigitalreceipt@outlook.com", email, "Forgot Password",
-                    br.lines().collect(Collectors.joining(" "))), true);
-            br.close();
-            return userList.get(0);
-        } else {
-            throw new BaseException(String.format("No user found for email '%s'", email));
-        }
-
+        sendEmail(buildUserEmail("ridgecampusdigitalreceipt@outlook.com", email, "Forgot Password",
+                br.lines().collect(Collectors.joining(" "))), true);
+        br.close();
     }
 
     /**

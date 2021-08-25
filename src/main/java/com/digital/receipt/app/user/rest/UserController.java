@@ -99,6 +99,19 @@ public class UserController {
     }
 
     /**
+     * This gets called when a user forgets their password. They will set the forgot
+     * password flag and get an email with the temporary password.
+     * 
+     * @return user associated to that id with the updated information
+     * @throws Exception
+     */
+    @PutMapping(path = "/forgot-password", produces = APPLICATION_JSON_VALUE)
+    @HasAccess(WebRole.USER)
+    public User forgotPassword(@RequestBody String email) throws Exception {
+        return userService.forgotPassword(email);
+    }
+
+    /**
      * Will delete a user for the given id. This endpoint can only be accessed by a
      * user with admin access.
      * 

@@ -39,7 +39,7 @@ public class EmailController {
      * @throws FileNotFoundException
      */
     @PostMapping()
-    @HasAccess(WebRole.USER)
+    @HasAccess(WebRole.ADMIN)
     public UserEmail sendEmail(@RequestBody UserEmail userEmail) throws MessagingException, FileNotFoundException {
         userEmail.setFrom("ridgecampusdigitalreceipt@outlook.com");
         return emailService.sendEmail(userEmail, false);
@@ -54,7 +54,8 @@ public class EmailController {
      * @throws Exception
      */
     @PutMapping("/forgot-password")
-    public User forgotPassword(@RequestBody String email) throws Exception {
-        return emailService.forgotPassword(email);
+    @HasAccess(WebRole.ADMIN)
+    public void forgotPassword(@RequestBody String email) throws Exception {
+        emailService.forgotPassword(email);
     }
 }

@@ -3,6 +3,7 @@ package com.digital.receipt.app.user.service;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import com.digital.receipt.app.email.client.EmailClient;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.app.user.dao.UserDao;
@@ -10,6 +11,7 @@ import com.digital.receipt.common.enums.WebRole;
 import com.digital.receipt.common.exceptions.BaseException;
 import com.digital.receipt.jwt.utility.JwtHolder;
 import com.digital.receipt.service.util.PasswordHash;
+import com.google.common.collect.Sets;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,6 +30,9 @@ public class UserService {
 
     @Autowired
     private JwtHolder jwtHolder;
+
+    @Autowired
+    private EmailClient emailClient;
 
     /**
      * Get users based on given request filter.
@@ -70,7 +75,7 @@ public class UserService {
      */
     public User updateUser(User user) throws Exception {
         updateUserPassword(user.getPassword());
-        updateUserForgotPasswordFlag(user.isForgotPassword());
+        updateUserForgotPasswordFlag(jwtHolder.getRequiredUserId(), user.isForgotPassword());
         return updateUserProfile(user);
     }
 
@@ -83,6 +88,26 @@ public class UserService {
      */
     public User updateUserRole(int id, WebRole role) throws Exception {
         return userDao.updateUserRole(id, role);
+    }
+
+    /**
+     * This gets called when a user forgets their password. They will set the forgot
+     * password flag and get an email with the temporary password.
+     * 
+     * @return user associated to that id with the updated information
+     * @throws Exception
+     */
+    public User forgotPassword(String email) throws Exception {
+        UserGetRequest request = new UserGetRequest();
+        request.setEmail(Sets.newHashSet(email));
+        List<User> users = getUsers(request);
+
+        if (users.size() == 0) {
+            throw new BaseException(String.format("User not found for email '%s'", email));
+        }
+
+        emailClient.forgotPassword(email);
+        return updateUserForgotPasswordFlag(users.get(0).getId(), true);
     }
 
     /**
@@ -128,13 +153,15 @@ public class UserService {
     }
 
     /**
-     * Will set the forgot password flag to the given boolean value.
+     * Will set the forgot password flag to the given boolean value for the given
+     * userId.
      * 
-     * @param flag The flag to set the forgot password too.
+     * @param userId The id of the user to update.
+     * @param flag   The flag to set the forgot password too.
      * @return user associated to that id with the updated information
      * @throws Exception
      */
-    public User updateUserForgotPasswordFlag(boolean flag) throws Exception {
-        return userDao.updateUserForgotPasswordFlag(flag);
+    private User updateUserForgotPasswordFlag(int userId, boolean flag) throws Exception {
+        return userDao.updateUserForgotPasswordFlag(userId, flag);
     }
 }

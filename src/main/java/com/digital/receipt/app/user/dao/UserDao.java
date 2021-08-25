@@ -103,8 +103,9 @@ public class UserDao extends AbstractSqlDao {
      * @return user associated to that id with the updated information
      * @throws Exception
      */
-    public User updateUserForgotPasswordFlag(boolean flag) throws Exception {
-        User userProfile = getUserById(jwtHolder.getRequiredUserId());
+    public User updateUserForgotPasswordFlag(int id, boolean flag) throws Exception {
+        User userProfile = getUserById(id);
+        userProfile.setForgotPassword(flag);
 
         sqlClient.update(getSql("updateUserForgotPassword"),
                 params("flag", flag ? 1 : 0).addValue("id", userProfile.getId()));

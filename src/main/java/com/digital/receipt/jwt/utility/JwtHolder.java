@@ -5,6 +5,8 @@ import javax.servlet.http.HttpServletRequest;
 import com.digital.receipt.common.enums.WebRole;
 import com.digital.receipt.service.activeProfile.ActiveProfile;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -20,6 +22,8 @@ import io.jsonwebtoken.Jwts;
  */
 @Service("JwtHolder")
 public class JwtHolder {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(JwtHolder.class);
 
 	private JwtParser jwtParser;
 
@@ -39,7 +43,7 @@ public class JwtHolder {
 		try {
 			return Integer.parseInt(jwtParser.parseClaimsJws(getToken()).getBody().get("userId").toString());
 		} catch (Exception e) {
-			System.out.println("Invalid Token");
+			LOGGER.warn("Invalid or no Token given.");
 			return -1;
 		}
 	}
@@ -54,7 +58,7 @@ public class JwtHolder {
 		try {
 			return Integer.parseInt(jwtParser.parseClaimsJws(token).getBody().get("userId").toString());
 		} catch (Exception e) {
-			System.out.println("Invalid Token");
+			LOGGER.warn("Invalid or no Token given.");
 			return -1;
 		}
 	}
@@ -68,7 +72,7 @@ public class JwtHolder {
 		try {
 			return jwtParser.parseClaimsJws(getToken()).getBody().get("email").toString();
 		} catch (Exception e) {
-			System.out.println("Invalid Token");
+			LOGGER.warn("Invalid or no Token given.");
 			return "";
 		}
 	}
@@ -83,7 +87,7 @@ public class JwtHolder {
 		try {
 			return jwtParser.parseClaimsJws(token).getBody().get("email").toString();
 		} catch (Exception e) {
-			System.out.println("Invalid Token");
+			LOGGER.warn("Invalid or no Token given.");
 			return "";
 		}
 	}
@@ -97,7 +101,7 @@ public class JwtHolder {
 		try {
 			return WebRole.valueOf(jwtParser.parseClaimsJws(getToken()).getBody().get("webRole").toString());
 		} catch (Exception e) {
-			System.out.println("Invalid Token");
+			LOGGER.warn("Invalid or no Token given.");
 			return WebRole.USER;
 		}
 	}
@@ -112,7 +116,7 @@ public class JwtHolder {
 		try {
 			return WebRole.valueOf(jwtParser.parseClaimsJws(token).getBody().get("webRole").toString());
 		} catch (Exception e) {
-			System.out.println("Invalid Token");
+			LOGGER.warn("Invalid or no Token given.");
 			return WebRole.USER;
 		}
 	}

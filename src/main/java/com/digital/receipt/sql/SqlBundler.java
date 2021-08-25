@@ -142,6 +142,7 @@ public class SqlBundler {
             Object paramValue = params.getValue(paramField);
 
             if (paramValue == null) {
+                deleteNextLine = false;
                 return "";
             }
 
