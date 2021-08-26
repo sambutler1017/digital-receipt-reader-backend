@@ -9,6 +9,7 @@ public class PasswordHashTest {
 
     @Test
     public void shouldHashPasswordString() {
+        System.out.println("Environment: " + System.getenv("APP_ENVIRONMENT"));
         Assert.assertEquals("Should match", 1, 1);
     }
 }
