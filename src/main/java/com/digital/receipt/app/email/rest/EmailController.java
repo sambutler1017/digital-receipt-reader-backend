@@ -8,12 +8,10 @@ import com.digital.receipt.annotations.interfaces.HasAccess;
 import com.digital.receipt.annotations.interfaces.RestApiController;
 import com.digital.receipt.app.email.client.domain.UserEmail;
 import com.digital.receipt.app.email.service.EmailService;
-import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.common.enums.WebRole;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -50,10 +48,9 @@ public class EmailController {
      * in the database then the link will be sent.
      * 
      * @param email Email to search for and send an email too.
-     * @return {@link User} object of the found user
      * @throws Exception
      */
-    @PutMapping("/forgot-password")
+    @PostMapping("/forgot-password")
     @HasAccess(WebRole.ADMIN)
     public void forgotPassword(@RequestBody String email) throws Exception {
         emailService.forgotPassword(email);

@@ -1,15 +1,8 @@
 package com.digital.receipt.app.email.client;
 
-import java.io.FileNotFoundException;
-
-import javax.mail.MessagingException;
-
 import com.digital.receipt.annotations.interfaces.Client;
 import com.digital.receipt.app.email.client.domain.UserEmail;
-import com.digital.receipt.app.email.rest.EmailController;
-import com.digital.receipt.app.user.client.domain.User;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import com.digital.receipt.common.abstracts.AbstractClient;
 
 /**
  * Class to expose the email client to other services.
@@ -18,10 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @since June 25, 2020
  */
 @Client
-public class EmailClient {
+public class EmailClient extends AbstractClient {
 
-    @Autowired
-    private EmailController emailController;
+    /**
+     * Initialize the Abstract client with the active profile and endpoint path.
+     */
+    public EmailClient() {
+        super("api/mail-app/email");
+    }
 
     /**
      * {@link UserEmail} object to send a email too. Default from user will be the
@@ -29,11 +26,9 @@ public class EmailClient {
      * 
      * @param userEmail UserEmail object to get the mail properties from
      * @return {@link UserEmail} object with the time it sent.
-     * @throws MessagingException
-     * @throws FileNotFoundException
      */
-    public UserEmail sendEmail(UserEmail userEmail) throws MessagingException, FileNotFoundException {
-        return emailController.sendEmail(userEmail);
+    public UserEmail sendEmail(UserEmail userEmail) {
+        return post("", userEmail).toEntity(UserEmail.class).block().getBody();
     }
 
     /**
@@ -41,10 +36,8 @@ public class EmailClient {
      * in the database then the link will be sent.
      * 
      * @param email Email to search for and send an email too.
-     * @return {@link User} object of the found user
-     * @throws Exception
      */
     public void forgotPassword(String email) throws Exception {
-        emailController.forgotPassword(email);
+        post("/forgot-password", email).toBodilessEntity().block();
     }
 }

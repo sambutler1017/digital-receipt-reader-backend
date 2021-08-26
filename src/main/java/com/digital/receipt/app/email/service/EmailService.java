@@ -11,7 +11,6 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import com.digital.receipt.app.email.client.domain.UserEmail;
-import com.digital.receipt.app.user.client.UserClient;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
 
@@ -31,9 +30,6 @@ public class EmailService {
 
     @Autowired
     private JavaMailSender javaMailSender;
-
-    @Autowired
-    private UserClient userClient;
 
     /**
      * {@link UserEmail} object to send a email too. Default from user will be the

@@ -5,9 +5,9 @@ import static com.digital.receipt.app.auth.mapper.AuthenticationMapper.AUTH_MAPP
 import java.io.IOException;
 
 import com.digital.receipt.app.user.client.domain.User;
+import com.digital.receipt.common.abstracts.AbstractSqlDao;
 import com.digital.receipt.common.exceptions.InvalidCredentialsException;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
-import com.digital.receipt.sql.AbstractSqlDao;
 import com.digital.receipt.sql.SqlClient;
 
 import org.springframework.beans.factory.annotation.Autowired;

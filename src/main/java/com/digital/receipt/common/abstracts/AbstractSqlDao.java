@@ -1,4 +1,4 @@
-package com.digital.receipt.sql;
+package com.digital.receipt.common.abstracts;
 
 import java.io.BufferedReader;
 import java.io.FileReader;

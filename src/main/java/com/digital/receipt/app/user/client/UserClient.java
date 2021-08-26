@@ -5,9 +5,9 @@ import java.util.List;
 import com.digital.receipt.annotations.interfaces.Client;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
-import com.digital.receipt.app.user.rest.UserController;
+import com.digital.receipt.common.abstracts.AbstractClient;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * This class exposes the user endpoint's to other app's to pull data across the
@@ -17,20 +17,23 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @since June 25, 2020
  */
 @Client
-public class UserClient {
+public class UserClient extends AbstractClient {
 
-    @Autowired
-    private UserController userController;
+    /**
+     * Initialize the Abstract client with the active profile and endpoint path.
+     */
+    public UserClient() {
+        super("api/user-app/users");
+    }
 
     /**
      * Get users based on given request filter
      * 
      * @param request of the user
      * @return User profile object {@link User}
-     * @throws Exception
      */
-    public List<User> getUsers(UserGetRequest request) throws Exception {
-        return userController.getUsers(request);
+    public List<User> getUsers(UserGetRequest request) {
+        return get("").toEntityList(User.class).block().getBody();
     }
 
     /**
@@ -38,20 +41,18 @@ public class UserClient {
      * 
      * @param id of the user
      * @return User profile object
-     * @throws Exception
      */
-    public User getUserById(int id) throws Exception {
-        return userController.getUserById(id);
+    public User getUserById(int id) {
+        return get("/{id}", id).toEntity(User.class).block().getBody();
     }
 
     /**
      * Gets the current logged in user information.
      * 
      * @return The user currently logged in.
-     * @throws Exception
      */
-    public User getCurrentUser() throws Exception {
-        return userController.getCurrentUser();
+    public User getCurrentUser() {
+        return get("/current-user").toEntity(User.class).block().getBody();
     }
 
     /**
@@ -61,10 +62,29 @@ public class UserClient {
      * @param id   of the user
      * @param user what information on the user needs to be updated.
      * @return user associated to that id with the updated information
-     * @throws Exception
      */
-    public User updateUser(User user) throws Exception {
-        return userController.updateUser(user);
+    public User updateUser(User user) {
+        return put("", user).toEntity(User.class).block().getBody();
+    }
+
+    /**
+     * Updates a user role, this endpoint can only be used by Admins.
+     * 
+     * @param id of the user
+     * @return user associated to that id with the updated information
+     */
+    public User updateUserRole(int id, String role) {
+        return put("/{id}/role/{role}", null, id, role).toEntity(User.class).block().getBody();
+    }
+
+    /**
+     * This gets called when a user forgets their password. They will set the forgot
+     * password flag and get an email with the temporary password.
+     * 
+     * @return user associated to that id with the updated information
+     */
+    public User forgotPassword(@RequestBody String email) {
+        return put("/forgot-password", email).toEntity(User.class).block().getBody();
     }
 
     /**
@@ -75,6 +95,6 @@ public class UserClient {
      * @throws Exception
      */
     public void deleteUser(int id) throws Exception {
-        userController.deleteUser(id);
+        delete("/{id}", null, id).toBodilessEntity().block();
     }
 }

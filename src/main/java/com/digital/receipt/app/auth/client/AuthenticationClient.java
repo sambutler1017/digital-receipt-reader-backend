@@ -2,10 +2,9 @@ package com.digital.receipt.app.auth.client;
 
 import com.digital.receipt.annotations.interfaces.Client;
 import com.digital.receipt.app.auth.client.domain.DigitalReceiptToken;
-import com.digital.receipt.app.auth.rest.AuthenticationController;
+import com.digital.receipt.common.abstracts.AbstractClient;
 import com.digital.receipt.jwt.model.AuthenticationRequest;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -15,19 +14,24 @@ import org.springframework.http.ResponseEntity;
  * @since July 31, 2021
  */
 @Client
-public class AuthenticationClient {
-    @Autowired
-    private AuthenticationController authController;
+public class AuthenticationClient extends AbstractClient {
+
+    /**
+     * Initialize the Abstract client with the active profile and endpoint path.
+     */
+    public AuthenticationClient() {
+        super("");
+    }
 
     /**
      * Verifies user credentials passed as a JWTRequest
      *
      * @param email    - Entered email at login.
      * @param password - Password entered at login.
-     * @throws Exception - Throw an exception if the credentials do not match.
      */
-    public ResponseEntity<DigitalReceiptToken> verifyUser(String email, String password) throws Exception {
-        return authController.authenticateUser(new AuthenticationRequest(email, password));
+    public ResponseEntity<DigitalReceiptToken> authenticateUser(String email, String password) {
+        return post("/authenticate", new AuthenticationRequest(email, password)).toEntity(DigitalReceiptToken.class)
+                .block();
     }
 
     /**
@@ -35,9 +39,8 @@ public class AuthenticationClient {
      *
      * @param authenticationRequest A email and password request.
      * @return a new JWT.
-     * @throws Exception - If user does not exist.
      */
-    public ResponseEntity<DigitalReceiptToken> reauthenticateUser() throws Exception {
-        return authController.reauthenticateUser();
+    public ResponseEntity<DigitalReceiptToken> reauthenticateUser() {
+        return post("/reauthenticate", null).toEntity(DigitalReceiptToken.class).block();
     }
 }

@@ -6,10 +6,10 @@ import java.util.List;
 
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
+import com.digital.receipt.common.abstracts.AbstractSqlDao;
 import com.digital.receipt.common.enums.WebRole;
 import com.digital.receipt.common.exceptions.UserNotFoundException;
 import com.digital.receipt.jwt.utility.JwtHolder;
-import com.digital.receipt.sql.AbstractSqlDao;
 import com.digital.receipt.sql.SqlClient;
 
 import org.springframework.beans.factory.annotation.Autowired;

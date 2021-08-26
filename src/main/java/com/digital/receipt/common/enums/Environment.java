@@ -7,9 +7,12 @@ package com.digital.receipt.common.enums;
  * @since July 31, 2021
  */
 public enum Environment {
-    PRODUCTION, LOCAL;
+    PRODUCTION("https://digital-receipt-production.herokuapp.com"), LOCAL("http://localhost:8080/");
 
-    Environment() {
+    private String uri;
+
+    Environment(String uri) {
+        this.uri = uri;
     }
 
     public static Environment getEnvrionment(String text) {
@@ -17,5 +20,9 @@ public enum Environment {
             if (w.toString().equals(text.toUpperCase()))
                 return w;
         return LOCAL;
+    }
+
+    public String getUri() {
+        return this.uri;
     }
 }

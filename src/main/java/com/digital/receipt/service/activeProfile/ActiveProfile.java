@@ -76,4 +76,13 @@ public class ActiveProfile {
     public boolean isLocalEnvironment() {
         return getEnvironment().equals(Environment.LOCAL);
     }
+
+    /**
+     * Gets the URI path for the current environment
+     * 
+     * @return {@link String} of the environment uri.
+     */
+    public String getUriPath() {
+        return isLocalEnvironment() ? Environment.LOCAL.getUri() : Environment.PRODUCTION.getUri();
+    }
 }
