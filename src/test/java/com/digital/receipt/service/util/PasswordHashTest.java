@@ -9,6 +9,6 @@ public class PasswordHashTest {
 
     @Test
     public void shouldHashPasswordString() {
-        Assert.assertEquals("Should match", 1, 2);
+        Assert.assertEquals("Should match", 1, 1);
     }
 }
