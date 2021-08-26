@@ -4,7 +4,9 @@ import com.digital.receipt.annotations.interfaces.Client;
 import com.digital.receipt.app.auth.client.domain.DigitalReceiptToken;
 import com.digital.receipt.common.abstracts.AbstractClient;
 import com.digital.receipt.jwt.model.AuthenticationRequest;
+import com.digital.receipt.service.activeProfile.ActiveProfile;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 /**
@@ -19,8 +21,9 @@ public class AuthenticationClient extends AbstractClient {
     /**
      * Initialize the Abstract client with the active profile and endpoint path.
      */
-    public AuthenticationClient() {
-        super("");
+    @Autowired
+    public AuthenticationClient(ActiveProfile activeProfile) {
+        super("", activeProfile);
     }
 
     /**

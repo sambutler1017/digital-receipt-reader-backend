@@ -6,6 +6,7 @@ import com.digital.receipt.service.activeProfile.ActiveProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClient.RequestBodyUriSpec;
 import org.springframework.web.reactive.function.client.WebClient.RequestHeadersSpec;
@@ -31,8 +32,9 @@ public abstract class AbstractClient {
      * 
      * @param endpointUrl The base endpoint of the clients controller.
      */
-    public AbstractClient(String endpointUrl) {
-        ActiveProfile activeProfile = new ActiveProfile();
+    public AbstractClient(String endpointUrl, ActiveProfile activeProfile) {
+        Assert.notNull(endpointUrl, "Endpoint Url is required");
+        Assert.notNull(activeProfile, "Active Profile is required");
         this.url = String.format("%s/%s", activeProfile.getUriPath(), endpointUrl);
     }
 
@@ -71,7 +73,6 @@ public abstract class AbstractClient {
      */
     public ResponseSpec put(String url, Object body, Object... params) {
         return completeRequestWithBody(getWebClient().put(), url, body, params).retrieve();
-
     }
 
     /**

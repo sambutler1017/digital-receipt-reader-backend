@@ -6,7 +6,9 @@ import com.digital.receipt.annotations.interfaces.Client;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.common.abstracts.AbstractClient;
+import com.digital.receipt.service.activeProfile.ActiveProfile;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 
 /**
@@ -22,8 +24,9 @@ public class UserClient extends AbstractClient {
     /**
      * Initialize the Abstract client with the active profile and endpoint path.
      */
-    public UserClient() {
-        super("api/user-app/users");
+    @Autowired
+    public UserClient(ActiveProfile activeProfile) {
+        super("api/user-app/users", activeProfile);
     }
 
     /**

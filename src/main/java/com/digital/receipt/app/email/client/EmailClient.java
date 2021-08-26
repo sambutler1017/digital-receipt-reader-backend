@@ -3,6 +3,9 @@ package com.digital.receipt.app.email.client;
 import com.digital.receipt.annotations.interfaces.Client;
 import com.digital.receipt.app.email.client.domain.UserEmail;
 import com.digital.receipt.common.abstracts.AbstractClient;
+import com.digital.receipt.service.activeProfile.ActiveProfile;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Class to expose the email client to other services.
@@ -16,8 +19,9 @@ public class EmailClient extends AbstractClient {
     /**
      * Initialize the Abstract client with the active profile and endpoint path.
      */
-    public EmailClient() {
-        super("api/mail-app/email");
+    @Autowired
+    public EmailClient(ActiveProfile activeProfile) {
+        super("api/mail-app/email", activeProfile);
     }
 
     /**
