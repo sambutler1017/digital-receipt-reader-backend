@@ -47,7 +47,7 @@ public class ActiveProfile {
      * @return String of the application file name
      */
     public String getAppPropertiesName() {
-        return isLocalEnvironment() ? "application-dev.properties" : "application-prod.properties";
+        return isLocalEnvironment() ? "application-local.properties" : "application-production.properties";
     }
 
     /**

@@ -8,9 +8,7 @@ import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.common.abstracts.AbstractSqlDao;
 import com.digital.receipt.common.exceptions.InvalidCredentialsException;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
-import com.digital.receipt.sql.SqlClient;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
@@ -22,10 +20,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class AuthenticationDao extends AbstractSqlDao {
-
-    @Autowired
-    private SqlClient sqlClient;
-
     /**
      * Not an exposed endpoint, strictly used by the authentication controller to
      * autheticate a user.

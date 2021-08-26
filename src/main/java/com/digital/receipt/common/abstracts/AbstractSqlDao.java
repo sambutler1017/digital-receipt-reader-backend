@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import com.digital.receipt.common.enums.SqlTag;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
 import com.digital.receipt.service.activeProfile.ActiveProfile;
+import com.digital.receipt.sql.SqlClient;
 import com.digital.receipt.sql.domain.SqlParams;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,10 @@ public abstract class AbstractSqlDao {
     private boolean endOfFragmentFound;
 
     @Autowired
-    private ActiveProfile activeProfile;
+    protected ActiveProfile activeProfile;
+
+    @Autowired
+    protected SqlClient sqlClient;
 
     /**
      * Gets the sql based on the given fragment name.
