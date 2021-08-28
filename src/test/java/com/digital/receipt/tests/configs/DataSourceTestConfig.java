@@ -1,5 +1,7 @@
 package com.digital.receipt.tests.configs;
 
+import java.sql.SQLException;
+
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
@@ -18,7 +20,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @Profile("test")
 public class DataSourceTestConfig {
     @Bean
-    public DataSource dataSource() {
+    public DataSource dataSource() throws SQLException {
         DriverManagerDataSource ds = new DriverManagerDataSource();
         ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
         ds.setUrl(String.format("jdbc:mysql://databasePI.ddnsfree.com/%s?%s", "receipt_db", getDBParams()));
@@ -28,17 +30,16 @@ public class DataSourceTestConfig {
     }
 
     @Bean
-    public JdbcTemplate jdbcTemplate() {
+    public JdbcTemplate jdbcTemplate() throws SQLException {
         return new JdbcTemplate(dataSource());
     }
 
     private String getUsername() {
-        return System.getProperty("APP_ENVIRONMENT") != null ? System.getProperty("MYSQL_USERNAME")
-                : "sambutler1017asd";
+        return System.getProperty("APP_ENVIRONMENT") != null ? System.getProperty("MYSQL_USERNAME") : "sambutler10173";
     }
 
     private String getPassword() {
-        return System.getProperty("APP_ENVIRONMENT") != null ? System.getProperty("MYSQL_PASSWORD") : "password12";
+        return System.getProperty("APP_ENVIRONMENT") != null ? System.getProperty("MYSQL_PASSWORD") : "password123";
     }
 
     private String getDBParams() {
