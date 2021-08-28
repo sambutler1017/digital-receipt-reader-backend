@@ -20,4 +20,4 @@ jobs:
         env:
           MYSQL_USERNAME: ${{ secrets.MYSQL_USERNAME }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
-        run: ./gradlew build -DMYSQL_USERNAME=sambutler1017 -DMYSQL_PASSWORD=password
+        run: ./gradlew build -DMYSQL_USERNAME=env.MYSQL_USERNAME -DMYSQL_PASSWORD=env.MYSQL_PASSWORD
