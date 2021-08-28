@@ -8,10 +8,8 @@ import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.common.abstracts.AbstractSqlDao;
 import com.digital.receipt.common.enums.WebRole;
-import com.digital.receipt.jwt.utility.JwtHolder;
-import com.digital.receipt.sql.SqlClient;
+import com.digital.receipt.common.exceptions.UserNotFoundException;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -22,12 +20,6 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public class UserDao extends AbstractSqlDao {
-
-    @Autowired
-    private SqlClient sqlClient;
-
-    @Autowired
-    private JwtHolder jwtHolder;
 
     /**
      * Get users based on given request filter
@@ -52,11 +44,11 @@ public class UserDao extends AbstractSqlDao {
      * @throws Exception
      */
     public User getUserById(int id) throws Exception {
-        // try {
+        try {
             return sqlClient.getTemplate(getSql("getUserById"), params("userId", id), USER_MAPPER);
-        // } catch (Exception e) {
-        //     throw new UserNotFoundException(String.format("User not found for id: %d", id));
-        // }
+        } catch (Exception e) {
+            throw new UserNotFoundException(String.format("User not found for id: %d", id));
+        }
     }
 
     /**
@@ -67,8 +59,8 @@ public class UserDao extends AbstractSqlDao {
      * @return user associated to that id with the updated information
      * @throws Exception
      */
-    public User updateUserProfile(User user) throws Exception {
-        User userProfile = getUserById(jwtHolder.getRequiredUserId());
+    public User updateUserProfile(int userId, User user) throws Exception {
+        User userProfile = getUserById(userId);
 
         user.setPassword(null);
         user = mapNonNullUserFields(user, userProfile);
@@ -87,8 +79,8 @@ public class UserDao extends AbstractSqlDao {
      * @return user associated to that id with the updated information
      * @throws Exception
      */
-    public User updateUserPassword(String password) throws Exception {
-        User userProfile = getUserById(jwtHolder.getRequiredUserId());
+    public User updateUserPassword(int userId, String password) throws Exception {
+        User userProfile = getUserById(userId);
 
         sqlClient.update(getSql("updateUserPassword"),
                 params("password", password).addValue("id", userProfile.getId()));

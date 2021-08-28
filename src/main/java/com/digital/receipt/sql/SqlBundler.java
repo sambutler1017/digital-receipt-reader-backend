@@ -107,13 +107,9 @@ public class SqlBundler {
                 deleteNextLine = true;
                 replacingValue = "";
             }
-            return getReplacedConditionLine(condition, replacingValue, line, paramField);
+            return line.replace(String.format("%s(:%s:)", condition.annotation(), paramField), replacingValue);
         }
         return line;
-    }
-
-    private String getReplacedConditionLine(QueryTag condition, String replacingValue, String line, String paramField) {
-        return line.replace(String.format("%s(:%s:)", condition.annotation(), paramField), replacingValue);
     }
 
     /**

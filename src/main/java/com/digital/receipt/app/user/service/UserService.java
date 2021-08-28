@@ -74,9 +74,9 @@ public class UserService {
      * @throws Exception
      */
     public User updateUser(User user) throws Exception {
-        updateUserPassword(user.getPassword());
+        updateUserPassword(jwtHolder.getRequiredUserId(), user.getPassword());
         updateUserForgotPasswordFlag(jwtHolder.getRequiredUserId(), user.isForgotPassword());
-        return updateUserProfile(user);
+        return updateUserProfile(jwtHolder.getRequiredUserId(), user);
     }
 
     /**
@@ -129,8 +129,8 @@ public class UserService {
      * @return user associated to that id with the updated information
      * @throws Exception
      */
-    private User updateUserProfile(User user) throws Exception {
-        return userDao.updateUserProfile(user);
+    private User updateUserProfile(int userId, User user) throws Exception {
+        return userDao.updateUserProfile(userId, user);
     }
 
     /**
@@ -140,10 +140,10 @@ public class UserService {
      * @return user associated to that id with the updated information
      * @throws Exception
      */
-    private User updateUserPassword(String password) throws Exception {
+    private User updateUserPassword(int userId, String password) throws Exception {
         try {
             if (password != null && password.trim() != "") {
-                return userDao.updateUserPassword(PasswordHash.hashPassword(password));
+                return userDao.updateUserPassword(userId, PasswordHash.hashPassword(password));
             } else {
                 return getCurrentUser();
             }
