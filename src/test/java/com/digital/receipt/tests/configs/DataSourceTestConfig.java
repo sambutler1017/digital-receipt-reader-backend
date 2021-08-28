@@ -1,10 +1,6 @@
 package com.digital.receipt.tests.configs;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -24,14 +20,14 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @Profile("test")
 public class DataSourceTestConfig {
     private static final String TEST_ENV_PATH = "../digital-receipt-reader-backend/src/test";
-    Properties prop = new Properties();
+    // Properties prop = new Properties();
 
     @Bean
     public DataSource dataSource() throws SQLException {
         DriverManagerDataSource ds = new DriverManagerDataSource();
-        if (System.getProperty("APP_ENVIRONMENT") == null) {
-            initPropertiesFile();
-        }
+        // if (System.getProperty("APP_ENVIRONMENT") == null) {
+        // initPropertiesFile();
+        // }
 
         System.out.println("Environment: " + System.getProperty("APP_ENVIRONMENT"));
         System.out.println("Username: " + System.getProperty("MYSQL_USERNAME"));
@@ -56,7 +52,7 @@ public class DataSourceTestConfig {
      */
     private String getUsername() {
         return System.getProperty("APP_ENVIRONMENT") != null ? System.getProperty("MYSQL_USERNAME")
-                : prop.getProperty("spring.datasource.username");
+                : "spring.datasource.username";
     }
 
     /**
@@ -66,7 +62,7 @@ public class DataSourceTestConfig {
      */
     private String getPassword() {
         return System.getProperty("APP_ENVIRONMENT") != null ? System.getProperty("MYSQL_PASSWORD")
-                : prop.getProperty("spring.datasource.password");
+                : "spring.datasource.password";
     }
 
     /**
@@ -81,12 +77,13 @@ public class DataSourceTestConfig {
     /**
      * Init the properties test file.
      */
-    private void initPropertiesFile() {
-        try (InputStream input = new FileInputStream(
-                String.format("%s/resources/application-test-local.properties", TEST_ENV_PATH))) {
-            prop.load(input);
-        } catch (IOException io) {
-            // Continue
-        }
-    }
+    // private void initPropertiesFile() {
+    // try (InputStream input = new FileInputStream(
+    // String.format("%s/resources/application-test-local.properties",
+    // TEST_ENV_PATH))) {
+    // prop.load(input);
+    // } catch (IOException io) {
+    // // Continue
+    // }
+    // }
 }
