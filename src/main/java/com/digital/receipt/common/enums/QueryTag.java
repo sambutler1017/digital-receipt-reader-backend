@@ -1,15 +1,12 @@
 package com.digital.receipt.common.enums;
 
-import java.util.Arrays;
-import java.util.List;
-
-public enum QueryStatement {
-	NONE("@NONE", "NONE"), AND("@AND", "AND"), WHERE("@WHERE", "WHERE"), IF("@IF", "IF");
+public enum QueryTag {
+	NONE("@NONE", "NONE"), AND("@AND", "AND"), WHERE("@WHERE", "WHERE"), IF("@IF", "IF"), OR("@OR", "OR");
 
 	private String annotation;
 	private String type;
 
-	QueryStatement(String annotation, String type) {
+	QueryTag(String annotation, String type) {
 		this.annotation = annotation;
 		this.type = type;
 	}
@@ -28,7 +25,7 @@ public enum QueryStatement {
 	 * 
 	 * @return boolean if type is not equal to NONE
 	 */
-	public boolean isQueryStatement() {
+	public boolean isQueryTag() {
 		return type != "NONE";
 	}
 
@@ -39,8 +36,8 @@ public enum QueryStatement {
 	 * @param str - String value to search
 	 * @return QueryStatement enum that the string contains (If one exists)
 	 */
-	public static QueryStatement getEnumFromString(String str) {
-		for (QueryStatement value : QueryStatement.values()) {
+	public static QueryTag getEnumFromString(String str) {
+		for (QueryTag value : QueryTag.values()) {
 			if (str.contains(value.annotation()))
 				return value;
 		}

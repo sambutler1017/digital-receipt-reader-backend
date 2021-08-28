@@ -29,12 +29,12 @@
 		user_credentials uc ON up.id = uc.user_id
 	@WHERE(:id:)
 		up.id = :id:
-	@AND(:email:)
+	@OR(:email:)
 		up.email = :email:
-	@AND(:firstName:)
+	@OR(:firstName:)
 		up.first_name = :firstName:
-	@AND(:lastName:)
-		up.lastr_name = :lastName:
+	@OR(:lastName:)
+		up.last_name = :lastName:
 
 @NAME(updateUserProfile)
     UPDATE user_profile 

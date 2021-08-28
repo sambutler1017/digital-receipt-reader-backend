@@ -1,13 +1,13 @@
 package com.digital.receipt.sql;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.digital.receipt.common.enums.QueryStatement;
+import com.digital.receipt.common.enums.QueryTag;
 import com.digital.receipt.sql.domain.SqlParams;
 
 import org.springframework.stereotype.Service;
@@ -70,7 +70,7 @@ public class SqlBundler {
      * @return {@link Matcher} of the regex
      */
     private Matcher getConditionTagMatcher(String line) {
-        String conditionList = Arrays.asList(QueryStatement.values()).stream().map(v -> v.toString())
+        String conditionList = Arrays.asList(QueryTag.values()).stream().map(v -> v.toString())
                 .collect(Collectors.joining("|"));
         return Pattern.compile(String.format("@(%s)", conditionList)).matcher(line);
     }
@@ -83,48 +83,37 @@ public class SqlBundler {
      * @return {@link Matcher} of the regex
      */
     private Matcher getParamTagMatcher(String line) {
-        return Pattern.compile(":([\\w]+):").matcher(line);
+        return Pattern.compile(":[\\w]+:").matcher(line);
     }
 
     private String replaceCondition(String line, SqlParams params) {
         Matcher m = getConditionTagMatcher(line);
 
         if (m.find()) {
-            QueryStatement condition = QueryStatement.getEnumFromString(m.group(0).trim());
+            QueryTag condition = QueryTag.getEnumFromString(m.group(0).trim());
             Matcher paramCondition = Pattern.compile(String.format("(?<=%s\\(:)(\\w+)(?=:\\))", condition.annotation()))
                     .matcher(line);
 
             paramCondition.find();
             String paramField = paramCondition.group(0).trim();
-            if (params.getValue(paramField) != null) {
-                if (condition.equals(QueryStatement.IF)) {
-                    return hasIfCondition(line, paramField);
-                } else {
-                    QueryStatement replacingCondition = condition;
-                    if (!hasWhereCondition) {
-                        replacingCondition = QueryStatement.WHERE;
-                        hasWhereCondition = true;
-                    }
-                    return line.replace(String.format("%s(:%s:)", condition.annotation(), paramField),
-                            replacingCondition.text());
+
+            String replacingValue = condition.text();
+            if (params.getValue(paramField) != null && !condition.equals(QueryTag.IF)) {
+                if (!hasWhereCondition) {
+                    hasWhereCondition = true;
+                    replacingValue = QueryTag.WHERE.text();
                 }
             } else {
                 deleteNextLine = true;
-                return line.replace(String.format("%s(:%s:)", condition.annotation(), paramField), "");
+                replacingValue = "";
             }
+            return getReplacedConditionLine(condition, replacingValue, line, paramField);
         }
         return line;
     }
 
-    /**
-     * Get rid of the IF statement and keep the logic inside.
-     * 
-     * @param line       The query line to be updated
-     * @param paramField The field that we are looking for in the map.
-     * @return {@link String} of the updated line.
-     */
-    public String hasIfCondition(String line, String paramField) {
-        return line.replace(String.format("%s(:%s:)", QueryStatement.IF.annotation(), paramField), "");
+    private String getReplacedConditionLine(QueryTag condition, String replacingValue, String line, String paramField) {
+        return line.replace(String.format("%s(:%s:)", condition.annotation(), paramField), replacingValue);
     }
 
     /**
@@ -147,21 +136,13 @@ public class SqlBundler {
             }
 
             if (deleteNextLine) {
-                long tabCount = line.chars().filter(c -> c == (int) '\t').count();
-                if (tabCount >= 2) {
-                    return "";
-                } else {
-                    deleteNextLine = false;
-                    return "";
-                }
+                deleteNextLine = line.chars().filter(c -> c == (int) '\t').count() >= 2;
+                return "";
             }
 
-            if (paramValue instanceof List)
-                return getReplacedListParam(line, paramField, castList(paramValue));
-            else if (paramValue instanceof Set)
-                return getReplacedSetParam(line, paramField, castSet(paramValue));
-            else
-                return getReplacedSingleParam(line, paramField, paramValue);
+            return paramValue instanceof Collection
+                    ? getReplacedCollectionParam(line, paramField, castCollection(paramValue))
+                    : getReplacedSingleParam(line, paramField, paramValue);
         }
         return line;
     }
@@ -174,21 +155,7 @@ public class SqlBundler {
      * @param listValues The values to represent as a string.
      * @return {@link String} representation of the list.
      */
-    private String getReplacedListParam(String line, String field, List<Object> listValues) {
-        String paramList = listValues.stream().map(v -> String.format("'%s'", v.toString()))
-                .collect(Collectors.joining(","));
-        return line.replace(String.format("= :%s:", field), String.format("%s", String.format("IN (%s)", paramList)));
-    }
-
-    /**
-     * Replace a param tag with a set of values.
-     * 
-     * @param line       The line that needs to be replaced with the params.
-     * @param field      The field we are looking for in the string.
-     * @param listValues The values to represent as a string.
-     * @return {@link String} representation of the list.
-     */
-    private String getReplacedSetParam(String line, String field, Set<Object> listValues) {
+    private String getReplacedCollectionParam(String line, String field, Collection<Object> listValues) {
         String paramList = listValues.stream().map(v -> String.format("'%s'", v.toString()))
                 .collect(Collectors.joining(","));
         return line.replace(String.format("= :%s:", field), String.format("%s", String.format("IN (%s)", paramList)));
@@ -226,19 +193,7 @@ public class SqlBundler {
      * @return {@link List} of objects.
      */
     @SuppressWarnings("unchecked")
-    public <T extends List<?>> T castList(Object obj) {
-        return (T) obj;
-    }
-
-    /**
-     * Will case the object to a set of objects.
-     * 
-     * @param <T> The type the object values should be cast too.
-     * @param obj What object needs to be a list.
-     * @return {@link Set} of objects.
-     */
-    @SuppressWarnings("unchecked")
-    public <T extends Set<?>> T castSet(Object obj) {
+    public <T extends Collection<?>> T castCollection(Object obj) {
         return (T) obj;
     }
 }
