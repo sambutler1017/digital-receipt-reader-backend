@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("test-local")
 public class PasswordHashTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(PasswordHashTest.class);
 
