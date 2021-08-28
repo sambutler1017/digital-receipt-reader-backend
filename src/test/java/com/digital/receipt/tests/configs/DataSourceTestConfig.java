@@ -1,10 +1,6 @@
 package com.digital.receipt.tests.configs;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.sql.SQLException;
-import java.util.Properties;
 
 import javax.sql.DataSource;
 
@@ -26,12 +22,12 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
  */
 @Configuration
 @Profile("test")
-public class DataSourceTestConfig {
+public class DataSourceTestConfig extends BaseTestConfig {
 
     @Autowired
-    private ActiveProfile activeProfile;
-
-    Properties prop = new Properties();
+    public DataSourceTestConfig(ActiveProfile activeProfile) {
+        super(activeProfile);
+    }
 
     /**
      * Create the datasouce config.
@@ -42,10 +38,6 @@ public class DataSourceTestConfig {
     @Bean
     public DataSource dataSource() throws SQLException {
         DriverManagerDataSource ds = new DriverManagerDataSource();
-        if (System.getProperty("APP_ENVIRONMENT") == null) {
-            initPropertiesFile();
-        }
-
         ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
         ds.setUrl(String.format("jdbc:mysql://databasePI.ddnsfree.com/%s?%s", generateTestSchema(), getDBParams()));
         ds.setUsername(getUsername());
@@ -62,20 +54,6 @@ public class DataSourceTestConfig {
     @Bean
     public JdbcTemplate jdbcTemplate() throws SQLException {
         return new JdbcTemplate(dataSource());
-    }
-
-    /**
-     * Generate the test Schema name and store it.
-     * 
-     * @return {@link String} of the test schema name.
-     */
-    private String generateTestSchema() {
-        String testSchema = String.format("receipt_test_%d",
-                (long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L);
-
-        new SqlClient(getDefaultDataSource()).execute(String.format("CREATE SCHEMA `%s`", testSchema));
-        System.setProperty("TEST_SCHEMA_NAME", testSchema);
-        return testSchema;
     }
 
     /**
@@ -107,42 +85,16 @@ public class DataSourceTestConfig {
     }
 
     /**
-     * Gets the username for the database based on the environment.
+     * Generate the test Schema name and store it.
      * 
-     * @return {@link String} of the username to use.
+     * @return {@link String} of the test schema name.
      */
-    private String getUsername() {
-        return System.getProperty("APP_ENVIRONMENT") != null ? System.getProperty("MYSQL_USERNAME")
-                : prop.getProperty("spring.datasource.username");
-    }
+    protected String generateTestSchema() {
+        String testSchema = String.format("receipt_test_%d",
+                (long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L);
 
-    /**
-     * Gets the password for the database based on the environment.
-     * 
-     * @return {@link String} of the password to use.
-     */
-    private String getPassword() {
-        return System.getProperty("APP_ENVIRONMENT") != null ? System.getProperty("MYSQL_PASSWORD")
-                : prop.getProperty("spring.datasource.password");
-    }
-
-    /**
-     * Returns the params to be appended to the db url.
-     * 
-     * @return {@link String} of the db url params.
-     */
-    private String getDBParams() {
-        return "useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-    }
-
-    /**
-     * Init the properties test file.
-     */
-    private void initPropertiesFile() {
-        try (InputStream input = new FileInputStream(activeProfile.getLocalTestPropertyFilePath())) {
-            prop.load(input);
-        } catch (IOException io) {
-            io.printStackTrace();
-        }
+        new SqlClient(getDefaultDataSource()).execute(String.format("CREATE SCHEMA `%s`", testSchema));
+        System.setProperty("TEST_SCHEMA_NAME", testSchema);
+        return testSchema;
     }
 }
