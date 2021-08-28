@@ -15,7 +15,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
  * @since August 28, 2021
  */
 @Configuration
-@Profile("test")
+@Profile("tmep")
 public class DataSourceTestConfig {
     @Bean
     public DataSource dataSource() {
@@ -23,8 +23,8 @@ public class DataSourceTestConfig {
         ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
         ds.setUrl(
                 "jdbc:mysql://databasePI.ddnsfree.com/receipt_db?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
-        ds.setUsername(System.getenv("MYSQL_USERNAME"));
-        ds.setPassword(System.getenv("MYSQL_PASSWORD"));
+        ds.setUsername(System.getProperty("MYSQL_USERNAME"));
+        ds.setPassword(System.getProperty("MYSQL_PASSWORD"));
         return ds;
     }
 
