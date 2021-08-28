@@ -28,6 +28,9 @@ dependencies {
 }
 
 test {
+	println "Starting Tests"
+	println System.getProperty("MYSQL_PASSWORD")
+    println System.getProperty("MYSQL_USERNAME")
 	systemProperties = System.properties
 	useJUnitPlatform()
 }
