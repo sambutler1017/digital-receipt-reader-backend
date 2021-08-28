@@ -120,4 +120,13 @@ public class SqlClient {
 			return Optional.of(-1);
 		}
 	}
+
+	/**
+	 * Execute the given query string as it is.
+	 * 
+	 * @param query The query to be executed.
+	 */
+	public void execute(String query) {
+		jdbcTemplateObject.execute(query);
+	}
 }
