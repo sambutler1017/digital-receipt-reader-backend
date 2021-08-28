@@ -18,3 +18,6 @@ jobs:
         run: chmod +x gradlew
       - name: Running Gradle Build/Tests
         run: ./gradlew build
+        env:
+          MYSQL_USERNAME: ${{secrets.MYSQL_USERNAME}}
+          MYSQL_PASSWORD: ${{secrets.MYSQL_PASSWORD}}
