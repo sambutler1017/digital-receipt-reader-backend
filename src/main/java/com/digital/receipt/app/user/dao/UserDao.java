@@ -110,11 +110,11 @@ public class UserDao extends AbstractSqlDao {
      * @return user associated to that id with the updated information
      * @throws Exception
      */
-    public User updateUserRole(int id, WebRole role) throws Exception {
-        User userProfile = getUserById(id);
+    public User updateUserRole(int userId, WebRole role) throws Exception {
+        User userProfile = getUserById(userId);
 
         userProfile.setWebRole(role);
-        sqlClient.update(getSql("updateUserRole"), params("id", id).addValue("roleId", role.getValue()));
+        sqlClient.update(getSql("updateUserRole"), params("id", userId).addValue("roleId", role.getValue()));
         return userProfile;
     }
 

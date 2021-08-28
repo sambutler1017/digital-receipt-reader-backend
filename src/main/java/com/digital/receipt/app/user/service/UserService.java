@@ -86,8 +86,8 @@ public class UserService {
      * @return user associated to that id with the updated information
      * @throws Exception
      */
-    public User updateUserRole(int id, WebRole role) throws Exception {
-        return userDao.updateUserRole(id, role);
+    public User updateUserRole(int userId, WebRole role) throws Exception {
+        return userDao.updateUserRole(userId, role);
     }
 
     /**
