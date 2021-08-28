@@ -35,11 +35,11 @@ public class DataSourceTestConfig {
     }
 
     private String getUsername() {
-        return System.getProperty("APP_ENVIRONMENT") != null ? System.getProperty("MYSQL_USERNAME") : "sambutler10173";
+        return System.getProperty("APP_ENVIRONMENT") != null ? System.getProperty("MYSQL_USERNAME") : "sambutler1017";
     }
 
     private String getPassword() {
-        return System.getProperty("APP_ENVIRONMENT") != null ? System.getProperty("MYSQL_PASSWORD") : "password123";
+        return System.getProperty("APP_ENVIRONMENT") != null ? System.getProperty("MYSQL_PASSWORD") : "password";
     }
 
     private String getDBParams() {
