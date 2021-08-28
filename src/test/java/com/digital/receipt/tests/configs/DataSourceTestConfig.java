@@ -35,7 +35,9 @@ public class DataSourceTestConfig {
     @Bean
     public DataSource dataSource() throws SQLException {
         DriverManagerDataSource ds = new DriverManagerDataSource();
-        initProperties();
+        if (System.getProperty("APP_ENVIRONMENT") == null) {
+            initPropertiesFile();
+        }
 
         ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
         ds.setUrl(String.format("jdbc:mysql://databasePI.ddnsfree.com/%s?%s", "receipt_db", getDBParams()));
@@ -81,7 +83,7 @@ public class DataSourceTestConfig {
     /**
      * Init the properties test file.
      */
-    private void initProperties() {
+    private void initPropertiesFile() {
         try (InputStream input = new FileInputStream(activeProfile.getLocalTestPropertyFilePath())) {
             prop.load(input);
         } catch (IOException io) {
