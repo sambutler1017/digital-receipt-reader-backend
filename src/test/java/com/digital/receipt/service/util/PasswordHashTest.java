@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("test-local")
+@ActiveProfiles("local")
 public class PasswordHashTest {
 
     @Autowired
@@ -21,7 +21,6 @@ public class PasswordHashTest {
     @Test
     public void shouldHashPasswordTest() throws Exception {
         userDao.getUserById(1);
-        System.out.println(System.getProperty("spring.profiles.active"));
         Assert.assertEquals("Should match", 1, 1);
     }
 }
