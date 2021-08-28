@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 public class ActiveProfile {
     private static final String PROD_ENV_PATH = "/app/src/main";
     private static final String LOCAL_ENV_PATH = "../digital-receipt-reader-backend/src/main";
+    private static final String TEST_ENV_PATH = "../digital-receipt-reader-backend/src/test";
 
     /**
      * Method to set the current active profile the application is running in
@@ -30,6 +31,15 @@ public class ActiveProfile {
      */
     public String getPropertyFilePath() {
         return String.format("%s/resources/%s", getEnvironmentUrl(), getAppPropertiesName());
+    }
+
+    /**
+     * Gets the Test property file path.
+     * 
+     * @return {@link String} of the property file path.
+     */
+    public String getLocalTestPropertyFilePath() {
+        return String.format("%s/resources/%s", TEST_ENV_PATH, "application-test-local.properties");
     }
 
     /**
