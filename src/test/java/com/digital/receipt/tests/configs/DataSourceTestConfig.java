@@ -15,21 +15,33 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
  * @since August 28, 2021
  */
 @Configuration
-@Profile("tmep")
+@Profile("test")
 public class DataSourceTestConfig {
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource ds = new DriverManagerDataSource();
         ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        ds.setUrl(
-                "jdbc:mysql://databasePI.ddnsfree.com/receipt_db?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
-        ds.setUsername(System.getProperty("MYSQL_USERNAME"));
-        ds.setPassword(System.getProperty("MYSQL_PASSWORD"));
+        ds.setUrl(String.format("jdbc:mysql://databasePI.ddnsfree.com/%s?%s", "receipt_db", getDBParams()));
+        ds.setUsername(getUsername());
+        ds.setPassword(getPassword());
         return ds;
     }
 
     @Bean
     public JdbcTemplate jdbcTemplate() {
         return new JdbcTemplate(dataSource());
+    }
+
+    private String getUsername() {
+        return System.getProperty("APP_ENVIRONMENT") != null ? System.getProperty("MYSQL_USERNAME")
+                : "sambutler1017asd";
+    }
+
+    private String getPassword() {
+        return System.getProperty("APP_ENVIRONMENT") != null ? System.getProperty("MYSQL_PASSWORD") : "password12";
+    }
+
+    private String getDBParams() {
+        return "useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     }
 }
