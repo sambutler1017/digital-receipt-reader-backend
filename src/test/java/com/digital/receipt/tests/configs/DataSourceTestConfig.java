@@ -40,6 +40,8 @@ public class DataSourceTestConfig {
         }
 
         System.out.println("Environment: " + System.getProperty("APP_ENVIRONMENT"));
+        System.out.println("Username: " + System.getProperty("MYSQL_USERNAME"));
+        System.out.println("Password: " + System.getProperty("MYSQL_PASSWORD"));
 
         ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
         ds.setUrl(String.format("jdbc:mysql://databasePI.ddnsfree.com/%s?%s", "receipt_db", getDBParams()));
