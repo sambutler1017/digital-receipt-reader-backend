@@ -65,7 +65,13 @@ public class ActiveProfile {
      * @return String of the signing key to use.
      */
     public String getSigningKey() {
-        return isLocalEnvironment() ? "local-key" : System.getenv("JWT_SIGNING_KEY");
+        if (isLocalEnvironment()) {
+            return "local-key";
+        } else if (System.getenv("JWT_SIGNING_KEY") != null) {
+            return System.getenv("JWT_SIGNING_KEY");
+        } else {
+            return System.getProperty("JWT_SIGNING_KEY");
+        }
     }
 
     /**
