@@ -8,9 +8,6 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
-import com.digital.receipt.service.activeProfile.ActiveProfile;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -26,10 +23,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @Configuration
 @Profile("test")
 public class DataSourceTestConfig {
-
-    @Autowired
-    private ActiveProfile activeProfile;
-
+    private static final String TEST_ENV_PATH = "../digital-receipt-reader-backend/src/test";
     Properties prop = new Properties();
 
     @Bean
@@ -88,10 +82,11 @@ public class DataSourceTestConfig {
      * Init the properties test file.
      */
     private void initPropertiesFile() {
-        try (InputStream input = new FileInputStream(activeProfile.getLocalTestPropertyFilePath())) {
+        try (InputStream input = new FileInputStream(
+                String.format("%s/resources/application-test-local.properties", TEST_ENV_PATH))) {
             prop.load(input);
         } catch (IOException io) {
-            io.printStackTrace();
+            // Continue
         }
     }
 }
