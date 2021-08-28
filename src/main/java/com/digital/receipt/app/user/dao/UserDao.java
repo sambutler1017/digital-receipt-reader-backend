@@ -8,6 +8,7 @@ import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.common.abstracts.AbstractSqlDao;
 import com.digital.receipt.common.enums.WebRole;
+import com.digital.receipt.common.exceptions.UserNotFoundException;
 
 import org.springframework.stereotype.Repository;
 
@@ -43,12 +44,11 @@ public class UserDao extends AbstractSqlDao {
      * @throws Exception
      */
     public User getUserById(int id) throws Exception {
-        // try {
-        return sqlClient.getTemplate(getSql("getUserById"), params("userId", id), USER_MAPPER);
-        // } catch (Exception e) {
-        // throw new UserNotFoundException(String.format("User not found for id: %d",
-        // id));
-        // }
+        try {
+            return sqlClient.getTemplate(getSql("getUserById"), params("userId", id), USER_MAPPER);
+        } catch (Exception e) {
+            throw new UserNotFoundException(String.format("User not found for id: %d", id));
+        }
     }
 
     /**

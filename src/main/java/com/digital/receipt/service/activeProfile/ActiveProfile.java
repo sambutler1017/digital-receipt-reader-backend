@@ -38,7 +38,12 @@ public class ActiveProfile {
      * @return string of the environment currently running
      */
     public Environment getEnvironment() {
-        return System.getenv("APP_ENVIRONMENT") != null ? Environment.PRODUCTION : Environment.LOCAL;
+        if (System.getenv("APP_ENVIRONMENT") != null) {
+            return Environment.getEnvrionment(System.getenv("APP_ENVIRONMENT"));
+        } else if (System.getProperty("APP_ENVIRONMENT") != null) {
+            return Environment.getEnvrionment(System.getProperty("APP_ENVIRONMENT"));
+        }
+        return Environment.LOCAL;
     }
 
     /**
@@ -56,7 +61,11 @@ public class ActiveProfile {
      * @return string of the environment url
      */
     public String getEnvironmentUrl() {
-        return isLocalEnvironment() ? LOCAL_ENV_PATH : PROD_ENV_PATH;
+        if (getEnvironment().equals(Environment.PRODUCTION)) {
+            return PROD_ENV_PATH;
+        } else {
+            return LOCAL_ENV_PATH;
+        }
     }
 
     /**
