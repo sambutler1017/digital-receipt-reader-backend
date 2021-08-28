@@ -11,8 +11,14 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
+/**
+ * Configuration class for running test with datasource.
+ * 
+ * @author Sam Butler
+ * @since August 28, 2021
+ */
 @Configuration
-@Profile("tmep")
+@Profile("unknownTest")
 public class DataSourceTestConfig {
 
     @Autowired
