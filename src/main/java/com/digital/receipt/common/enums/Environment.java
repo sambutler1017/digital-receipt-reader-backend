@@ -7,8 +7,7 @@ package com.digital.receipt.common.enums;
  * @since July 31, 2021
  */
 public enum Environment {
-    PRODUCTION("https://digital-receipt-production.herokuapp.com"), LOCAL("http://localhost:8080/"),
-    TEST("https://digital-receipt-production.herokuapp.com");
+    PRODUCTION("https://digital-receipt-production.herokuapp.com"), LOCAL("http://localhost:8080/");
 
     private String uri;
 
