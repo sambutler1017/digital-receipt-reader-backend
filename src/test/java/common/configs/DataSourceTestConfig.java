@@ -40,8 +40,7 @@ public class DataSourceTestConfig extends DatabaseTestProfile {
     public DataSource dataSource() throws SQLException {
         DriverManagerDataSource ds = new DriverManagerDataSource();
         ds.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        ds.setUrl(String.format("jdbc:mysql://databasePI.ddnsfree.com/%s?%s", System.getProperty("TEST_SCHEMA_NAME"),
-                getDBParams()));
+        ds.setUrl(String.format(DB_URL, System.getProperty("TEST_SCHEMA_NAME")));
         ds.setUsername(getUsername());
         ds.setPassword(getPassword());
         return ds;

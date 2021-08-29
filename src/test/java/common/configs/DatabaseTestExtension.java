@@ -20,19 +20,16 @@ import common.factory.TestFactory;
  */
 @Service
 public class DatabaseTestExtension implements BeforeAllCallback, ExtensionContext.Store.CloseableResource {
-
     private static boolean started = false;
     private DatabaseTestProfile dbProfile;
 
     private DriverManagerDataSource defaultDatasource;
     private SqlClient sqlClient;
-    private TestFactory testFactory;
 
     public DatabaseTestExtension() {
         this.dbProfile = new DatabaseTestProfile(new ActiveProfile());
         this.defaultDatasource = getDefaultDataSource();
         this.sqlClient = new SqlClient(defaultDatasource);
-        this.testFactory = new TestFactory(this.sqlClient);
     }
 
     @Override
@@ -56,9 +53,8 @@ public class DatabaseTestExtension implements BeforeAllCallback, ExtensionContex
      * @return {@link DriverManagerDataSource} source of the db.
      */
     private DriverManagerDataSource getDefaultDataSource() {
-        return generateDataSource(
-                "jdbc:mysql://databasePI.ddnsfree.com/receipt_db?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
-                dbProfile.getUsername(), dbProfile.getPassword());
+        return generateDataSource(String.format(dbProfile.DB_URL, "receipt_db"), dbProfile.getUsername(),
+                dbProfile.getPassword());
     }
 
     /**
@@ -67,9 +63,8 @@ public class DatabaseTestExtension implements BeforeAllCallback, ExtensionContex
      * @return {@link DriverManagerDataSource} source of the db.
      */
     private DriverManagerDataSource getTestDataSource() {
-        String url = "jdbc:mysql://databasePI.ddnsfree.com/%s?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
-        return generateDataSource(String.format(url, System.getProperty("TEST_SCHEMA_NAME")), dbProfile.getUsername(),
-                dbProfile.getPassword());
+        return generateDataSource(String.format(dbProfile.DB_URL, System.getProperty("TEST_SCHEMA_NAME")),
+                dbProfile.getUsername(), dbProfile.getPassword());
     }
 
     /**
@@ -109,7 +104,6 @@ public class DatabaseTestExtension implements BeforeAllCallback, ExtensionContex
      * @throws Exception If the sql client can be initialized.
      */
     private void schemaInit() throws Exception {
-        testFactory = new TestFactory(new SqlClient(getTestDataSource()));
-        testFactory.initSchema();
+        new TestFactory(new SqlClient(getTestDataSource())).initSchema();
     }
 }

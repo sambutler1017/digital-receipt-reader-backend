@@ -14,6 +14,7 @@ import com.digital.receipt.service.activeProfile.ActiveProfile;
  * @since August 29, 2021
  */
 public class DatabaseTestProfile {
+    protected final String DB_URL = "jdbc:mysql://databasePI.ddnsfree.com/%s?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     protected Properties prop;
     protected ActiveProfile activeProfile;
 
@@ -44,15 +45,6 @@ public class DatabaseTestProfile {
     protected String getPassword() {
         return System.getProperty("APP_ENVIRONMENT") != null ? System.getProperty("MYSQL_PASSWORD")
                 : prop.getProperty("spring.datasource.password");
-    }
-
-    /**
-     * Returns the params to be appended to the db url.
-     * 
-     * @return {@link String} of the db url params.
-     */
-    protected String getDBParams() {
-        return "useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     }
 
     /**
