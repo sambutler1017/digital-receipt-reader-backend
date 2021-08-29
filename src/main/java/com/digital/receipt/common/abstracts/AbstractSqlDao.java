@@ -27,6 +27,8 @@ public abstract class AbstractSqlDao {
 
     private final String defaultSqlPath = "%s/resources/dao/%s.sql";
 
+    private String sqlFilePath;
+
     private boolean startOfFragmentFound;
 
     private boolean endOfFragmentFound;
@@ -36,6 +38,14 @@ public abstract class AbstractSqlDao {
 
     @Autowired
     protected SqlClient sqlClient;
+
+    public AbstractSqlDao() {
+        sqlFilePath = new ActiveProfile().getEnvironmentUrl();
+    }
+
+    public AbstractSqlDao(String sqlFilePath) {
+        this.sqlFilePath = sqlFilePath;
+    }
 
     /**
      * Gets the sql based on the given fragment name.
@@ -49,7 +59,7 @@ public abstract class AbstractSqlDao {
     public List<String> getSql(String fragmentName) throws Exception {
         resetFragmentStatus();
 
-        String filePath = String.format(defaultSqlPath, activeProfile.getEnvironmentUrl(), getChildClassName());
+        String filePath = String.format(defaultSqlPath, sqlFilePath, getChildClassName());
         BufferedReader br = new BufferedReader(new FileReader(filePath));
 
         List<String> result = br.lines().filter(s -> isContainedInFragment(s, fragmentName))

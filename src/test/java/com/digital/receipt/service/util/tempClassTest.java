@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 import common.annotations.IntegrationTests;
 
 @IntegrationTests
-public class PasswordHashTest {
+public class tempClassTest {
 
     @Test
     public void shouldHashPasswordTest() throws Exception {

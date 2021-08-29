@@ -1,4 +1,4 @@
-package com.digital.receipt.tests.configs;
+package common.configs;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -13,14 +13,14 @@ import com.digital.receipt.service.activeProfile.ActiveProfile;
  * @author Sam Butler
  * @since August 29, 2021
  */
-public class BaseTestConfig {
+public class DatabaseTestProfile {
     protected Properties prop;
     protected ActiveProfile activeProfile;
 
     /**
      * Default constructor for initializing properties file.
      */
-    public BaseTestConfig(ActiveProfile activeProfile) {
+    public DatabaseTestProfile(ActiveProfile activeProfile) {
         this.activeProfile = activeProfile;
         this.prop = new Properties();
         initPropertiesFile();

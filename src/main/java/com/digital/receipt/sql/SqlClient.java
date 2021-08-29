@@ -129,4 +129,13 @@ public class SqlClient {
 	public void execute(String query) {
 		jdbcTemplateObject.execute(query);
 	}
+
+	/**
+	 * Execute multiple queries at once.
+	 * 
+	 * @param query The query to be executed.
+	 */
+	public void batch(String... querys) {
+		jdbcTemplateObject.batchUpdate(querys);
+	}
 }
