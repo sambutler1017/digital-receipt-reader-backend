@@ -13,6 +13,13 @@ import java.security.NoSuchAlgorithmException;
  */
 public class PasswordHash {
 
+	/**
+	 * Will hash the given string with SHA-256.
+	 * 
+	 * @param pass The string to be hashed.
+	 * @return {@link String} hash
+	 * @throws NoSuchAlgorithmException
+	 */
 	public static String hashPassword(String pass) throws NoSuchAlgorithmException {
 		byte[] hash = getSHA(pass);
 		BigInteger number = new BigInteger(1, hash);
@@ -26,12 +33,27 @@ public class PasswordHash {
 		return hexString.toString();
 	}
 
+	/**
+	 * Gets the Sha instance for the given string.
+	 * 
+	 * @param input The string to turn into a bte Array
+	 * @return {@link byte[]} of the input
+	 * @throws NoSuchAlgorithmException
+	 */
 	private static byte[] getSHA(String input) throws NoSuchAlgorithmException {
 		MessageDigest md = MessageDigest.getInstance("SHA-256");
 		return md.digest(input.getBytes(StandardCharsets.UTF_8));
 
 	}
 
+	/**
+	 * Checks to see if the given string password matches the hashed password.
+	 * 
+	 * @param stringPass String password.
+	 * @param hashPass   Hashed Password.
+	 * @return {@link boolean} of the result of the match.
+	 * @throws NoSuchAlgorithmException
+	 */
 	public static boolean checkPassword(String stringPass, String hashPass) throws NoSuchAlgorithmException {
 		return hashPassword(stringPass).equals(hashPass);
 	}
