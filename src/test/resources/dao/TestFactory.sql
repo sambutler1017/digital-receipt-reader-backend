@@ -37,15 +37,6 @@
         UNIQUE KEY `receipt_id_UNIQUE` (`receipt_id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-    INSERT INTO `user_profile` (`first_name`, `last_name`, `email`)
-    VALUES ("test", "test", "test");
-
-    INSERT INTO `web_role`(`web_role`)
-    VALUES ("ADMIN"), ("USER");
-
-    INSERT INTO `user_credentials` (`user_id`,`password`)
-    VALUES (1, "temp");
-
 @NAME(setupContraints)
     ALTER TABLE user_profile 
         ADD CONSTRAINT `user_profile__web_role__FK1` FOREIGN KEY (`web_role_id`) 
