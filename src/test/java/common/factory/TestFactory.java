@@ -50,7 +50,7 @@ public class TestFactory extends AbstractSqlDao {
      */
     private void initTables() throws Exception {
         LOGGER.info(String.format("Creating tables on schema: %s", System.getProperty("TEST_SCHEMA_NAME")));
-        sqlClient.batch(getCleanedSql("setupTables"));
+        sqlClient.batch(getQueryList("setupTables"));
     }
 
     /**
@@ -60,7 +60,7 @@ public class TestFactory extends AbstractSqlDao {
      */
     private void initContraints() throws Exception {
         LOGGER.info("Adding table Contraints ...");
-        sqlClient.batch(getCleanedSql("setupContraints"));
+        sqlClient.batch(getQueryList("setupContraints"));
     }
 
     /**
@@ -71,7 +71,7 @@ public class TestFactory extends AbstractSqlDao {
      * @return {@link String[]} of the queries to run.
      * @throws Exception If the fragment can't be found.
      */
-    private String[] getCleanedSql(String fragment) throws Exception {
+    private String[] getQueryList(String fragment) throws Exception {
         List<String> queries = Arrays.asList(getSql(fragment).stream().collect(Collectors.joining("")).split(";"));
         queries.removeAll(Arrays.asList("", " ", null));
         return queries.toArray(new String[0]);

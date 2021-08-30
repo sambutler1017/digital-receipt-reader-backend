@@ -57,6 +57,32 @@ public abstract class AbstractSqlDao {
      * @throws IOException
      */
     public List<String> getSql(String fragmentName) throws Exception {
+        return getQueryFromFile(fragmentName, getChildClassName());
+    }
+
+    /**
+     * Gets the sql based on the given fragment name.
+     * 
+     * @param fragmentName Name of the sql fragment to search for.
+     * @return {@link AbstractSqlDao} instance containing the sql string.
+     * @throws SqlFragmentNotFoundException If the fragment can not be found in the
+     *                                      given file.
+     * @throws IOException
+     */
+    public List<String> getSql(String fragmentName, String fileName) throws Exception {
+        return getQueryFromFile(fragmentName, fileName);
+    }
+
+    /**
+     * Gets the sql based on the given fragment name and name of the file to search
+     * in.
+     * 
+     * @param fragmentName Name of the sql fragment to search for.
+     * @param fileName     Name of the file to search in.
+     * @return {@link List<String>} of the query found.
+     * @throws IOException If the file can't be found or Reader can't be closed.
+     */
+    private List<String> getQueryFromFile(String fragmentName, String fileName) throws IOException {
         resetFragmentStatus();
 
         String filePath = String.format(defaultSqlPath, sqlFilePath, getChildClassName());

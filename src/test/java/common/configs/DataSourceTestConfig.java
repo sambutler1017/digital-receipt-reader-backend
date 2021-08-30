@@ -8,7 +8,6 @@ import com.digital.receipt.service.activeProfile.ActiveProfile;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,13 +20,12 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
  * @since August 28, 2021
  */
 @Configuration
-@ComponentScan("com.digital.receipt")
 @Profile("test")
 public class DataSourceTestConfig extends DatabaseTestProfile {
 
     @Autowired
-    public DataSourceTestConfig(ActiveProfile activeProfile) {
-        super(activeProfile);
+    public DataSourceTestConfig() {
+        super(new ActiveProfile());
     }
 
     /**
