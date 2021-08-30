@@ -7,10 +7,7 @@ import java.lang.annotation.Target;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
 
-import common.configs.DataSourceTestConfig;
 import common.configs.DatabaseTestExtension;
 
 /**
@@ -21,10 +18,8 @@ import common.configs.DatabaseTestExtension;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@ContextConfiguration(classes = DataSourceTestConfig.class)
 @SpringBootTest
 @ExtendWith(DatabaseTestExtension.class)
-@ActiveProfiles("test")
 public @interface IntegrationTests {
 
 }

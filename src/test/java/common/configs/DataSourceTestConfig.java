@@ -20,11 +20,6 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 @Profile("test")
 public class DataSourceTestConfig extends DatabaseTestProfile {
 
-    // @Autowired
-    // public DataSourceTestConfig(ActiveProfile activeProfile) {
-    // super(activeProfile);
-    // }
-
     /**
      * Create the datasouce config.
      * 
