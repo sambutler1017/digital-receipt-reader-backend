@@ -1,22 +1,20 @@
 package com.digital.receipt.app.user.dao;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
+import com.digital.receipt.app.user.client.domain.User;
+
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import common.annotations.IntegrationTests;
 
 @IntegrationTests
 public class UserDaoTest {
 
-    @BeforeAll
-    public static void setup() throws Exception {
-        System.out.println("In Before");
-    }
+    @Autowired
+    private UserDao userDao;
 
-    @DisplayName("Should get the user for the given id")
     @Test
     public void getUserForTheGivenId() throws Exception {
-        System.out.println("In Test");
+        User user = userDao.getUserById(1);
     }
 }

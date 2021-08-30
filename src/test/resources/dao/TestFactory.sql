@@ -8,20 +8,20 @@
         `insert_date_utc` datetime NOT NULL DEFAULT current_timestamp(),
         PRIMARY KEY (`id`),
         UNIQUE KEY `email__AK1` (`email`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
     CREATE TABLE web_role (
         `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
         `web_role` varchar(45) NOT NULL,
         PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4;
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
     CREATE TABLE user_credentials (
         `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
         `password` varchar(256) NOT NULL,
         `forgot_password_flag` tinyint(3) unsigned NOT NULL DEFAULT 0,
         PRIMARY KEY (`user_id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
     CREATE TABLE receipts (
         `id` int(10) unsigned NOT NULL,
@@ -37,6 +37,14 @@
         UNIQUE KEY `receipt_id_UNIQUE` (`receipt_id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+    INSERT INTO `user_profile` (`first_name`, `last_name`, `email`)
+    VALUES ("test", "test", "test");
+
+    INSERT INTO `web_role`(`web_role`)
+    VALUES ("ADMIN"), ("USER");
+
+    INSERT INTO `user_credentials` (`user_id`,`password`)
+    VALUES (1, "temp");
 
 @NAME(setupContraints)
     ALTER TABLE user_profile 

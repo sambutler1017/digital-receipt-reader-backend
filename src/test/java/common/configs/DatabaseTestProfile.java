@@ -7,12 +7,17 @@ import java.util.Properties;
 
 import com.digital.receipt.service.activeProfile.ActiveProfile;
 
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Service;
+
 /**
  * Base Test configuration class.
  * 
  * @author Sam Butler
  * @since August 29, 2021
  */
+@Service
+@ComponentScan(basePackages = "com.digital.receipt")
 public class DatabaseTestProfile {
     protected final String DB_URL = "jdbc:mysql://databasePI.ddnsfree.com/%s?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
     protected Properties prop;
@@ -21,8 +26,8 @@ public class DatabaseTestProfile {
     /**
      * Default constructor for initializing properties file.
      */
-    public DatabaseTestProfile(ActiveProfile activeProfile) {
-        this.activeProfile = activeProfile;
+    public DatabaseTestProfile() {
+        this.activeProfile = new ActiveProfile();
         this.prop = new Properties();
         initPropertiesFile();
     }

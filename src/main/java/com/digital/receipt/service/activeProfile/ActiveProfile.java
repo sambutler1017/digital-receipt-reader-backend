@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class ActiveProfile {
     private static final String PROD_ENV_PATH = "/app/src/main";
-    private static final String LOCAL_ENV_PATH = "../digital-receipt-reader-backend/src/main";
-    private static final String TEST_ENV_PATH = "../digital-receipt-reader-backend/src/test";
+    private static final String LOCAL_ENV_PATH = "src/main";
+    private static final String TEST_ENV_PATH = "src/test";
 
     /**
      * Method to set the current active profile the application is running in

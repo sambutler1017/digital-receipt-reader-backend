@@ -2,7 +2,6 @@ package common.configs;
 
 import static org.junit.jupiter.api.extension.ExtensionContext.Namespace.GLOBAL;
 
-import com.digital.receipt.service.activeProfile.ActiveProfile;
 import com.digital.receipt.sql.SqlClient;
 
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -27,7 +26,7 @@ public class DatabaseTestExtension implements BeforeAllCallback, ExtensionContex
     private SqlClient sqlClient;
 
     public DatabaseTestExtension() {
-        this.dbProfile = new DatabaseTestProfile(new ActiveProfile());
+        this.dbProfile = new DatabaseTestProfile();
         this.defaultDatasource = getDefaultDataSource();
         this.sqlClient = new SqlClient(defaultDatasource);
     }
