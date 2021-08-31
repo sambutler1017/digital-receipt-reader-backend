@@ -48,7 +48,8 @@
 @NAME(updateUserPassword)
     UPDATE user_credentials 
 	SET 
-    	password = :password:
+    	password = :password:,
+		salt = :salt:
 	WHERE
 		user_id = :id:
 
@@ -56,6 +57,13 @@
     UPDATE user_credentials 
 	SET 
     	forgot_password_flag = :flag:
+	WHERE
+		user_id = :id:
+
+@NAME(updateUserPassword)
+    UPDATE user_credentials 
+	SET 
+    	salt = :salt:
 	WHERE
 		user_id = :id:
 

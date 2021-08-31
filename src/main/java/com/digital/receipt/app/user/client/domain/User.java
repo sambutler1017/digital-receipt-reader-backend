@@ -3,6 +3,8 @@ package com.digital.receipt.app.user.client.domain;
 import java.util.Date;
 
 import com.digital.receipt.common.enums.WebRole;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 /**
  * Class to create a user profile object
@@ -23,6 +25,9 @@ public class User {
     private WebRole webRole;
 
     private String password;
+
+    @JsonInclude(Include.NON_DEFAULT)
+    private long salt;
 
     private boolean forgotPassword;
 
@@ -74,6 +79,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public long getSalt() {
+        return salt;
+    }
+
+    public void setSalt(long salt) {
+        this.salt = salt;
     }
 
     public boolean isForgotPassword() {

@@ -4,6 +4,7 @@ import static com.digital.receipt.app.user.mapper.UserMapper.USER_MAPPER;
 
 import java.util.List;
 
+import com.digital.receipt.app.auth.client.domain.AuthPassword;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.common.abstracts.AbstractSqlDao;
@@ -55,7 +56,8 @@ public class UserDao extends AbstractSqlDao {
      * Update the user for the given user object. Null out password field so that it
      * is not returned on the {@link User} object
      * 
-     * @param user what information on the user needs to be updated.
+     * @param userId Id of the usre being updated.
+     * @param user   what information on the user needs to be updated.
      * @return user associated to that id with the updated information
      * @throws Exception
      */
@@ -75,15 +77,17 @@ public class UserDao extends AbstractSqlDao {
     /**
      * Update the users password, for the given password.
      * 
-     * @param user what information on the user needs to be updated.
+     * @param userId   Id of the use that is being updated.
+     * @param password The password to set on the user profile.
+     * @param salt     The salt value that was appended to the password.
      * @return user associated to that id with the updated information
      * @throws Exception
      */
-    public User updateUserPassword(int userId, String password) throws Exception {
+    public User updateUserPassword(int userId, AuthPassword authPassword) throws Exception {
         User userProfile = getUserById(userId);
 
-        sqlClient.update(getSql("updateUserPassword"),
-                params("password", password).addValue("id", userProfile.getId()));
+        sqlClient.update(getSql("updateUserPassword"), params("password", authPassword.getPassword())
+                .addValue("id", userProfile.getId()).addValue("salt", authPassword.getSalt()));
         return userProfile;
     }
 

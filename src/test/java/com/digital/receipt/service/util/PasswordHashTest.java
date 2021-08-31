@@ -22,19 +22,19 @@ public class PasswordHashTest {
     @DisplayName("Should hash the string")
     @Test
     public void shouldHashPasswordTest() throws Exception {
-        Assert.assertNotNull(PasswordHash.hashPassword(fakePass));
+        Assert.assertNotNull(PasswordUtil.hashPassword(fakePass));
     }
 
     @DisplayName("Password should match sash")
     @Test
     public void passwordShouldMatch() throws Exception {
-        Assert.assertTrue("Passwords should match", PasswordHash.checkPassword(fakePass, hashedPass));
+        Assert.assertTrue("Passwords should match", PasswordUtil.checkPassword(fakePass, hashedPass));
     }
 
     @DisplayName("Password should not match hash")
     @Test
     public void passwordShouldNotMatch() throws Exception {
         String pass = "nonMatchingPassword";
-        Assert.assertFalse("Passwords should not match", PasswordHash.checkPassword(pass, hashedPass));
+        Assert.assertFalse("Passwords should not match", PasswordUtil.checkPassword(pass, hashedPass));
     }
 }

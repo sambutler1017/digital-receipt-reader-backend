@@ -16,12 +16,14 @@
         PRIMARY KEY (`id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
 
-    CREATE TABLE user_credentials (
+    CREATE TABLE `user_credentials` (
         `user_id` int(10) unsigned NOT NULL AUTO_INCREMENT,
         `password` varchar(256) NOT NULL,
+        `salt` varchar(10) NOT NULL DEFAULT '0',
         `forgot_password_flag` tinyint(3) unsigned NOT NULL DEFAULT 0,
         PRIMARY KEY (`user_id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4;
+
 
     CREATE TABLE receipts (
         `id` int(10) unsigned NOT NULL,

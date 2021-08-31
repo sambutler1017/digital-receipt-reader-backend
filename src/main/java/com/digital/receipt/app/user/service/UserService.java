@@ -10,7 +10,7 @@ import com.digital.receipt.app.user.dao.UserDao;
 import com.digital.receipt.common.enums.WebRole;
 import com.digital.receipt.common.exceptions.BaseException;
 import com.digital.receipt.jwt.utility.JwtHolder;
-import com.digital.receipt.service.util.PasswordHash;
+import com.digital.receipt.service.util.PasswordUtil;
 import com.google.common.collect.Sets;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,14 +136,15 @@ public class UserService {
     /**
      * Update the users credentials.
      * 
-     * @param user what information on the user needs to be updated.
+     * @param userId   Id of the user wanting to update their password.
+     * @param password THe password to update on the user's account.
      * @return user associated to that id with the updated information
      * @throws Exception
      */
     private User updateUserPassword(int userId, String password) throws Exception {
         try {
             if (password != null && password.trim() != "") {
-                return userDao.updateUserPassword(userId, PasswordHash.hashPassword(password));
+                return userDao.updateUserPassword(userId, PasswordUtil.hashPasswordWithSalt(password));
             } else {
                 return getCurrentUser();
             }

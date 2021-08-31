@@ -39,7 +39,6 @@ public class SqlClient {
 	 */
 	@Autowired
 	public SqlClient(DataSource source) {
-		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		jdbcTemplateObject = new JdbcTemplate(source);
 	}
 
@@ -138,5 +137,15 @@ public class SqlClient {
 	 */
 	public void batch(String... querys) {
 		jdbcTemplateObject.batchUpdate(querys);
+	}
+
+	/**
+	 * Query for a single long column value.
+	 * 
+	 * @param query The query to execute.
+	 * @return {@link long} of the value returned.
+	 */
+	public long queryForLong(List<String> query, SqlParams params) {
+		return jdbcTemplateObject.queryForObject(bundler.bundle(query, params), Long.class);
 	}
 }

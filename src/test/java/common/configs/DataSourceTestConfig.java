@@ -2,6 +2,7 @@ package common.configs;
 
 import javax.sql.DataSource;
 
+import com.digital.receipt.service.util.PasswordUtil;
 import com.digital.receipt.sql.SqlClient;
 
 import org.springframework.context.annotation.Bean;
@@ -96,8 +97,7 @@ public class DataSourceTestConfig extends DatabaseTestProfile {
      * @throws Exception
      */
     private String generateTestSchema() throws Exception {
-        String testSchema = String.format("receipt_test_%d",
-                (long) Math.floor(Math.random() * 9_000_000_000L) + 1_000_000_000L);
+        String testSchema = String.format("receipt_test_%d", PasswordUtil.generatePasswordSalt());
         SqlClient sqlClient = new SqlClient(getDefaultDataSource());
 
         sqlClient.execute(String.format("CREATE SCHEMA `%s`", testSchema));
