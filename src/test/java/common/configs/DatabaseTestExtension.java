@@ -4,6 +4,8 @@ import com.digital.receipt.sql.SqlClient;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class DatabaseTestExtension implements AfterAllCallback {
+    private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseTestExtension.class);
+
     private static boolean afterAllInitialized = false;
     private DatabaseTestProfile dbProfile;
 
@@ -25,6 +29,8 @@ public class DatabaseTestExtension implements AfterAllCallback {
     @Override
     public void afterAll(ExtensionContext context) {
         if (afterAllInitialized) {
+            LOGGER.info(String.format("Cleaning up database and dropping schema '%s'.",
+                    System.getProperty("TEST_SCHEMA_NAME")));
             new SqlClient(getDefaultDataSource())
                     .execute(String.format("DROP SCHEMA `%s`", System.getProperty("TEST_SCHEMA_NAME")));
         } else {

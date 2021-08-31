@@ -29,7 +29,10 @@ public class DatabaseTestProfile {
     public DatabaseTestProfile() {
         this.activeProfile = new ActiveProfile();
         this.prop = new Properties();
-        initPropertiesFile();
+
+        if (System.getProperty("APP_ENVIRONMENT") == null) {
+            initPropertiesFile();
+        }
     }
 
     /**
