@@ -39,6 +39,7 @@ public class SqlClient {
 	 */
 	@Autowired
 	public SqlClient(DataSource source) {
+		StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 		jdbcTemplateObject = new JdbcTemplate(source);
 	}
 
