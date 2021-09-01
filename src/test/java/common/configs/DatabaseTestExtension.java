@@ -38,7 +38,7 @@ public class DatabaseTestExtension implements BeforeAllCallback, AfterAllCallbac
         if (!started) {
             started = true;
             generateTestSchema();
-            testClassCount = countFilesInDirectory(new File("src\\test\\java\\com\\digital\\receipt"));
+            testClassCount = countFilesInDirectory(new File("src/test/java/com/digital/receipt"));
         }
     }
 
@@ -116,7 +116,6 @@ public class DatabaseTestExtension implements BeforeAllCallback, AfterAllCallbac
     private int countFilesInDirectory(File directory) {
         LOGGER.info("Path: " + directory.getPath());
         LOGGER.info("File Exists: " + directory.exists());
-        LOGGER.info("User DIR: " + System.getProperty("user.dir"));
 
         int count = 0;
         for (File file : directory.listFiles()) {
