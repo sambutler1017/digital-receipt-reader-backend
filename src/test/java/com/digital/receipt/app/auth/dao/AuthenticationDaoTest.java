@@ -3,13 +3,17 @@ package com.digital.receipt.app.auth.dao;
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
 
+import com.digital.receipt.app.auth.client.domain.AuthPassword;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.common.enums.WebRole;
 import com.digital.receipt.common.exceptions.InvalidCredentialsException;
+import com.digital.receipt.jwt.utility.JwtHolder;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.jdbc.Sql;
@@ -23,13 +27,16 @@ public class AuthenticationDaoTest {
     @Autowired
     private AuthenticationDao dao;
 
+    @Mock
+    private JwtHolder jwtHolder;
+
     @BeforeEach
     public void setup() {
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
-    public void authenticateUser() throws Exception {
+    public void authenticateUserTest() throws Exception {
         String email = "user1@mail.com";
         String password = "fa1e2d102c06ecd5d6d4dbfb4c9ddeca01c3e890d58ffcaf1b04b9afe4590e78";
 
@@ -43,12 +50,21 @@ public class AuthenticationDaoTest {
     }
 
     @Test
-    public void shouldNotAuthenticateUser() throws Exception {
+    public void shouldNotAuthenticateUserTest() throws Exception {
         String email = "user1@mail.com";
         String password = "incorrectPassword!";
 
         Exception exception = assertThrows(InvalidCredentialsException.class,
                 () -> dao.authenticateUser(email, password));
         assertEquals("Exception messages", "Invalid Credentials!", exception.getMessage());
+    }
+
+    @Test
+    public void getUserAuthPasswordTest() throws Exception {
+        AuthPassword authPass = dao.getUserAuthPassword("user1@mail.com");
+
+        assertEquals("Password Hash should match", authPass.getPassword(),
+                "fa1e2d102c06ecd5d6d4dbfb4c9ddeca01c3e890d58ffcaf1b04b9afe4590e78");
+        assertEquals("Salt values should match", authPass.getSalt(), 2835126461L);
     }
 }

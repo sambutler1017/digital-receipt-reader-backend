@@ -56,7 +56,7 @@ public abstract class AbstractSqlDao {
      *                                      given file.
      * @throws IOException
      */
-    public List<String> getSql(String fragmentName) throws Exception {
+    protected List<String> getSql(String fragmentName) throws Exception {
         return getQueryFromFile(fragmentName, getChildClassName());
     }
 
@@ -69,8 +69,20 @@ public abstract class AbstractSqlDao {
      *                                      given file.
      * @throws IOException
      */
-    public List<String> getSql(String fragmentName, String fileName) throws Exception {
+    protected List<String> getSql(String fragmentName, String fileName) throws Exception {
         return getQueryFromFile(fragmentName, fileName);
+    }
+
+    /**
+     * Gets a {@link SqlParams} object to store the params to be used on the sql
+     * query.
+     * 
+     * @param name  The name of the field to store the object under.
+     * @param value The object to store in the params.
+     * @return Instance of {@link SqlParams} object with the added param.
+     */
+    protected SqlParams params(String name, Object value) {
+        return new SqlParams(name, value);
     }
 
     /**
@@ -92,18 +104,6 @@ public abstract class AbstractSqlDao {
                 .collect(Collectors.toList());
         br.close();
         return result;
-    }
-
-    /**
-     * Gets a {@link SqlParams} object to store the params to be used on the sql
-     * query.
-     * 
-     * @param name  The name of the field to store the object under.
-     * @param value The object to store in the params.
-     * @return Instance of {@link SqlParams} object with the added param.
-     */
-    public SqlParams params(String name, Object value) {
-        return new SqlParams(name, value);
     }
 
     /**
