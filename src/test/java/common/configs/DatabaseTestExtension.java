@@ -1,13 +1,20 @@
 package common.configs;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import com.digital.receipt.service.util.PasswordUtil;
 import com.digital.receipt.sql.SqlClient;
 
 import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.stereotype.Service;
+
+import common.factory.TestFactory;
 
 /**
  * Extension class for initializing data for the database.
@@ -16,10 +23,11 @@ import org.springframework.stereotype.Service;
  * @since August 28, 2021
  */
 @Service
-public class DatabaseTestExtension implements AfterAllCallback {
+public class DatabaseTestExtension implements BeforeAllCallback, AfterAllCallback {
     private static final Logger LOGGER = LoggerFactory.getLogger(DatabaseTestExtension.class);
+    private static long testClassCount = 0;
+    private static boolean started = false;
 
-    private static boolean afterAllInitialized = false;
     private DatabaseTestProfile dbProfile;
 
     public DatabaseTestExtension() {
@@ -27,14 +35,25 @@ public class DatabaseTestExtension implements AfterAllCallback {
     }
 
     @Override
+    public void beforeAll(ExtensionContext context) throws Exception {
+        if (!started) {
+            started = true;
+            generateTestSchema();
+            testClassCount = Files
+                    .walk(Paths.get(String.format("%s\\java\\com\\digital\\receipt",
+                            dbProfile.activeProfile.getTestEnvironmentUrl())))
+                    .parallel().filter(p -> !p.toFile().isDirectory()).count();
+        }
+    }
+
+    @Override
     public void afterAll(ExtensionContext context) {
-        if (afterAllInitialized) {
+        testClassCount--;
+        if (testClassCount == 0) {
             LOGGER.info(String.format("Cleaning up database and dropping schema '%s'.",
                     System.getProperty("TEST_SCHEMA_NAME")));
             new SqlClient(getDefaultDataSource())
                     .execute(String.format("DROP SCHEMA `%s`", System.getProperty("TEST_SCHEMA_NAME")));
-        } else {
-            afterAllInitialized = true;
         }
     }
 
@@ -46,6 +65,16 @@ public class DatabaseTestExtension implements AfterAllCallback {
     private DriverManagerDataSource getDefaultDataSource() {
         return generateDataSource(String.format(dbProfile.DB_URL, "receipt_db"), dbProfile.getUsername(),
                 dbProfile.getPassword());
+    }
+
+    /**
+     * Get the default datasource to create the test schema.
+     * 
+     * @return {@link DriverManagerDataSource} source of the db.
+     */
+    private DriverManagerDataSource getTestDataSource() {
+        return generateDataSource(String.format(dbProfile.DB_URL, System.getProperty("TEST_SCHEMA_NAME")),
+                dbProfile.getUsername(), dbProfile.getPassword());
     }
 
     /**
@@ -63,5 +92,22 @@ public class DatabaseTestExtension implements AfterAllCallback {
         ds.setUsername(username);
         ds.setPassword(password);
         return ds;
+    }
+
+    /**
+     * Generate the test Schema name and store it.
+     * 
+     * @return {@link String} of the test schema name.
+     * @throws Exception
+     */
+    private String generateTestSchema() throws Exception {
+        String testSchema = String.format("receipt_test_%d", PasswordUtil.generatePasswordSalt());
+        SqlClient sqlClient = new SqlClient(getDefaultDataSource());
+
+        sqlClient.execute(String.format("CREATE SCHEMA `%s`", testSchema));
+        System.setProperty("TEST_SCHEMA_NAME", testSchema);
+        new TestFactory(new SqlClient(getTestDataSource())).initSchema();
+
+        return testSchema;
     }
 }

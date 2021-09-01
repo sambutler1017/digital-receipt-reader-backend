@@ -17,13 +17,12 @@ import common.annotations.IntegrationTests;
 @Sql("insert-test-data.sql")
 @Sql(scripts = "clean-up.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
 public class UserDaoTest {
-
     @Autowired
-    private UserDao userDao;
+    private UserDao dao;
 
     @Test
     public void getUserForIdTest() throws Exception {
-        User user = userDao.getUserById(1);
+        User user = dao.getUserById(1);
 
         assertEquals("First Name should be User1", "User1", user.getFirstName());
         assertEquals("Last Name should be User1", "Test1", user.getLastName());
@@ -33,7 +32,7 @@ public class UserDaoTest {
 
     @Test
     public void throwsExceptionForUserIdNotFound() {
-        Exception exception = assertThrows(UserNotFoundException.class, () -> userDao.getUserById(1200));
+        Exception exception = assertThrows(UserNotFoundException.class, () -> dao.getUserById(1200));
         assertEquals("Exception messages", "User not found for id: 1200", exception.getMessage());
     }
 }

@@ -39,7 +39,7 @@ public class ActiveProfile {
      * @return {@link String} of the property file path.
      */
     public String getLocalTestPropertyFilePath() {
-        return String.format("%s/resources/application-test-local.properties", TEST_ENV_PATH);
+        return String.format("%s/resources/application-test-local.properties", getTestEnvironmentUrl());
     }
 
     /**
