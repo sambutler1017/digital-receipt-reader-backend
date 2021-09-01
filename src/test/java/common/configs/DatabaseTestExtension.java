@@ -114,6 +114,9 @@ public class DatabaseTestExtension implements BeforeAllCallback, AfterAllCallbac
      * @return the total number of files
      */
     private int countFilesInDirectory(File directory) {
+        LOGGER.info("Path: " + directory.getPath());
+        LOGGER.info("List Count: " + directory.listFiles().length);
+
         int count = 0;
         for (File file : directory.listFiles()) {
             if (file.isFile()) {
