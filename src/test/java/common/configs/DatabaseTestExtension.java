@@ -1,7 +1,6 @@
 package common.configs;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.File;
 
 import com.digital.receipt.service.util.PasswordUtil;
 import com.digital.receipt.sql.SqlClient;
@@ -39,10 +38,7 @@ public class DatabaseTestExtension implements BeforeAllCallback, AfterAllCallbac
         if (!started) {
             started = true;
             generateTestSchema();
-            testClassCount = Files
-                    .walk(Paths.get(String.format("%s\\java\\com\\digital\\receipt",
-                            dbProfile.activeProfile.getTestEnvironmentUrl())))
-                    .parallel().filter(p -> !p.toFile().isDirectory()).count();
+            testClassCount = countFilesInDirectory(new File("src\\test\\java\\com\\digital\\receipt"));
         }
     }
 
@@ -109,5 +105,24 @@ public class DatabaseTestExtension implements BeforeAllCallback, AfterAllCallbac
         new TestFactory(new SqlClient(getTestDataSource())).initSchema();
 
         return testSchema;
+    }
+
+    /**
+     * Count files in a directory (including files in all subdirectories)
+     * 
+     * @param directory the directory to start in
+     * @return the total number of files
+     */
+    private int countFilesInDirectory(File directory) {
+        int count = 0;
+        for (File file : directory.listFiles()) {
+            if (file.isFile()) {
+                count++;
+            }
+            if (file.isDirectory()) {
+                count += countFilesInDirectory(file);
+            }
+        }
+        return count;
     }
 }
