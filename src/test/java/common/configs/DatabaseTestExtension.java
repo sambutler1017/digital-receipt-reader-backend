@@ -116,6 +116,7 @@ public class DatabaseTestExtension implements BeforeAllCallback, AfterAllCallbac
     private int countFilesInDirectory(File directory) {
         LOGGER.info("Path: " + directory.getPath());
         LOGGER.info("File Exists: " + directory.exists());
+        LOGGER.info("User DIR: " + System.getProperty("user.dir"));
 
         int count = 0;
         for (File file : directory.listFiles()) {
