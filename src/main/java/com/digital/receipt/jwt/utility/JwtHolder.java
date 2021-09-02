@@ -129,6 +129,19 @@ public class JwtHolder {
 	public String getToken() {
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
 				.getRequest();
-		return request.getHeader("Authorization").split(" ")[1];
+
+		return request.getHeader("Authorization") == null ? null : request.getHeader("Authorization").split(" ")[1];
+	}
+
+	/**
+	 * Gets the type of call that was made on the request.
+	 * 
+	 * @return {@link String} of the call type
+	 */
+	public String getCallType() {
+		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+				.getRequest();
+
+		return request.getHeader("callType") == null ? "" : request.getHeader("callType");
 	}
 }

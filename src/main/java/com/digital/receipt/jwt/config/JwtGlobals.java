@@ -21,7 +21,7 @@ public class JwtGlobals {
             put("/authenticate", Arrays.asList("ANY"));
 
             // Forgot Password Endpoint in Mail App
-            put("/api/mail-app/email/forgot-password", Arrays.asList("PUT"));
+            put("/api/mail-app/email/forgot-password", Arrays.asList("POST"));
 
             // Forgot Password Endpoint in User App
             put("/api/user-app/users/forgot-password", Arrays.asList("PUT"));

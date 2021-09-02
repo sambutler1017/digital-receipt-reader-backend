@@ -41,12 +41,12 @@ public abstract class AbstractClient {
     /**
      * Make get Client request to the given endpoint with the given params.
      * 
-     * @param url    The url to be called.
-     * @param params Any params needing to be added to the request.
+     * @param urlString The url to be called.
+     * @param params    Any params needing to be added to the request.
      * @return {@link ResponseSpec} of for the given endpoint.
      */
-    public ResponseSpec get(String url, Object... params) {
-        return completeRequest(getWebClient().get(), url, params).retrieve();
+    public ResponseSpec get(String urlString, Object... params) {
+        return completeRequest(getWebClient().get(), urlString, params).retrieve();
 
     }
 
@@ -54,12 +54,12 @@ public abstract class AbstractClient {
      * Make post Client request to the given endpoint with the given params. Will
      * also pass in the body with the request.
      * 
-     * @param url    The url to be called.
-     * @param params Any params needing to be added to the request.
+     * @param urlString The url to be called.
+     * @param params    Any params needing to be added to the request.
      * @return {@link ResponseSpec} of for the given endpoint.
      */
-    public ResponseSpec post(String url, Object body, Object... params) {
-        return completeRequestWithBody(getWebClient().post(), url, body, params).retrieve();
+    public ResponseSpec post(String urlString, Object body, Object... params) {
+        return completeRequestWithBody(getWebClient().post(), urlString, body, params).retrieve();
 
     }
 
@@ -67,23 +67,23 @@ public abstract class AbstractClient {
      * Make put Client request to the given endpoint with the given params. Will
      * also pass in the body with the request.
      * 
-     * @param url    The url to be called.
-     * @param params Any params needing to be added to the request.
+     * @param urlString The url to be called.
+     * @param params    Any params needing to be added to the request.
      * @return {@link ResponseSpec} of for the given endpoint.
      */
-    public ResponseSpec put(String url, Object body, Object... params) {
-        return completeRequestWithBody(getWebClient().put(), url, body, params).retrieve();
+    public ResponseSpec put(String urlString, Object body, Object... params) {
+        return completeRequestWithBody(getWebClient().put(), urlString, body, params).retrieve();
     }
 
     /**
      * Make delete Client request to the given endpoint with the given params.
      * 
-     * @param url    The url to be called.
-     * @param params Any params needing to be added to the request.
+     * @param urlString The url to be called.
+     * @param params    Any params needing to be added to the request.
      * @return {@link ResponseSpec} of for the given endpoint.
      */
-    public ResponseSpec delete(String url, Object... params) {
-        return completeRequest(getWebClient().delete(), url, params).retrieve();
+    public ResponseSpec delete(String urlString, Object... params) {
+        return completeRequest(getWebClient().delete(), urlString, params).retrieve();
 
     }
 
@@ -92,14 +92,14 @@ public abstract class AbstractClient {
      * 
      * @param requestHeadersUriSpec The type of request to make (get, post, update,
      *                              delete).
-     * @param url                   The url to be called.
+     * @param urlString             The url to be called.
      * @param params                Any params needing to be added to the request.
      * @return The {@link RequestHeadersSpec} with the given data.
      */
-    private RequestHeadersSpec<?> completeRequest(RequestHeadersUriSpec<?> requestHeadersUriSpec, String url,
+    private RequestHeadersSpec<?> completeRequest(RequestHeadersUriSpec<?> requestHeadersUriSpec, String urlString,
             Object... params) {
-        return requestHeadersUriSpec.uri(url, params)
-                .header("Authorization", String.format("Bearer: %s", jwtHolder.getToken()))
+        return requestHeadersUriSpec.uri(urlString, params)
+                .header("Authorization", String.format("Bearer: %s", jwtHolder.getToken())).header("callType", "CLIENT")
                 .accept(MediaType.APPLICATION_JSON);
     }
 
@@ -108,15 +108,15 @@ public abstract class AbstractClient {
      * 
      * @param requestBodyUriSpec The type of request to make (get, post, update,
      *                           delete).
-     * @param url                The url to be called.
+     * @param urlString          The url to be called.
      * @param body               The {@link Object} body to send with the request.
      * @param params             Any params needing to be added to the request.
      * @return The {@link RequestHeadersSpec} with the given data.
      */
-    private RequestHeadersSpec<?> completeRequestWithBody(RequestBodyUriSpec requestBodyUriSpec, String url,
+    private RequestHeadersSpec<?> completeRequestWithBody(RequestBodyUriSpec requestBodyUriSpec, String urlString,
             Object body, Object... params) {
-        return requestBodyUriSpec.uri(url, params)
-                .header("Authorization", String.format("Bearer: %s", jwtHolder.getToken()))
+        return requestBodyUriSpec.uri(urlString, params)
+                .header("Authorization", String.format("Bearer: %s", jwtHolder.getToken())).header("callType", "CLIENT")
                 .accept(MediaType.APPLICATION_JSON).bodyValue(body);
     }
 
