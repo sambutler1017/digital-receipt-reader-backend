@@ -1,6 +1,7 @@
 package com.digital.receipt.sql;
 
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.Map;
@@ -39,6 +40,11 @@ public class SqlClient {
 	 */
 	@Autowired
 	public SqlClient(DataSource source) {
+		try {
+			source.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		jdbcTemplateObject = new JdbcTemplate(source);
 	}
 
