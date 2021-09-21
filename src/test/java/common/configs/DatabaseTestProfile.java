@@ -41,6 +41,7 @@ public class DatabaseTestProfile {
      * @return {@link String} of the username to use.
      */
     protected String getUsername() {
+        System.out.println("\nApp Environment: " + System.getProperty("APP_ENVIRONMENT") + "\n");
         return System.getProperty("APP_ENVIRONMENT") != null ? System.getProperty("MYSQL_USERNAME")
                 : prop.getProperty("spring.datasource.username");
     }
