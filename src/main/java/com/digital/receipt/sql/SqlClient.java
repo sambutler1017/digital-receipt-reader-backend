@@ -40,6 +40,11 @@ public class SqlClient {
 	 */
 	@Autowired
 	public SqlClient(DataSource source) {
+		try {
+			source.getConnection();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		jdbcTemplateObject = new JdbcTemplate(source);
 	}
 
