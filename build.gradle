@@ -23,14 +23,4 @@ dependencies {
 	implementation 'org.aspectj:aspectjtools:1.9.7'
 	implementation 'mysql:mysql-connector-java:8.0.15'
 	implementation 'com.google.code.findbugs:jsr305:3.0.2'
-	
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.junit.jupiter:junit-jupiter-api:5.3.1'
-	testImplementation 'org.junit.platform:junit-platform-runner:1.5.2'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
-}
-
-test {
-	systemProperties = System.properties
-	useJUnitPlatform()
 }
