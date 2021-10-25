@@ -7,7 +7,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
 import com.digital.receipt.common.enums.QueryTag;
+import com.digital.receipt.common.exceptions.MaliciousSqlQueryException;
 import com.digital.receipt.sql.domain.SqlParams;
 
 import org.springframework.stereotype.Service;
@@ -26,6 +31,10 @@ public class SqlBundler {
 
     private boolean deleteNextLine;
 
+    private long previousSpaceCount;
+
+    private ScriptEngineManager sem;
+
     /**
      * Default constructor to intialize the class level variables. These will be
      * used when doing logical test with the sql conditions.
@@ -35,6 +44,8 @@ public class SqlBundler {
     public SqlBundler() {
         hasWhereCondition = false;
         deleteNextLine = false;
+        previousSpaceCount = 1L;
+        sem = new ScriptEngineManager();
     }
 
     /**
@@ -52,15 +63,38 @@ public class SqlBundler {
 
         int index = 0;
         for (String line : query) {
-            if (getConditionTagMatcher(line).find()) {
-                query.set(index, replaceCondition(line, params));
-            } else if (getParamTagMatcher(line).find()) {
-                query.set(index, replaceParam(line, params));
+            if (deleteNextLine && line.indexOf(line.trim()) > previousSpaceCount) {
+                query.set(index, "");
+            } else {
+                deleteNextLine = false;
+
+                if (getConditionTagMatcher(query.get(index)).find()) {
+                    query.set(index, replaceCondition(line, params));
+                } else if (getParamTagMatcher(query.get(index)).find()) {
+                    query.set(index, replaceParam(line, params));
+                }
+                previousSpaceCount = line.indexOf(line.trim());
             }
             index++;
         }
 
-        return query.stream().collect(Collectors.joining(" ")).replaceAll("\\s{2,}", " ").trim();
+        return validateQuery(query.stream().collect(Collectors.joining(" ")).replaceAll("\\s{2,}", " ").trim());
+    }
+
+    /**
+     * Method that will check if the string that was formed caontains an malicious
+     * characters that shouldn't be in the query. If it does it will throw a
+     * {@link MaliciousSqlQueryException}
+     * 
+     * @param q The query to be validated.
+     * @return {@link String} of the query if it is valid.
+     */
+    public String validateQuery(String q) throws MaliciousSqlQueryException {
+        if (q.contains(";") || q.contains("--") || q.contains("\\")) {
+            throw new MaliciousSqlQueryException();
+        } else {
+            return q;
+        }
     }
 
     /**
@@ -86,20 +120,37 @@ public class SqlBundler {
         return Pattern.compile(":[\\w]+:").matcher(line);
     }
 
-    private String replaceCondition(String line, SqlParams params) {
+    /**
+     * Replaces the annotation if the condition in the params field does not
+     * evaulate to true.
+     * 
+     * @param line   The sql line being studied
+     * @param params The params to use to check expression.
+     * @return {@link String} of the completed line.
+     */
+    private String replaceCondition(String line, SqlParams sqlParams) {
         Matcher m = getConditionTagMatcher(line);
 
         if (m.find()) {
             QueryTag condition = QueryTag.getEnumFromString(m.group(0).trim());
-            Matcher paramCondition = Pattern.compile(String.format("(?<=%s\\(:)(\\w+)(?=:\\))", condition.annotation()))
-                    .matcher(line);
+            Matcher ex = Pattern.compile("(?<=\\()(.*?)(?=\\))").matcher(line);
+            Matcher exParams = getParamTagMatcher(line);
 
-            paramCondition.find();
-            String paramField = paramCondition.group(0).trim();
+            ex.find();
+            String exp = ex.group(0).trim();
+            boolean valid = false;
+
+            if (isExpression(line)) {
+                valid = modifyExpressionCondition(line, sqlParams, exp, exParams);
+            } else {
+                valid = modifySingleCondition(line, sqlParams, exParams);
+            }
 
             String replacingValue = condition.text();
-            if (params.getValue(paramField) != null && !condition.equals(QueryTag.IF)) {
-                if (!hasWhereCondition) {
+            if (valid) {
+                if (condition.equals(QueryTag.IF)) {
+                    replacingValue = "";
+                } else if (!hasWhereCondition) {
                     hasWhereCondition = true;
                     replacingValue = QueryTag.WHERE.text();
                 }
@@ -107,7 +158,7 @@ public class SqlBundler {
                 deleteNextLine = true;
                 replacingValue = "";
             }
-            return line.replace(String.format("%s(:%s:)", condition.annotation(), paramField), replacingValue);
+            return line.replace(String.format("%s(%s)", condition.annotation(), exp), replacingValue);
         }
         return line;
     }
@@ -126,21 +177,90 @@ public class SqlBundler {
             String paramField = m.group(0).replace(":", "").trim();
             Object paramValue = params.getValue(paramField);
 
-            if (paramValue == null) {
-                deleteNextLine = false;
-                return "";
-            }
-
-            if (deleteNextLine) {
-                deleteNextLine = line.chars().filter(c -> c == (int) '\t').count() >= 2;
-                return "";
-            }
-
-            return paramValue instanceof Collection
+            line = paramValue instanceof Collection
                     ? getReplacedCollectionParam(line, paramField, castCollection(paramValue))
                     : getReplacedSingleParam(line, paramField, paramValue);
         }
         return line;
+    }
+
+    /**
+     * This will determine if the given expression in the annotation parentheses is
+     * valid and the expression evaultes to true.
+     * 
+     * @param line      The string in the query being studied.
+     * @param sqlParams The params to be inserted into the string.
+     * @param exp       The expression to replace the values in.
+     * @param expParams The params to insert into the expression.
+     * @return {@link boolean} determining if the expression results to true.
+     */
+    private boolean modifyExpressionCondition(String line, SqlParams sqlParams, String exp, Matcher expParams) {
+        String expressionString = exp;
+        while (expParams.find()) {
+            String expressionName = expParams.group(0).trim();
+            expressionString = expressionString.replace(expressionName,
+                    buildExpressionParam(sqlParams.getValue(expressionName.replace(":", ""))));
+        }
+        return evalutateExpression(expressionString);
+    }
+
+    /**
+     * Builds out the js script to determine if the string expression is valid.
+     * 
+     * @param value The value to add to the expression.
+     * @return {@link String} with the complete expression.
+     */
+    private String buildExpressionParam(Object value) {
+        String conditionValue = "";
+        if (value != null) {
+            conditionValue = value.toString();
+        }
+        return String.format("('%s' != null && '%s' != false)", conditionValue, conditionValue);
+    }
+
+    /**
+     * This is called if only a single param value is in the parentheses and
+     * determines if the value exist.
+     * 
+     * @param line      The string in the query being studied.
+     * @param sqlParams The params to be inserted into the string.
+     * @param expParams The params to insert into the expression.
+     * @return {@link boolean} determining if the expression results to true.
+     */
+    private boolean modifySingleCondition(String line, SqlParams sqlParams, Matcher expParams) {
+        expParams.find();
+        return sqlParams.getValue(expParams.group(0).replace(":", "").trim()) != null;
+    }
+
+    /**
+     * Determines if the string being studied is an expression or single param
+     * value.
+     * 
+     * @param line The string to detect
+     * @return {@link boolean} determining if it is an expression or not.
+     */
+    private boolean isExpression(String line) {
+        return Pattern.compile("[\\|\\|\\&\\&\\!]+").matcher(line).find();
+    }
+
+    /**
+     * Determines the result of the expression. If the expression can't be found or
+     * evaulated then it will return false. Otherwise it will evaualte the
+     * expression.
+     * 
+     * @param expression The expression to be evaulated.
+     * @return {@link boolean} of the expressions status.
+     */
+    private boolean evalutateExpression(String expression) {
+        try {
+
+            ScriptEngine se = sem.getEngineByName("JavaScript");
+            return Boolean.parseBoolean(se.eval(expression).toString());
+
+        } catch (ScriptException e) {
+            // Comes in here when it is an invalid expression
+            return false;
+        }
     }
 
     /**
@@ -152,9 +272,16 @@ public class SqlBundler {
      * @return {@link String} representation of the list.
      */
     private String getReplacedCollectionParam(String line, String field, Collection<Object> listValues) {
-        String paramList = listValues.stream().map(v -> String.format("'%s'", v.toString()))
-                .collect(Collectors.joining(","));
-        return line.replace(String.format("= :%s:", field), String.format("%s", String.format("IN (%s)", paramList)));
+        if (line.contains("LIKE")) {
+            String paramLikeList = listValues.stream().map(v -> String.format("LIKE '%%%s%%'", v.toString()))
+                    .collect(Collectors.joining("OR"));
+            return line.replace(String.format("LIKE :%s:", field), paramLikeList);
+        } else {
+            String paramList = listValues.stream().map(v -> String.format("'%s'", v.toString()))
+                    .collect(Collectors.joining(","));
+            return line.replace(String.format("= :%s:", field),
+                    String.format("%s", String.format("IN (%s)", paramList)));
+        }
     }
 
     /**
