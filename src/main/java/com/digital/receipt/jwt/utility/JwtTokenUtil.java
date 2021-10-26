@@ -82,17 +82,6 @@ public class JwtTokenUtil implements Serializable {
     }
 
     /**
-     * Checks if the given token is expired
-     * 
-     * @param token - Token to pull the expiration date from
-     * @return Returns a boolean object of true, false, or null
-     */
-    public Boolean isTokenExpired(String token) {
-        final Date expiration = getExpirationDateFromToken(token);
-        return expiration.before(new Date());
-    }
-
-    /**
      * Sets up the fields to be added to the token
      * 
      * @param user - User info to be added to the token
@@ -119,7 +108,6 @@ public class JwtTokenUtil implements Serializable {
      */
     private String doGenerateToken(Map<String, Object> claims) {
         return Jwts.builder().setClaims(claims).setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 

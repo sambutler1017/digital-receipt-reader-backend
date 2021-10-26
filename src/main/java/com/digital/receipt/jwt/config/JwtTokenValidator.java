@@ -47,7 +47,6 @@ public class JwtTokenValidator {
 
             isCorrectEnvironment(jwtToken);
             hasCorrectFields(jwtToken);
-            isReauthenticating(request.getRequestURI(), jwtToken);
 
         } else {
             doesTokenExist(tokenHeader);
@@ -75,34 +74,6 @@ public class JwtTokenValidator {
             }
         }
         return false;
-    }
-
-    /**
-     * This will check if the endpoint that was called was the /reauthenticate. If
-     * it was then we don't care if the token is expired and it will return.
-     * Otherwise check if the token is expired.
-     *
-     * @param endpoint The endpoint that was called.
-     * @param token    The token to confirm if it is expired if need be.
-     * @throws BaseException Throws exception if the token is expired.
-     */
-    private void isReauthenticating(String endpoint, String token) throws BaseException {
-        if (!endpoint.equals("/reauthenticate")) {
-            isTokenExpired(token);
-        }
-    }
-
-    /**
-     * Checks to see if the token that the request pulled is expired. If it is then
-     * it will throw an exception.
-     *
-     * @param token The token to confirm if it is expired or not.
-     * @throws BaseException Throws exception if the token is expired.
-     */
-    private void isTokenExpired(String token) throws BaseException {
-        if (jwtTokenUtil.isTokenExpired(token)) {
-            throw new BaseException("JWT Token is Expired. Please re-authenticate.");
-        }
     }
 
     /**

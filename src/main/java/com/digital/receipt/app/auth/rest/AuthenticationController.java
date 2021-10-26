@@ -4,12 +4,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.util.Date;
 
-import com.digital.receipt.annotations.interfaces.HasAccess;
 import com.digital.receipt.annotations.interfaces.RestApiController;
 import com.digital.receipt.app.auth.client.domain.DigitalReceiptToken;
 import com.digital.receipt.app.auth.service.AuthenticationService;
 import com.digital.receipt.app.user.client.domain.User;
-import com.digital.receipt.common.enums.WebRole;
 import com.digital.receipt.jwt.model.AuthenticationRequest;
 import com.digital.receipt.jwt.utility.JwtTokenUtil;
 
@@ -45,8 +43,7 @@ public class AuthenticationController {
         User user = authService.verifyUser(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
         final String token = jwtTokenUtil.generateToken(user);
-        return ResponseEntity
-                .ok(new DigitalReceiptToken(token, new Date(), jwtTokenUtil.getExpirationDateFromToken(token), user));
+        return ResponseEntity.ok(new DigitalReceiptToken(token, new Date(), user));
 
     }
 
@@ -58,11 +55,9 @@ public class AuthenticationController {
      * @throws Exception If user does not exist.
      */
     @PostMapping(path = "/reauthenticate", produces = APPLICATION_JSON_VALUE)
-    @HasAccess(WebRole.ADMIN)
     public ResponseEntity<DigitalReceiptToken> reauthenticateUser() throws Exception {
         User user = authService.getUserToAuthenticate();
         final String token = jwtTokenUtil.generateToken(user);
-        return ResponseEntity
-                .ok(new DigitalReceiptToken(token, new Date(), jwtTokenUtil.getExpirationDateFromToken(token), user));
+        return ResponseEntity.ok(new DigitalReceiptToken(token, new Date(), user));
     }
 }

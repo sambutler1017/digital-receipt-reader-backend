@@ -16,13 +16,10 @@ public class DigitalReceiptToken {
 
     private Date createDate;
 
-    private Date expireDate;
-
     private User user;
 
-    public DigitalReceiptToken(String t, Date creation, Date expire, User u) {
+    public DigitalReceiptToken(String t, Date creation, User u) {
         token = t;
-        expireDate = expire;
         createDate = creation;
         user = u;
     }
@@ -41,14 +38,6 @@ public class DigitalReceiptToken {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
-    }
-
-    public Date getExpireDate() {
-        return expireDate;
-    }
-
-    public void setExpireDate(Date expireDate) {
-        this.expireDate = expireDate;
     }
 
     public User getUser() {
