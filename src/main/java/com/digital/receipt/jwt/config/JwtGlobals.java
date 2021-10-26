@@ -25,6 +25,9 @@ public class JwtGlobals {
 
             // Forgot Password Endpoint in User App
             put("/api/user-app/users/forgot-password", Arrays.asList("PUT"));
+
+            // Does User exist endpoint in User App
+            put("/api/user-app/users/check-email", Arrays.asList("GET"));
         }
     };
 

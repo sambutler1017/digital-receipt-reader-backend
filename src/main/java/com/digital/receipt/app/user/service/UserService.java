@@ -123,6 +123,22 @@ public class UserService {
     }
 
     /**
+     * This will check to see if the email exists. If it does then it will return
+     * true, otherwise false.
+     * 
+     * @param email The email to check
+     * @return {@link Boolean} to see if the email exists
+     * @throws Exception
+     */
+    public boolean doesEmailExist(String email) throws Exception {
+        UserGetRequest request = new UserGetRequest();
+        request.setEmail(Sets.newHashSet(email));
+        List<User> users = getUsers(request);
+
+        return users.size() > 0;
+    }
+
+    /**
      * Update the user for the given user object.
      * 
      * @param user what information on the user needs to be updated.

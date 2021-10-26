@@ -123,4 +123,18 @@ public class UserController {
     public void deleteUser(@PathVariable int id) throws Exception {
         userService.deleteUser(id);
     }
+
+    /**
+     * This will check to see if the email exists. If it does then it will return
+     * true, otherwise false.
+     * 
+     * @param email The email to check
+     * @return {@link Boolean} to see if the email exists
+     * @throws Exception
+     */
+    @GetMapping("/check-email")
+    @HasAccess(WebRole.USER)
+    public boolean doesEmailExist(@RequestBody String email) throws Exception {
+        return userService.doesEmailExist(email);
+    }
 }
