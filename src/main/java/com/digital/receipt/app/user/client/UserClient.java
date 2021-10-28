@@ -5,11 +5,9 @@ import java.util.List;
 import com.digital.receipt.annotations.interfaces.Client;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
-import com.digital.receipt.common.abstracts.AbstractClient;
-import com.digital.receipt.service.activeProfile.ActiveProfile;
+import com.digital.receipt.app.user.rest.UserController;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * This class exposes the user endpoint's to other app's to pull data across the
@@ -19,24 +17,20 @@ import org.springframework.web.bind.annotation.RequestBody;
  * @since June 25, 2020
  */
 @Client
-public class UserClient extends AbstractClient {
+public class UserClient {
 
-    /**
-     * Initialize the Abstract client with the active profile and endpoint path.
-     */
     @Autowired
-    public UserClient(ActiveProfile activeProfile) {
-        super("api/user-app/users", activeProfile);
-    }
+    private UserController controller;
 
     /**
      * Get users based on given request filter
      * 
      * @param request of the user
      * @return User profile object {@link User}
+     * @throws Exception
      */
-    public List<User> getUsers(UserGetRequest request) {
-        return get("").toEntityList(User.class).block().getBody();
+    public List<User> getUsers(UserGetRequest request) throws Exception {
+        return controller.getUsers(request);
     }
 
     /**
@@ -44,18 +38,20 @@ public class UserClient extends AbstractClient {
      * 
      * @param id of the user
      * @return User profile object
+     * @throws Exception
      */
-    public User getUserById(int id) {
-        return get("/{id}", id).toEntity(User.class).block().getBody();
+    public User getUserById(int id) throws Exception {
+        return controller.getUserById(id);
     }
 
     /**
      * Gets the current logged in user information.
      * 
      * @return The user currently logged in.
+     * @throws Exception
      */
-    public User getCurrentUser() {
-        return get("/current-user").toEntity(User.class).block().getBody();
+    public User getCurrentUser() throws Exception {
+        return controller.getCurrentUser();
     }
 
     /**
@@ -65,9 +61,10 @@ public class UserClient extends AbstractClient {
      * @param id   of the user
      * @param user what information on the user needs to be updated.
      * @return user associated to that id with the updated information
+     * @throws Exception
      */
-    public User updateUser(User user) {
-        return put("", user).toEntity(User.class).block().getBody();
+    public User updateUser(User user) throws Exception {
+        return controller.updateUser(user);
     }
 
     /**
@@ -75,9 +72,10 @@ public class UserClient extends AbstractClient {
      * 
      * @param id of the user
      * @return user associated to that id with the updated information
+     * @throws Exception
      */
-    public User updateUserRole(int id, String role) {
-        return put("/{id}/role/{role}", null, id, role).toEntity(User.class).block().getBody();
+    public User updateUserRole(int id, String role) throws Exception {
+        return controller.updateUserRole(id, role);
     }
 
     /**
@@ -85,9 +83,10 @@ public class UserClient extends AbstractClient {
      * password flag and get an email with the temporary password.
      * 
      * @return user associated to that id with the updated information
+     * @throws Exception
      */
-    public User forgotPassword(@RequestBody String email) {
-        return put("/forgot-password", email).toEntity(User.class).block().getBody();
+    public User forgotPassword(String email) throws Exception {
+        return controller.forgotPassword(email);
     }
 
     /**
@@ -98,6 +97,6 @@ public class UserClient extends AbstractClient {
      * @throws Exception
      */
     public void deleteUser(int id) throws Exception {
-        delete("/{id}", null, id).toBodilessEntity().block();
+        controller.deleteUser(id);
     }
 }

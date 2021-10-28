@@ -37,7 +37,7 @@ public class HasAccessAspect {
      */
     @Around(value = "@annotation(anno)", argNames = "jp, anno")
     public Object access(ProceedingJoinPoint joinPoint, HasAccess access) throws Throwable {
-        if (jwtHolder.getCallType().equals("CLIENT"))
+        if (isClientCall(Thread.currentThread().getStackTrace()))
             return joinPoint.proceed();
 
         if (jwtHolder.getWebRole().getValue() > access.value().getValue()) {

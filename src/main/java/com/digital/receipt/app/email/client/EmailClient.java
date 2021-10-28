@@ -1,9 +1,12 @@
 package com.digital.receipt.app.email.client;
 
+import java.io.FileNotFoundException;
+
+import javax.mail.MessagingException;
+
 import com.digital.receipt.annotations.interfaces.Client;
 import com.digital.receipt.app.email.client.domain.UserEmail;
-import com.digital.receipt.common.abstracts.AbstractClient;
-import com.digital.receipt.service.activeProfile.ActiveProfile;
+import com.digital.receipt.app.email.rest.EmailController;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,15 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @since June 25, 2020
  */
 @Client
-public class EmailClient extends AbstractClient {
+public class EmailClient {
 
-    /**
-     * Initialize the Abstract client with the active profile and endpoint path.
-     */
     @Autowired
-    public EmailClient(ActiveProfile activeProfile) {
-        super("api/mail-app/email", activeProfile);
-    }
+    private EmailController controller;
 
     /**
      * {@link UserEmail} object to send a email too. Default from user will be the
@@ -30,9 +28,11 @@ public class EmailClient extends AbstractClient {
      * 
      * @param userEmail UserEmail object to get the mail properties from
      * @return {@link UserEmail} object with the time it sent.
+     * @throws MessagingException
+     * @throws FileNotFoundException
      */
-    public UserEmail sendEmail(UserEmail userEmail) {
-        return post("", userEmail).toEntity(UserEmail.class).block().getBody();
+    public UserEmail sendEmail(UserEmail userEmail) throws FileNotFoundException, MessagingException {
+        return controller.sendEmail(userEmail);
     }
 
     /**
@@ -42,6 +42,6 @@ public class EmailClient extends AbstractClient {
      * @param email Email to search for and send an email too.
      */
     public void forgotPassword(String email) throws Exception {
-        post("/forgot-password", email).toBodilessEntity().block();
+        controller.forgotPassword(email);
     }
 }

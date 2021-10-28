@@ -43,7 +43,7 @@ public class JwtHolder {
 		try {
 			return Integer.parseInt(jwtParser.parseClaimsJws(getToken()).getBody().get("userId").toString());
 		} catch (Exception e) {
-			LOGGER.warn("Invalid or no Token given.");
+			LOGGER.debug("Invalid or no Token given.");
 			return -1;
 		}
 	}
@@ -58,7 +58,7 @@ public class JwtHolder {
 		try {
 			return Integer.parseInt(jwtParser.parseClaimsJws(token).getBody().get("userId").toString());
 		} catch (Exception e) {
-			LOGGER.warn("Invalid or no Token given.");
+			LOGGER.debug("Invalid or no Token given.");
 			return -1;
 		}
 	}
@@ -72,7 +72,7 @@ public class JwtHolder {
 		try {
 			return jwtParser.parseClaimsJws(getToken()).getBody().get("email").toString();
 		} catch (Exception e) {
-			LOGGER.warn("Invalid or no Token given.");
+			LOGGER.debug("Invalid or no Token given.");
 			return "";
 		}
 	}
@@ -87,7 +87,7 @@ public class JwtHolder {
 		try {
 			return jwtParser.parseClaimsJws(token).getBody().get("email").toString();
 		} catch (Exception e) {
-			LOGGER.warn("Invalid or no Token given.");
+			LOGGER.debug("Invalid or no Token given.");
 			return "";
 		}
 	}
@@ -101,7 +101,7 @@ public class JwtHolder {
 		try {
 			return WebRole.valueOf(jwtParser.parseClaimsJws(getToken()).getBody().get("webRole").toString());
 		} catch (Exception e) {
-			LOGGER.warn("Invalid or no Token given.");
+			LOGGER.debug("Invalid or no Token given.");
 			return WebRole.USER;
 		}
 	}
@@ -116,7 +116,7 @@ public class JwtHolder {
 		try {
 			return WebRole.valueOf(jwtParser.parseClaimsJws(token).getBody().get("webRole").toString());
 		} catch (Exception e) {
-			LOGGER.warn("Invalid or no Token given.");
+			LOGGER.debug("Invalid or no Token given.");
 			return WebRole.USER;
 		}
 	}

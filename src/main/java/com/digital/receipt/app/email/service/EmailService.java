@@ -5,14 +5,19 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
 import com.digital.receipt.app.email.client.domain.UserEmail;
+import com.digital.receipt.app.user.client.UserClient;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.common.exceptions.SqlFragmentNotFoundException;
+import com.digital.receipt.jwt.utility.JwtTokenUtil;
+import com.google.common.collect.Sets;
+import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -28,8 +33,16 @@ import org.springframework.stereotype.Component;
 @Component
 public class EmailService {
 
+    private final String RESET_LINK = "http://www.digital-receipt-reader.com/reset-password/";
+
     @Autowired
     private JavaMailSender javaMailSender;
+
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+
+    @Autowired
+    private UserClient userClient;
 
     /**
      * {@link UserEmail} object to send a email too. Default from user will be the
@@ -68,12 +81,14 @@ public class EmailService {
      *                                      found.
      */
     public void forgotPassword(String email) throws MessagingException, Exception {
-        String filePath = "src/main/java/com/digital/receipt/app/email/client/domain/ForgotPasswordEmail.html";
-        BufferedReader br = new BufferedReader(new FileReader(filePath));
+        String content = getForgotPasswordContent(email);
 
-        sendEmail(buildUserEmail("ridgecampusdigitalreceipt@outlook.com", email, "Forgot Password",
-                br.lines().collect(Collectors.joining(" "))), true);
-        br.close();
+        if ("".equals(content)) {
+            return;
+        } else {
+            sendEmail(buildUserEmail("ridgecampusdigitalreceipt@outlook.com", email, "Forgot Password", content), true);
+        }
+
     }
 
     /**
@@ -93,6 +108,42 @@ public class EmailService {
         userEmail.setSubject(subject);
         userEmail.setBody(body);
         return userEmail;
+    }
+
+    /**
+     * This will build out the reset password link that will be sent with the email.
+     * If the users email does not exist this method will return an empty string and
+     * it will not send an email.
+     * 
+     * @param email The users email to search for and send an email too.
+     * @return {@link String} of the email content with the replaced link.
+     * @throws Exception
+     */
+    private String getForgotPasswordContent(String email) throws Exception {
+        String filePath = "src/main/java/com/digital/receipt/app/email/client/domain/ForgotPasswordEmail.html";
+        BufferedReader br = new BufferedReader(new FileReader(filePath));
+        String emailContent = br.lines().collect(Collectors.joining(" "));
+        br.close();
+
+        UserGetRequest request = new UserGetRequest();
+        request.setEmail(Sets.newHashSet(email));
+        List<User> users = userClient.getUsers(request);
+
+        if (users.size() < 1)
+            return "";
+        else
+            return emailContent.replace("::FORGOT_PASSWORD_LINK::", RESET_LINK + getAuthToken(users.get(0)));
+    }
+
+    /**
+     * Gets the auth token for the given user. They will need this in order to
+     * update thier password since they are not logged into the app.
+     * 
+     * @param user The user to generate an auth token for.
+     * @return {@link String} representation of the auth token.
+     */
+    private String getAuthToken(User user) {
+        return jwtTokenUtil.generateToken(user);
     }
 
 }
