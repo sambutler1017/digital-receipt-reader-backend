@@ -29,8 +29,6 @@ public class User {
     @JsonInclude(Include.NON_DEFAULT)
     private long salt;
 
-    private boolean forgotPassword;
-
     private Date insertDate;
 
     public int getId() {
@@ -87,14 +85,6 @@ public class User {
 
     public void setSalt(long salt) {
         this.salt = salt;
-    }
-
-    public boolean isForgotPassword() {
-        return forgotPassword;
-    }
-
-    public void setForgotPassword(boolean forgotPassword) {
-        this.forgotPassword = forgotPassword;
     }
 
     public Date getInsertDate() {

@@ -5,7 +5,6 @@
 		up.last_name,
 		up.email,
 		up.web_role_id,
-		uc.forgot_password_flag,
 		up.insert_date_utc
 	FROM
 		user_profile up

@@ -75,7 +75,6 @@ public class UserService {
      */
     public User updateUser(User user) throws Exception {
         updateUserPassword(jwtHolder.getRequiredUserId(), user.getPassword());
-        updateUserForgotPasswordFlag(jwtHolder.getRequiredUserId(), user.isForgotPassword());
         return updateUserProfile(jwtHolder.getRequiredUserId(), user);
     }
 
@@ -91,8 +90,9 @@ public class UserService {
     }
 
     /**
-     * This gets called when a user forgets their password. They will set the forgot
-     * password flag and get an email with the temporary password.
+     * This gets called when a user forgets their password. This will check to see
+     * if the passed in email exists as a user, if it does then the user will get an
+     * email to reset their passowrd.
      * 
      * @return user associated to that id with the updated information
      * @throws Exception
@@ -107,7 +107,7 @@ public class UserService {
         }
 
         emailClient.forgotPassword(email);
-        return updateUserForgotPasswordFlag(users.get(0).getId(), true);
+        return users.get(0);
     }
 
     /**
@@ -167,18 +167,5 @@ public class UserService {
         } catch (NoSuchAlgorithmException e) {
             throw new BaseException("Could not hash password!");
         }
-    }
-
-    /**
-     * Will set the forgot password flag to the given boolean value for the given
-     * userId.
-     * 
-     * @param userId The id of the user to update.
-     * @param flag   The flag to set the forgot password too.
-     * @return user associated to that id with the updated information
-     * @throws Exception
-     */
-    private User updateUserForgotPasswordFlag(int userId, boolean flag) throws Exception {
-        return userDao.updateUserForgotPasswordFlag(userId, flag);
     }
 }

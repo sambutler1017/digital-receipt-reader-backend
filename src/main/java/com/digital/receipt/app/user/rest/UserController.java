@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -71,6 +72,19 @@ public class UserController {
     }
 
     /**
+     * This will check to see if the email exists. If it does then it will return
+     * true, otherwise false.
+     * 
+     * @param email The email to check
+     * @return {@link Boolean} to see if the email exists
+     * @throws Exception
+     */
+    @GetMapping("/check-email")
+    public boolean doesEmailExist(@RequestBody String email) throws Exception {
+        return userService.doesEmailExist(email);
+    }
+
+    /**
      * Update the user's information such as email, first name, last name, and
      * password
      * 
@@ -99,13 +113,14 @@ public class UserController {
     }
 
     /**
-     * This gets called when a user forgets their password. They will set the forgot
-     * password flag and get an email with the temporary password.
+     * This gets called when a user forgets their password. This will check to see
+     * if the passed in email exists as a user, if it does then the user will get an
+     * email to reset their passowrd.
      * 
      * @return user associated to that id with the updated information
      * @throws Exception
      */
-    @PutMapping(path = "/forgot-password", produces = APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/forgot-password", produces = APPLICATION_JSON_VALUE)
     @HasAccess(WebRole.USER)
     public User forgotPassword(@RequestBody String email) throws Exception {
         return userService.forgotPassword(email);
@@ -122,19 +137,5 @@ public class UserController {
     @HasAccess(WebRole.ADMIN)
     public void deleteUser(@PathVariable int id) throws Exception {
         userService.deleteUser(id);
-    }
-
-    /**
-     * This will check to see if the email exists. If it does then it will return
-     * true, otherwise false.
-     * 
-     * @param email The email to check
-     * @return {@link Boolean} to see if the email exists
-     * @throws Exception
-     */
-    @GetMapping("/check-email")
-    @HasAccess(WebRole.USER)
-    public boolean doesEmailExist(@RequestBody String email) throws Exception {
-        return userService.doesEmailExist(email);
     }
 }
