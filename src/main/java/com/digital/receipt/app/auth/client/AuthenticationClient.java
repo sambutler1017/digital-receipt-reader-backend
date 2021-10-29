@@ -23,9 +23,10 @@ public class AuthenticationClient {
     /**
      * Verifies user credentials passed as a JWTRequest
      *
-     * @param email    - Entered email at login.
-     * @param password - Password entered at login.
-     * @throws Exception
+     * @param email    Entered email at login.
+     * @param password Password entered at login.
+     * @throws Exception If the user email or password does not match what is in the
+     *                   databsae
      */
     public ResponseEntity<DigitalReceiptToken> authenticateUser(String email, String password) throws Exception {
         return controller.authenticateUser(new AuthenticationRequest(email, password));

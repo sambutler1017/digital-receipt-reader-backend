@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.digital.receipt.annotations.interfaces.HasAccess;
 import com.digital.receipt.annotations.interfaces.RestApiController;
+import com.digital.receipt.app.user.client.domain.PasswordUpdate;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.app.user.service.UserService;
@@ -110,6 +111,23 @@ public class UserController {
     @HasAccess(WebRole.ADMIN)
     public User updateUserRole(@PathVariable int id, @PathVariable String role) throws Exception {
         return userService.updateUserRole(id, WebRole.valueOf(role));
+    }
+
+    /**
+     * This will take in a {@link PasswordUpdate} object that will confirm that the
+     * current password matches the database password. If it does then it will
+     * update the password to the new password.
+     * 
+     * @param passUpdate Object the holds the current password and new user password
+     *                   to change it too.
+     * @return {@link User} object of the user that was updated.
+     * @throws Exception If the user can not be authenticated or it failed to hash
+     *                   the new password.
+     */
+    @PutMapping(path = "/password", produces = APPLICATION_JSON_VALUE)
+    @HasAccess(WebRole.USER)
+    public User updatePassword(@RequestBody PasswordUpdate passUpdate) throws Exception {
+        return userService.updatePassword(passUpdate);
     }
 
     /**

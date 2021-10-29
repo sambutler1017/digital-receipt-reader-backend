@@ -3,7 +3,10 @@ package com.digital.receipt.app.user.service;
 import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
+import com.digital.receipt.app.auth.client.AuthenticationClient;
+import com.digital.receipt.app.auth.client.domain.DigitalReceiptToken;
 import com.digital.receipt.app.email.client.EmailClient;
+import com.digital.receipt.app.user.client.domain.PasswordUpdate;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.app.user.dao.UserDao;
@@ -33,6 +36,9 @@ public class UserService {
 
     @Autowired
     private EmailClient emailClient;
+
+    @Autowired
+    private AuthenticationClient authClient;
 
     /**
      * Get users based on given request filter.
@@ -74,7 +80,6 @@ public class UserService {
      * @throws Exception
      */
     public User updateUser(User user) throws Exception {
-        updateUserPassword(jwtHolder.getRequiredUserId(), user.getPassword());
         return updateUserProfile(jwtHolder.getRequiredUserId(), user);
     }
 
@@ -108,6 +113,33 @@ public class UserService {
 
         emailClient.forgotPassword(email);
         return users.get(0);
+    }
+
+    /**
+     * This will take in a {@link PasswordUpdate} object that will confirm that the
+     * current password matches the database password. If it does then it will
+     * update the password to the new password.
+     * 
+     * @param passUpdate Object the holds the current password and new user password
+     *                   to change it too.
+     * @return {@link User} object of the user that was updated.
+     * @throws Exception If the user can not be authenticated or the function was
+     *                   not able to hash the new password.
+     */
+    public User updatePassword(PasswordUpdate passUpdate) throws Exception {
+        DigitalReceiptToken token = authClient
+                .authenticateUser(jwtHolder.getRequiredEmail(), passUpdate.getCurrentPassword()).getBody();
+
+        try {
+            if (passUpdate.getNewPassword() != null && passUpdate.getNewPassword().trim() != "") {
+                return userDao.updateUserPassword(token.getUser().getId(),
+                        PasswordUtil.hashPasswordWithSalt(passUpdate.getNewPassword()));
+            } else {
+                return getCurrentUser();
+            }
+        } catch (NoSuchAlgorithmException e) {
+            throw new BaseException("Could not hash password!");
+        }
     }
 
     /**
@@ -147,25 +179,5 @@ public class UserService {
      */
     private User updateUserProfile(int userId, User user) throws Exception {
         return userDao.updateUserProfile(userId, user);
-    }
-
-    /**
-     * Update the users credentials.
-     * 
-     * @param userId   Id of the user wanting to update their password.
-     * @param password THe password to update on the user's account.
-     * @return user associated to that id with the updated information
-     * @throws Exception
-     */
-    private User updateUserPassword(int userId, String password) throws Exception {
-        try {
-            if (password != null && password.trim() != "") {
-                return userDao.updateUserPassword(userId, PasswordUtil.hashPasswordWithSalt(password));
-            } else {
-                return getCurrentUser();
-            }
-        } catch (NoSuchAlgorithmException e) {
-            throw new BaseException("Could not hash password!");
-        }
     }
 }

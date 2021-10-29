@@ -3,6 +3,7 @@ package com.digital.receipt.app.user.client;
 import java.util.List;
 
 import com.digital.receipt.annotations.interfaces.Client;
+import com.digital.receipt.app.user.client.domain.PasswordUpdate;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
 import com.digital.receipt.app.user.rest.UserController;
@@ -55,6 +56,18 @@ public class UserClient {
     }
 
     /**
+     * This will check to see if the email exists. If it does then it will return
+     * true, otherwise false.
+     * 
+     * @param email The email to check
+     * @return {@link Boolean} to see if the email exists
+     * @throws Exception
+     */
+    public boolean doesEmailExist(String email) throws Exception {
+        return controller.doesEmailExist(email);
+    }
+
+    /**
      * Update the user's information such as email, first name, last name, and
      * password
      * 
@@ -76,6 +89,33 @@ public class UserClient {
      */
     public User updateUserRole(int id, String role) throws Exception {
         return controller.updateUserRole(id, role);
+    }
+
+    /**
+     * This will take in a {@link PasswordUpdate} object that will confirm that the
+     * current password matches the database password. If it does then it will
+     * update the password to the new password.
+     * 
+     * @param passUpdate Object the holds the current password and new user password
+     *                   to change it too.
+     * @return {@link User} object of the user that was updated.
+     * @throws Exception If the user can not be authenticated or it failed to hash
+     *                   the new password.
+     */
+    public User updatePassword(PasswordUpdate passUpdate) throws Exception {
+        return controller.updatePassword(passUpdate);
+    }
+
+    /**
+     * This gets called when a user forgets their password. This will check to see
+     * if the passed in email exists as a user, if it does then the user will get an
+     * email to reset their passowrd.
+     * 
+     * @return user associated to that id with the updated information
+     * @throws Exception
+     */
+    public User forgotPassword(String email) throws Exception {
+        return controller.forgotPassword(email);
     }
 
     /**
