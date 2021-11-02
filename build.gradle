@@ -23,4 +23,5 @@ dependencies {
 	implementation 'org.aspectj:aspectjtools:1.9.7'
 	implementation 'mysql:mysql-connector-java:8.0.15'
 	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+	implementation 'com.cloudinary:cloudinary-http44:1.29.0'
 }
