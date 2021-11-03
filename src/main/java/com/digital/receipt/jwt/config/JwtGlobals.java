@@ -28,6 +28,9 @@ public class JwtGlobals {
 
             // Does User exist endpoint in User App
             put("/api/user-app/users/check-email", Arrays.asList("GET"));
+
+            // Create user endpoint in User Appends
+            put("/api/user-app/users", Arrays.asList("POST"));
         }
     };
 

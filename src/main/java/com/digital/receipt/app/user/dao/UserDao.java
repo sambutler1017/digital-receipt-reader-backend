@@ -108,29 +108,29 @@ public class UserDao extends AbstractSqlDao {
     }
 
     /**
+     * This will create a new user based on the given {@link User} object.
      * 
-     * 
-     * @param id of the user that is to be deleted.
-     * @throws Exception
+     * @param user The user to be created.
+     * @throws Exception If the user can not be created.
      */
     public User createUser(User user) throws Exception {
-        Optional<Integer> id = sqlClient.update(getSql("createUserProfile"),
-                         params("firstName", user.getFirstName())
-                         .addValue("lastName", user.getLastName())
-                         .addValue("email", user.getEmail()));
+        Optional<Integer> id = sqlClient.update(getSql("createUserProfile"), params("firstName", user.getFirstName())
+                .addValue("lastName", user.getLastName()).addValue("email", user.getEmail()));
         user.setId(id.get());
         return user;
     }
 
     /**
+     * This will insert the given auth password into the database for the given user
+     * id.
      * 
-     * @param id
-     * @throws Exception
+     * @param id           The id of the created user to attach it too.
+     * @param authPassword The password and salt value to insert.
+     * @throws Exception If the sql process can not be completed.
      */
-    public User createUserPassword(int userId, AuthPassword authPassword) throws Exception {
+    public void createUserPassword(int userId, AuthPassword authPassword) throws Exception {
         sqlClient.update(getSql("createUserPassword"), params("password", authPassword.getPassword())
                 .addValue("id", userId).addValue("salt", authPassword.getSalt()));
-        return getUserById(userId);
     }
 
     /**

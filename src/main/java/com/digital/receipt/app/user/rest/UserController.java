@@ -89,7 +89,7 @@ public class UserController {
      * Adds a user to the database.
      * 
      * @param user what information on the user needs to be updated.
-     * @return
+     * @return {@link User} object of the newly created user.
      * @throws Exception
      */
     @PostMapping(produces = APPLICATION_JSON_VALUE)

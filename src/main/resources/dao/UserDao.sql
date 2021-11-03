@@ -44,14 +44,12 @@
 		id = :id:
 
 @NAME(createUserProfile)
-	INSERT INTO `user_profile`
-	(`first_name`,
-	 `last_name`,
-	 `email`)
-	VALUES
-	(:firstName:,
-	 :lastName:,
-	 :email:)
+	INSERT INTO `user_profile` (`first_name`,`last_name`,`email`)
+	VALUES (:firstName:,:lastName:,:email:)
+
+@NAME(createUserPassword)
+	INSERT INTO `user_credentials` (`user_id`,`password`,`salt`)
+	VALUES (:id:,:password:,:salt:)
 
 @NAME(updateUserPassword)
     UPDATE user_credentials 
@@ -60,16 +58,6 @@
 		salt = :salt:
 	WHERE
 		user_id = :id:
-
-@NAME(createUserPassword)
-	INSERT INTO `user_profile`
-	(`user_id`,
-	 `password`,
-	 `salt`)
-	VALUES
-	(:id:,
-	 :password:,
-	 :salt:)
 
 @NAME(updateUserRole)
 	UPDATE user_profile
