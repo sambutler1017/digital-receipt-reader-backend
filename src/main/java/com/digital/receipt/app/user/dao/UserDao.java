@@ -3,6 +3,7 @@ package com.digital.receipt.app.user.dao;
 import static com.digital.receipt.app.user.mapper.UserMapper.USER_MAPPER;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.digital.receipt.app.auth.client.domain.AuthPassword;
 import com.digital.receipt.app.user.client.domain.User;
@@ -104,6 +105,32 @@ public class UserDao extends AbstractSqlDao {
         userProfile.setWebRole(role);
         sqlClient.update(getSql("updateUserRole"), params("id", userId).addValue("roleId", role.getValue()));
         return userProfile;
+    }
+
+    /**
+     * This will create a new user based on the given {@link User} object.
+     * 
+     * @param user The user to be created.
+     * @throws Exception If the user can not be created.
+     */
+    public User createUser(User user) throws Exception {
+        Optional<Integer> id = sqlClient.update(getSql("createUserProfile"), params("firstName", user.getFirstName())
+                .addValue("lastName", user.getLastName()).addValue("email", user.getEmail()));
+        user.setId(id.get());
+        return user;
+    }
+
+    /**
+     * This will insert the given auth password into the database for the given user
+     * id.
+     * 
+     * @param id           The id of the created user to attach it too.
+     * @param authPassword The password and salt value to insert.
+     * @throws Exception If the sql process can not be completed.
+     */
+    public void createUserPassword(int userId, AuthPassword authPassword) throws Exception {
+        sqlClient.update(getSql("createUserPassword"), params("password", authPassword.getPassword())
+                .addValue("id", userId).addValue("salt", authPassword.getSalt()));
     }
 
     /**

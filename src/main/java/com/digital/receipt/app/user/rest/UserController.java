@@ -86,6 +86,19 @@ public class UserController {
     }
 
     /**
+     * Adds a user to the database.
+     * 
+     * @param user what information on the user needs to be updated.
+     * @return {@link User} object of the newly created user.
+     * @throws Exception
+     */
+    @PostMapping(produces = APPLICATION_JSON_VALUE)
+    @HasAccess(WebRole.USER)
+    public User createUser(@RequestBody User user) throws Exception {
+        return userService.createUser(user);
+    }
+
+    /**
      * Update the user's information such as email, first name, last name, and
      * password
      * 

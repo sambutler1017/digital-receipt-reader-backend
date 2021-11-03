@@ -73,6 +73,18 @@ public class UserService {
     }
 
     /**
+     * This will create a new user based on the given {@link User} object.
+     * 
+     * @param user The user to be created.
+     * @throws Exception If the user can not be created.
+     */
+    public User createUser(User user) throws Exception {
+        User newUser = userDao.createUser(user);
+        createUserPassword(newUser.getId(), user.getPassword());
+        return getUserById(newUser.getId());
+    }
+
+    /**
      * Update the user profile for the given user object.
      * 
      * @param user what information on the user needs to be updated.
@@ -113,6 +125,18 @@ public class UserService {
 
         emailClient.forgotPassword(email);
         return users.get(0);
+    }
+
+    /**
+     * This will insert the given auth password into the database for the given user
+     * id.
+     * 
+     * @param id           The id of the created user to attach it too.
+     * @param authPassword The password and salt value to insert.
+     * @throws Exception If the sql process can not be completed.
+     */
+    public void createUserPassword(int userId, String userPassword) throws Exception {
+        userDao.createUserPassword(userId, PasswordUtil.hashPasswordWithSalt(userPassword));
     }
 
     /**
