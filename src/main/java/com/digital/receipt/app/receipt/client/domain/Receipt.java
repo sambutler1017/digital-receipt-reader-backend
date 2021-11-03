@@ -17,21 +17,21 @@ public class Receipt {
     @JsonInclude(Include.NON_DEFAULT)
     private int userId;
 
-    private String fileName;
+    private String filePublicId;
 
     private Date insertDate;
 
     public Receipt() {
     }
 
-    public Receipt(String data, Date insertDate) {
-        this.fileName = data;
+    public Receipt(String filePublicId, Date insertDate) {
+        this.filePublicId = filePublicId;
         this.insertDate = insertDate;
     }
 
-    public Receipt(int id, String fileName, Date insertDate) {
+    public Receipt(int id, String filePublicId, Date insertDate) {
         this.id = id;
-        this.fileName = fileName;
+        this.filePublicId = filePublicId;
         this.insertDate = insertDate;
     }
 
@@ -51,12 +51,12 @@ public class Receipt {
         this.userId = userId;
     }
 
-    public String getFileName() {
-        return fileName;
+    public String getFilePublicId() {
+        return filePublicId;
     }
 
-    public void setFileName(String fileName) {
-        this.fileName = fileName;
+    public void setFilePublicId(String filePublicId) {
+        this.filePublicId = filePublicId;
     }
 
     public Date getInsertDate() {

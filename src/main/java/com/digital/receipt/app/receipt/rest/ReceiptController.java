@@ -38,7 +38,7 @@ public class ReceiptController {
     @PostMapping(produces = APPLICATION_JSON_VALUE)
     @HasAccess(WebRole.USER)
     public Receipt insertReceipt(@RequestBody Receipt rec) throws Exception {
-        return service.insertReceipt(rec.getFileName());
+        return service.insertReceipt(rec.getFilePublicId());
     }
 
     /**
@@ -65,5 +65,17 @@ public class ReceiptController {
     @HasAccess(WebRole.USER)
     public Receipt associateUserToReceipt(@RequestBody Receipt rec) throws Exception {
         return service.associateUserToReceipt(rec);
+    }
+
+    /**
+     * Get the next auto increment value for the receipt details table.
+     * 
+     * @return {@link Long} of the next auto increment id.
+     * @throws Exception
+     */
+    @GetMapping(path = "/receipt-details/auto-increment", produces = APPLICATION_JSON_VALUE)
+    @HasAccess(WebRole.USER)
+    public long getAutoIncrementReceiptDetails() throws Exception {
+        return service.getAutoIncrementReceiptDetails();
     }
 }

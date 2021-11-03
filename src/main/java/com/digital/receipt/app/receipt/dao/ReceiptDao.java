@@ -27,9 +27,9 @@ public class ReceiptDao extends AbstractSqlDao {
      * @return {@link Receipt} of the added receipt.
      * @throws Exception
      */
-    public Receipt insertReceipt(String fileName) throws Exception {
-        Optional<Integer> id = sqlClient.post(getSql("insertUserReceipt"), params("name", fileName));
-        return new Receipt(id.get(), fileName, new Date());
+    public Receipt insertReceipt(String publicId) throws Exception {
+        Optional<Integer> id = sqlClient.post(getSql("insertUserReceipt"), params("name", publicId));
+        return new Receipt(id.get(), publicId, new Date());
     }
 
     /**
@@ -53,5 +53,15 @@ public class ReceiptDao extends AbstractSqlDao {
     public Receipt associateUserToReceipt(Receipt rec) throws Exception {
         sqlClient.post(getSql("associateUserToReceipt"), params("id", rec.getId()).addValue("userId", rec.getUserId()));
         return getReceiptById(rec.getId());
+    }
+
+    /**
+     * Get the next auto increment value for the receipt details table.
+     * 
+     * @return {@link Long} of the next auto increment id.
+     * @throws Exception
+     */
+    public long getAutoIncrementReceiptDetails() throws Exception {
+        return sqlClient.queryForLong(getSql("getAutoIncrementReceiptDetails"), params("", null));
     }
 }

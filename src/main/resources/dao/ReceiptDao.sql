@@ -1,5 +1,5 @@
 @NAME(insertUserReceipt)
-    INSERT INTO `receipt_details`(`file_name`)
+    INSERT INTO `receipt_details`(`file_public_id`)
     VALUES (:name:)
 
 @NAME(getReceiptById)
@@ -15,3 +15,12 @@
 @NAME(associateUserToReceipt)
     INSERT INTO `user_receipts` (`receipt_id`,`user_id`)
     VALUES (:id:, :userId:);
+
+@NAME(getAutoIncrementReceiptDetails)
+    SELECT 
+        AUTO_INCREMENT
+    FROM
+        information_schema.tables
+    WHERE
+        table_name = 'receipt_details'
+            AND table_schema = DATABASE()

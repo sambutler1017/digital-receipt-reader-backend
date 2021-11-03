@@ -1,7 +1,5 @@
 package com.digital.receipt.app.receipt.service;
 
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
 import com.digital.receipt.app.receipt.client.domain.Receipt;
 import com.digital.receipt.app.receipt.dao.ReceiptDao;
 
@@ -24,12 +22,12 @@ public class ReceiptService {
      * This will create the receipt in the database for the given userId and the
      * receipt data to be attatched.
      * 
-     * @param fileName Add the file name the pdf is stored under.
+     * @param publicId Public key for the file.
      * @return {@link Receipt} of the added receipt.
      * @throws Exception
      */
-    public Receipt insertReceipt(String fileName) throws Exception {
-        return dao.insertReceipt(fileName);
+    public Receipt insertReceipt(String publicId) throws Exception {
+        return dao.insertReceipt(publicId);
     }
 
     /**
@@ -54,12 +52,14 @@ public class ReceiptService {
     public Receipt associateUserToReceipt(Receipt rec) throws Exception {
         return dao.associateUserToReceipt(rec);
     }
+
+    /**
+     * Get the next auto increment value for the receipt details table.
+     * 
+     * @return {@link Long} of the next auto increment id.
+     * @throws Exception
+     */
+    public long getAutoIncrementReceiptDetails() throws Exception {
+        return dao.getAutoIncrementReceiptDetails();
+    }
 }
-
-// Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap("cloud_name",
-// "hwxm9amax", "api_key",
-// "656249988229398", "api_secret", "NO6Ydnn_UIFwAzanYJL3Xm0xkb8", "secure",
-// true));
-
-// cloudinary.uploader().upload("C:\\Users\\sambu\\Desktop\\EECS1100_fall_2021_opp0_reva[8100].pdf",
-// ObjectUtils.emptyMap());
