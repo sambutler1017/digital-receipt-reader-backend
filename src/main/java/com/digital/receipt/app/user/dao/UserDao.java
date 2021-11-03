@@ -3,6 +3,7 @@ package com.digital.receipt.app.user.dao;
 import static com.digital.receipt.app.user.mapper.UserMapper.USER_MAPPER;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.digital.receipt.app.auth.client.domain.AuthPassword;
 import com.digital.receipt.app.user.client.domain.User;
@@ -104,6 +105,32 @@ public class UserDao extends AbstractSqlDao {
         userProfile.setWebRole(role);
         sqlClient.update(getSql("updateUserRole"), params("id", userId).addValue("roleId", role.getValue()));
         return userProfile;
+    }
+
+    /**
+     * 
+     * 
+     * @param id of the user that is to be deleted.
+     * @throws Exception
+     */
+    public User createUser(User user) throws Exception {
+        Optional<Integer> id = sqlClient.update(getSql("createUserProfile"),
+                         params("firstName", user.getFirstName())
+                         .addValue("lastName", user.getLastName())
+                         .addValue("email", user.getEmail()));
+        user.setId(id.get());
+        return user;
+    }
+
+    /**
+     * 
+     * @param id
+     * @throws Exception
+     */
+    public User createUserPassword(int userId, AuthPassword authPassword) throws Exception {
+        sqlClient.update(getSql("createUserPassword"), params("password", authPassword.getPassword())
+                .addValue("id", userId).addValue("salt", authPassword.getSalt()));
+        return getUserById(userId);
     }
 
     /**

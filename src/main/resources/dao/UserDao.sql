@@ -43,6 +43,16 @@
 	WHERE
 		id = :id:
 
+@NAME(createUserProfile)
+	INSERT INTO `user_profile`
+	(`first_name`,
+	 `last_name`,
+	 `email`)
+	VALUES
+	(:firstName:,
+	 :lastName:,
+	 :email:)
+
 @NAME(updateUserPassword)
     UPDATE user_credentials 
 	SET 
@@ -51,12 +61,15 @@
 	WHERE
 		user_id = :id:
 
-@NAME(updateUserPassword)
-    UPDATE user_credentials 
-	SET 
-    	salt = :salt:
-	WHERE
-		user_id = :id:
+@NAME(createUserPassword)
+	INSERT INTO `user_profile`
+	(`user_id`,
+	 `password`,
+	 `salt`)
+	VALUES
+	(:id:,
+	 :password:,
+	 :salt:)
 
 @NAME(updateUserRole)
 	UPDATE user_profile

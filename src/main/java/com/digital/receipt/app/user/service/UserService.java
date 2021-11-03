@@ -4,6 +4,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 import com.digital.receipt.app.auth.client.AuthenticationClient;
+import com.digital.receipt.app.auth.client.domain.AuthPassword;
 import com.digital.receipt.app.auth.client.domain.DigitalReceiptToken;
 import com.digital.receipt.app.email.client.EmailClient;
 import com.digital.receipt.app.user.client.domain.PasswordUpdate;
@@ -16,6 +17,7 @@ import com.digital.receipt.jwt.utility.JwtHolder;
 import com.digital.receipt.service.util.PasswordUtil;
 import com.google.common.collect.Sets;
 
+import org.aspectj.weaver.NewFieldTypeMunger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -73,6 +75,19 @@ public class UserService {
     }
 
     /**
+     * Adds the given user object to the database as a new user.
+     * 
+     * @param user what information on the user needs to be updated.
+     * @return
+     * @throws Exception
+     */
+    public User createUser(User user) throws Exception {
+        User newUser = userDao.createUser(user);
+        createUserPassword(newUser.getId(), user.getPassword());
+        return newUser;
+    }
+
+    /**
      * Update the user profile for the given user object.
      * 
      * @param user what information on the user needs to be updated.
@@ -113,6 +128,16 @@ public class UserService {
 
         emailClient.forgotPassword(email);
         return users.get(0);
+    }
+
+    /**
+     * Creates a new password for {@link userId}
+     * @param id
+     * @return
+     * @throws Exception
+     */
+    public void createUserPassword(int userId, String userPassword) throws Exception {
+        userDao.createUserPassword(userId, PasswordUtil.hashPasswordWithSalt(userPassword));
     }
 
     /**
