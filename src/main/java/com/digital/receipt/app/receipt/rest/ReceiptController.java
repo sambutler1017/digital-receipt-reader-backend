@@ -2,6 +2,8 @@ package com.digital.receipt.app.receipt.rest;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import java.util.List;
+
 import com.digital.receipt.annotations.interfaces.HasAccess;
 import com.digital.receipt.annotations.interfaces.RestApiController;
 import com.digital.receipt.app.receipt.client.domain.Receipt;
@@ -49,9 +51,21 @@ public class ReceiptController {
      * @throws Exception
      */
     @GetMapping(path = "/{id}", produces = APPLICATION_JSON_VALUE)
-    @HasAccess(WebRole.USER)
+    @HasAccess(WebRole.ADMIN)
     public Receipt getReceiptById(@PathVariable int id) throws Exception {
         return service.getReceiptById(id);
+    }
+
+    /**
+     * This will get all of the currently logged in users receipts.
+     * 
+     * @return {@link List<Receipt>} associated to that user.
+     * @throws Exception
+     */
+    @GetMapping(path = "/current-user", produces = APPLICATION_JSON_VALUE)
+    @HasAccess(WebRole.USER)
+    public List<Receipt> getCurrentUserReceipts() throws Exception {
+        return service.getCurrentUserReceipts();
     }
 
     /**

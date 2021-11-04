@@ -1,7 +1,10 @@
 package com.digital.receipt.app.receipt.service;
 
+import java.util.List;
+
 import com.digital.receipt.app.receipt.client.domain.Receipt;
 import com.digital.receipt.app.receipt.dao.ReceiptDao;
+import com.digital.receipt.jwt.utility.JwtHolder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +20,9 @@ public class ReceiptService {
 
     @Autowired
     private ReceiptDao dao;
+
+    @Autowired
+    private JwtHolder jwtHolder;
 
     /**
      * This will create the receipt in the database for the given userId and the
@@ -38,8 +44,17 @@ public class ReceiptService {
      * @throws Exception
      */
     public Receipt getReceiptById(int id) throws Exception {
-        Receipt rec = dao.getReceiptById(id);
-        return rec;
+        return dao.getReceiptById(id);
+    }
+
+    /**
+     * This will get all of the currently logged in users receipts.
+     * 
+     * @return {@link List<Receipt>} associated to that user.
+     * @throws Exception
+     */
+    public List<Receipt> getCurrentUserReceipts() throws Exception {
+        return dao.getCurrentUserReceipts(jwtHolder.getRequiredUserId());
     }
 
     /**

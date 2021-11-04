@@ -3,6 +3,7 @@ package com.digital.receipt.app.receipt.dao;
 import static com.digital.receipt.app.receipt.mapper.ReceiptMapper.RECEIPT_MAPPER;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import com.digital.receipt.app.receipt.client.domain.Receipt;
@@ -41,6 +42,17 @@ public class ReceiptDao extends AbstractSqlDao {
      */
     public Receipt getReceiptById(int id) throws Exception {
         return sqlClient.getTemplate(getSql("getReceiptById"), params("id", id), RECEIPT_MAPPER);
+    }
+
+    /**
+     * This will get all of the currently logged in users receipts.
+     * 
+     * @param userId The user id of the user to return receipts for.
+     * @return {@link List<Receipt>} associated to that user.
+     * @throws Exception
+     */
+    public List<Receipt> getCurrentUserReceipts(int userId) throws Exception {
+        return sqlClient.getPage(getSql("getCurrentUserReceipts"), params("userId", userId), RECEIPT_MAPPER);
     }
 
     /**
