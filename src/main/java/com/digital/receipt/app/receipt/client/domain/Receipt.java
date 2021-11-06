@@ -19,6 +19,8 @@ public class Receipt {
 
     private String filePublicId;
 
+    private String url;
+
     private Date insertDate;
 
     public Receipt() {
@@ -57,6 +59,14 @@ public class Receipt {
 
     public void setFilePublicId(String filePublicId) {
         this.filePublicId = filePublicId;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public Date getInsertDate() {

@@ -45,6 +45,23 @@ public class ReceiptDao extends AbstractSqlDao {
     }
 
     /**
+     * Get the receipt for the given receipt id from the current user account.
+     * 
+     * @param id     The id of the receipt to get
+     * @param userId The user id of the user to get the receipt for.
+     * @return {@link Receipt} of the id.
+     * @throws Exception
+     */
+    public Receipt getCurrentUserReceiptById(int id, int userId) throws Exception {
+        try {
+            return sqlClient.getTemplate(getSql("getCurrentUserReceiptById"),
+                    params("id", id).addValue("userId", userId), RECEIPT_MAPPER);
+        } catch (Exception e) {
+            throw new Exception(String.format("User id '%d' does not have access to receipt id '%d'", userId, id));
+        }
+    }
+
+    /**
      * This will get all of the currently logged in users receipts.
      * 
      * @param userId The user id of the user to return receipts for.
@@ -75,5 +92,16 @@ public class ReceiptDao extends AbstractSqlDao {
      */
     public long getAutoIncrementReceiptDetails() throws Exception {
         return sqlClient.queryForLong(getSql("getAutoIncrementReceiptDetails"), params("", null));
+    }
+
+    /**
+     * This will delete the record of a receipt from the database. Any user
+     * associated to that receipt will now not have access to it anymore.
+     * 
+     * @param id The id of the receip that needs deleted.
+     * @throws Exception
+     */
+    public void deleteCurrentUserReceipt(int id) throws Exception {
+        sqlClient.delete(getSql("deleteCurrentUserReceipt"), params("id", id));
     }
 }
