@@ -17,6 +17,10 @@ public class Receipt {
     @JsonInclude(Include.NON_DEFAULT)
     private int userId;
 
+    private String location;
+
+    private String label;
+
     private String filePublicId;
 
     private String url;
@@ -51,6 +55,22 @@ public class Receipt {
 
     public void setUserId(int userId) {
         this.userId = userId;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
     }
 
     public String getFilePublicId() {
