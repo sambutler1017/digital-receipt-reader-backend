@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * User Controller for dealing with user request and modifications.
@@ -43,7 +44,7 @@ public class UserController {
      */
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @HasAccess(WebRole.ADMIN)
-    public List<User> getUsers(UserGetRequest request) throws Exception {
+    public List<User> getUsers(@RequestParam UserGetRequest request) throws Exception {
         return userService.getUsers(request);
     }
 
@@ -81,7 +82,7 @@ public class UserController {
      * @throws Exception
      */
     @GetMapping("/check-email")
-    public boolean doesEmailExist(@RequestBody String email) throws Exception {
+    public boolean doesEmailExist(@RequestParam String email) throws Exception {
         return userService.doesEmailExist(email);
     }
 
@@ -158,8 +159,9 @@ public class UserController {
     }
 
     /**
-     * Will delete a user for the given id. This endpoint can only be accessed by a
-     * user with admin access.
+     * Will delete a user for the given id. This will delete all their receipts,
+     * personal information, and login credentials. This endpoint can only be
+     * accessed by a user with admin access.
      * 
      * @param id of the user that is to be deleted.
      * @throws Exception
@@ -168,5 +170,17 @@ public class UserController {
     @HasAccess(WebRole.ADMIN)
     public void deleteUser(@PathVariable int id) throws Exception {
         userService.deleteUser(id);
+    }
+
+    /**
+     * This will allow a user to delete their account. This will delete all their
+     * receipts, personal information, and login credentials.
+     * 
+     * @throws Exception
+     */
+    @DeleteMapping()
+    @HasAccess(WebRole.USER)
+    public void currentUserDeleteAccount() throws Exception {
+        userService.currentUserDeleteAccount();
     }
 }

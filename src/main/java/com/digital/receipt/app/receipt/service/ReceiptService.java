@@ -1,11 +1,15 @@
 package com.digital.receipt.app.receipt.service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.digital.receipt.app.receipt.client.domain.Receipt;
+import com.digital.receipt.app.receipt.client.domain.request.ReceiptGetRequest;
 import com.digital.receipt.app.receipt.dao.ReceiptDao;
 import com.digital.receipt.jwt.utility.JwtHolder;
 import com.digital.receipt.service.cloudinary.ReceiptCloud;
+import com.google.common.collect.Sets;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -42,19 +46,32 @@ public class ReceiptService {
     }
 
     /**
+     * This will get a list of all the receipts based on the
+     * {@link ReceiptGetRequest}
+     * 
+     * @return {@link List<Receipt>} associated to that user.
+     * @throws Exception
+     */
+    public List<Receipt> getReceipts(ReceiptGetRequest request) throws Exception {
+        List<Receipt> receipts = dao.getReceipts(request);
+        for (Receipt r : receipts) {
+            r.setUrl(cloud.getUrl(r.getFilePublicId()));
+        }
+
+        return receipts;
+    }
+
+    /**
      * This will get all of the currently logged in users receipts.
      * 
      * @return {@link List<Receipt>} associated to that user.
      * @throws Exception
      */
     public List<Receipt> getCurrentUserReceipts() throws Exception {
-        List<Receipt> receipts = dao.getCurrentUserReceipts(jwtHolder.getRequiredUserId());
+        ReceiptGetRequest r = new ReceiptGetRequest();
+        r.setUserId(Sets.newHashSet(jwtHolder.getRequiredUserId()));
 
-        for (Receipt r : receipts) {
-            r.setUrl(cloud.getUrl(r.getFilePublicId()));
-        }
-
-        return receipts;
+        return getReceipts(r);
     }
 
     /**
@@ -106,50 +123,87 @@ public class ReceiptService {
     }
 
     /**
-     * This will get the user id and receipt id and associate the two together.
+     * This will associate the passed in receipt id to the given user id.
      * 
-     * @param rec Receipt object containing the user ID and receipt id.
+     * @param receiptId Id of the receipt to associate the user to.
+     * @param userId    The user id to associate.
      * @return {@link Receipt}
      * @throws Exception
      */
-    public Receipt associateUserToReceipt(Receipt rec) throws Exception {
-        return dao.associateUserToReceipt(rec);
+    public Receipt associateUserToReceipt(int receiptId, int userId) throws Exception {
+        return dao.associateUserToReceipt(receiptId, userId);
     }
 
     /**
-     * Delete the receipt for the given id. This is an admin only enpoint. This
-     * allows for testing purposes of deleting receipts that are associated to our
-     * users.
+     * This will get the user id and receipt id and associate the two together.
      * 
-     * @param id The id of the receipt to be deleted.
+     * @param receiptId Id of the receipt to associate current user too.
+     * @return {@link Receipt}
      * @throws Exception
      */
-    public void deleteReceipt(int id) throws Exception {
-        deleteReceiptRecord(getReceiptById(id));
+    public Receipt associateCurrentUserToReceipt(int receiptId) throws Exception {
+        return associateUserToReceipt(receiptId, jwtHolder.getRequiredUserId());
     }
 
     /**
-     * Delete the receipt for the given id. It will first check to make sure that
-     * the receipt belongs to that user. If it does not then it will throw an
-     * exception. Otherwise it will continue through the process of unassociating
-     * the receipt from the user and removing it from the S3 bucket.
+     * Delete the receipt for the given id.
      * 
-     * @param id The id of the receipt that needs deleted.
+     * @param receiptId The id of the receipt to be deleted.
      * @throws Exception
      */
-    public void deleteCurrentUserReceipt(int id) throws Exception {
-        deleteReceiptRecord(getCurrentUserReceiptById(id));
+    public void deleteReceipts(int receiptId) throws Exception {
+        deleteReceipts(Sets.newHashSet(receiptId));
     }
 
     /**
-     * Private helper method that will delete the public id record in the database
-     * and also remove it from the cloudinary S3 bucket.
+     * Delete the receipts for the given list of ids.
      * 
-     * @param r The receipt to be removed.
-     * @throws Exception If the receipt can not be removed or deleted.
+     * @param receiptIds The id of the receipt to be deleted.
+     * @throws Exception
      */
-    private void deleteReceiptRecord(Receipt r) throws Exception {
-        dao.deleteCurrentUserReceipt(r.getId());
-        cloud.delete(r.getFilePublicId());
+    public void deleteReceipts(Set<Integer> receiptIds) throws Exception {
+        ReceiptGetRequest request = new ReceiptGetRequest();
+        request.setId(receiptIds);
+
+        deleteReceipts(getReceipts(request));
+    }
+
+    /**
+     * Delete the receipts for the given list. This will remove the association in
+     * cloudinary and also the DB record. If an empty list is passed in then it will
+     * just return with no deletions.
+     * 
+     * @param receipts List of receipts to be deleted.
+     * @throws Exception
+     */
+    public void deleteReceipts(List<Receipt> receipts) throws Exception {
+        if (receipts.isEmpty()) {
+            return;
+        }
+
+        dao.deleteReceiptRecords(receipts.stream().map(r -> r.getId()).collect(Collectors.toList()));
+        cloud.delete(receipts.stream().map(r -> r.getFilePublicId()).collect(Collectors.toList()));
+    }
+
+    /**
+     * This will delete all receipts associated to the current user.
+     * 
+     * @throws Exception If the receipts can't be deleted.
+     */
+    public void currentUserDeleteAllReceipts() throws Exception {
+        deleteAllUserReceipts(jwtHolder.getRequiredUserId());
+    }
+
+    /**
+     * This will delete all receipts associated to that user id.
+     * 
+     * @param userId The user id to delete receipts for.
+     * @throws Exception If the receipts can't be deleted.
+     */
+    public void deleteAllUserReceipts(int userId) throws Exception {
+        ReceiptGetRequest r = new ReceiptGetRequest();
+        r.setUserId(Sets.newHashSet(userId));
+
+        deleteReceipts(getReceipts(r));
     }
 }

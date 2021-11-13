@@ -6,6 +6,7 @@ import java.util.List;
 import com.digital.receipt.app.auth.client.AuthenticationClient;
 import com.digital.receipt.app.auth.client.domain.DigitalReceiptToken;
 import com.digital.receipt.app.email.client.EmailClient;
+import com.digital.receipt.app.receipt.client.ReceiptClient;
 import com.digital.receipt.app.user.client.domain.PasswordUpdate;
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.app.user.client.domain.request.UserGetRequest;
@@ -39,6 +40,9 @@ public class UserService {
 
     @Autowired
     private AuthenticationClient authClient;
+
+    @Autowired
+    private ReceiptClient receiptClient;
 
     /**
      * Get users based on given request filter.
@@ -175,7 +179,18 @@ public class UserService {
      */
     public void deleteUser(int id) throws Exception {
         getUserById(id);
+        receiptClient.deleteAllUserReceipts(id);
         userDao.deleteUser(id);
+    }
+
+    /**
+     * This will allow a user to delete their account. This will delete all their
+     * receipts, personal information, and login credentials.
+     * 
+     * @throws Exception
+     */
+    public void currentUserDeleteAccount() throws Exception {
+        deleteUser(jwtHolder.getRequiredUserId());
     }
 
     /**

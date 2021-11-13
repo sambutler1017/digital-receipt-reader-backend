@@ -3,10 +3,12 @@ package com.digital.receipt.app.receipt.rest;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import java.util.List;
+import java.util.Set;
 
 import com.digital.receipt.annotations.interfaces.HasAccess;
 import com.digital.receipt.annotations.interfaces.RestApiController;
 import com.digital.receipt.app.receipt.client.domain.Receipt;
+import com.digital.receipt.app.receipt.client.domain.request.ReceiptGetRequest;
 import com.digital.receipt.app.receipt.service.ReceiptService;
 import com.digital.receipt.common.enums.WebRole;
 
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * Email Controller for dealing with sending emails to users.
@@ -42,6 +45,19 @@ public class ReceiptController {
     @HasAccess(WebRole.ADMIN)
     public Receipt getReceiptById(@PathVariable int id) throws Exception {
         return service.getReceiptById(id);
+    }
+
+    /**
+     * This will get a list of all the receipts based on the
+     * {@link ReceiptGetRequest}
+     * 
+     * @return {@link List<Receipt>} associated to that user.
+     * @throws Exception
+     */
+    @GetMapping(produces = APPLICATION_JSON_VALUE)
+    @HasAccess(WebRole.ADMIN)
+    public List<Receipt> getReceipts(ReceiptGetRequest request) throws Exception {
+        return service.getReceipts(request);
     }
 
     /**
@@ -111,16 +127,30 @@ public class ReceiptController {
     }
 
     /**
-     * This will get the user id and receipt id and associate the two together.
+     * This will associate the passed in receipt id to the given user id.
      * 
-     * @param rec Receipt object containing the user ID and receipt id.
+     * @param receiptId Id of the receipt to associate the user to.
+     * @param userId    The user id to associate.
      * @return {@link Receipt}
      * @throws Exception
      */
-    @PostMapping(path = "/associate", produces = APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/{receiptId}/associate/{userId}", produces = APPLICATION_JSON_VALUE)
+    @HasAccess(WebRole.ADMIN)
+    public Receipt associateUserToReceipt(@PathVariable int receiptId, @PathVariable int userId) throws Exception {
+        return service.associateUserToReceipt(receiptId, userId);
+    }
+
+    /**
+     * This will associate the current user to the receipt id that is passsed in.
+     * 
+     * @param receiptId Id of the receipt to associate the user to.
+     * @return {@link Receipt}
+     * @throws Exception
+     */
+    @PostMapping(path = "/associate/{receiptId}", produces = APPLICATION_JSON_VALUE)
     @HasAccess(WebRole.USER)
-    public Receipt associateUserToReceipt(@RequestBody Receipt rec) throws Exception {
-        return service.associateUserToReceipt(rec);
+    public Receipt associateCurrentUserToReceipt(@PathVariable int receiptId) throws Exception {
+        return service.associateCurrentUserToReceipt(receiptId);
     }
 
     /**
@@ -128,13 +158,27 @@ public class ReceiptController {
      * allows for testing purposes of deleting receipts that are associated to our
      * users.
      * 
-     * @param id The id of the receipt to be deleted.
+     * @param receiptId The id of the receipt to be deleted.
      * @throws Exception
      */
-    @DeleteMapping(path = "/{id}")
+    @DeleteMapping(path = "/{receiptId}")
     @HasAccess(WebRole.ADMIN)
-    public void deleteReceipt(@PathVariable int id) throws Exception {
-        service.deleteReceipt(id);
+    public void deleteReceipt(@PathVariable int receiptId) throws Exception {
+        service.deleteReceipts(receiptId);
+    }
+
+    /**
+     * Delete the receipts for the given ids. This is an admin only enpoint. This
+     * allows for testing purposes of deleting receipts that are associated to our
+     * users.
+     * 
+     * @param id The ids of the receipt to be deleted.
+     * @throws Exception
+     */
+    @DeleteMapping(path = "/bulk")
+    @HasAccess(WebRole.ADMIN)
+    public void bulkDeleteReceipts(@RequestParam Set<Integer> id) throws Exception {
+        service.deleteReceipts(id);
     }
 
     /**
@@ -143,12 +187,35 @@ public class ReceiptController {
      * exception. Otherwise it will continue through the process of unassociating
      * the receipt from the user and removing it from the S3 bucket.
      * 
-     * @param id The id of the receip that needs deleted.
+     * @param receiptId The id of the receipt that needs deleted.
      * @throws Exception
      */
-    @DeleteMapping(path = "/current-user/{id}")
+    @DeleteMapping(path = "/current-user/{receiptId}")
     @HasAccess(WebRole.USER)
-    public void deleteCurrentUserReceipt(@PathVariable int id) throws Exception {
-        service.deleteCurrentUserReceipt(id);
+    public void currentUserDeleteReceipt(@PathVariable int receiptId) throws Exception {
+        service.deleteReceipts(receiptId);
+    }
+
+    /**
+     * This will delete all receipts associated to that user.
+     * 
+     * @throws Exception If the receipts can't be deleted.
+     */
+    @DeleteMapping(path = "/current-user")
+    @HasAccess(WebRole.USER)
+    public void currentUserDeleteAllReceipts() throws Exception {
+        service.currentUserDeleteAllReceipts();
+    }
+
+    /**
+     * This will delete all receipts associated to that user id.
+     * 
+     * @param userId The user id to delete receipts for.
+     * @throws Exception If the receipts can't be deleted.
+     */
+    @DeleteMapping(path = "/user/{userId}")
+    @HasAccess(WebRole.ADMIN)
+    public void deleteAllUserReceipts(@PathVariable int userId) throws Exception {
+        service.deleteAllUserReceipts(userId);
     }
 }

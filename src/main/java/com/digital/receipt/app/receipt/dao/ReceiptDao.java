@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.digital.receipt.app.receipt.client.domain.Receipt;
+import com.digital.receipt.app.receipt.client.domain.request.ReceiptGetRequest;
 import com.digital.receipt.common.abstracts.AbstractSqlDao;
 
 import org.springframework.stereotype.Repository;
@@ -21,19 +22,6 @@ import org.springframework.stereotype.Repository;
 public class ReceiptDao extends AbstractSqlDao {
 
     /**
-     * This will create the receipt in the database for the given userId and the
-     * receipt data to be attatched.
-     * 
-     * @param receipt UserEmail object to get the mail properties from
-     * @return {@link Receipt} of the added receipt.
-     * @throws Exception
-     */
-    public Receipt insertReceipt(String publicId) throws Exception {
-        Optional<Integer> id = sqlClient.post(getSql("insertUserReceipt"), params("name", publicId));
-        return new Receipt(id.get(), publicId, new Date());
-    }
-
-    /**
      * Get the receipt for the given receipt id.
      * 
      * @param id The id of the receipt to get
@@ -42,6 +30,18 @@ public class ReceiptDao extends AbstractSqlDao {
      */
     public Receipt getReceiptById(int id) throws Exception {
         return sqlClient.getTemplate(getSql("getReceiptById"), params("id", id), RECEIPT_MAPPER);
+    }
+
+    /**
+     * This will get a list of all the receipts based on the
+     * {@link ReceiptGetRequest}
+     * 
+     * @return {@link List<Receipt>} associated to that user.
+     * @throws Exception
+     */
+    public List<Receipt> getReceipts(ReceiptGetRequest request) throws Exception {
+        return sqlClient.getPage(getSql("getReceipts"),
+                params("id", request.getId()).addValue("userId", request.getUserId()), RECEIPT_MAPPER);
     }
 
     /**
@@ -62,29 +62,6 @@ public class ReceiptDao extends AbstractSqlDao {
     }
 
     /**
-     * This will get all of the currently logged in users receipts.
-     * 
-     * @param userId The user id of the user to return receipts for.
-     * @return {@link List<Receipt>} associated to that user.
-     * @throws Exception
-     */
-    public List<Receipt> getCurrentUserReceipts(int userId) throws Exception {
-        return sqlClient.getPage(getSql("getCurrentUserReceipts"), params("userId", userId), RECEIPT_MAPPER);
-    }
-
-    /**
-     * This will get the user id and receipt id and associate the two together.
-     * 
-     * @param rec Receipt object containing the user ID and receipt id.
-     * @return {@link Receipt}
-     * @throws Exception
-     */
-    public Receipt associateUserToReceipt(Receipt rec) throws Exception {
-        sqlClient.post(getSql("associateUserToReceipt"), params("id", rec.getId()).addValue("userId", rec.getUserId()));
-        return getReceiptById(rec.getId());
-    }
-
-    /**
      * Get the next auto increment value for the receipt details table.
      * 
      * @return {@link Long} of the next auto increment id.
@@ -95,13 +72,38 @@ public class ReceiptDao extends AbstractSqlDao {
     }
 
     /**
-     * This will delete the record of a receipt from the database. Any user
-     * associated to that receipt will now not have access to it anymore.
+     * This will create the receipt in the database for the given userId and the
+     * receipt data to be attatched.
      * 
-     * @param id The id of the receip that needs deleted.
+     * @param receipt UserEmail object to get the mail properties from
+     * @return {@link Receipt} of the added receipt.
      * @throws Exception
      */
-    public void deleteCurrentUserReceipt(int id) throws Exception {
-        sqlClient.delete(getSql("deleteCurrentUserReceipt"), params("id", id));
+    public Receipt insertReceipt(String publicId) throws Exception {
+        Optional<Integer> id = sqlClient.post(getSql("insertUserReceipt"), params("name", publicId));
+        return new Receipt(id.get(), publicId, new Date());
+    }
+
+    /**
+     * This will get the user id and receipt id and associate the two together.
+     * 
+     * @param receiptId Id of the receipt to associate current user too.
+     * @param userId    The id of the user to put the receip to.
+     * @return {@link Receipt}
+     * @throws Exception
+     */
+    public Receipt associateUserToReceipt(int receiptId, int userId) throws Exception {
+        sqlClient.post(getSql("associateUserToReceipt"), params("id", receiptId).addValue("userId", userId));
+        return getReceiptById(receiptId);
+    }
+
+    /**
+     * Delete multiple receipt records at a time for the given list of receipts.
+     * 
+     * @param recs The receipts to be deleted.
+     * @throws Exception
+     */
+    public void deleteReceiptRecords(List<Integer> recs) throws Exception {
+        sqlClient.delete(getSql("deleteReceiptRecords"), params("id", recs));
     }
 }

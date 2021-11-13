@@ -1,5 +1,7 @@
 package com.digital.receipt.service.cloudinary;
 
+import java.util.List;
+
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 
@@ -39,8 +41,17 @@ public class ReceiptCloud {
      * @throws Exception
      */
     public void delete(String pid) throws Exception {
-        getUrl(pid);
         cloud.uploader().destroy(pid, ObjectUtils.asMap("invalidate", true));
+    }
+
+    /**
+     * API call that will delete all the receipts given in the list.
+     * 
+     * @param pids The public ids to delete.
+     * @throws Exception
+     */
+    public void delete(List<String> pids) throws Exception {
+        cloud.api().deleteResources(pids, ObjectUtils.asMap("invalidate", true));
     }
 
     /**
