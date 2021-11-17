@@ -66,7 +66,6 @@
 	WHERE
 		id = :id:
 
-
 @NAME(deleteUser)
 	DELETE FROM user_profile
 	WHERE

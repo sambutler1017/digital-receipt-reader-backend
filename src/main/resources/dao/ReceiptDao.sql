@@ -1,6 +1,6 @@
 @NAME(getReceiptById)
     SELECT 
-        rd.id, rd.file_public_id, rd.insert_date_utc, ur.user_id
+        rd.id, rd.file_public_id, rd.insert_date_utc, ur.user_id, ur.location, ur.label
     FROM
         receipt_details rd
             LEFT JOIN
@@ -10,7 +10,7 @@
 
 @NAME(getReceipts)
     SELECT 
-        rd.id, rd.file_public_id, rd.insert_date_utc, ur.user_id
+        rd.id, rd.file_public_id, rd.insert_date_utc, ur.user_id, ur.location, ur.label
     FROM
         receipt_details rd
             LEFT JOIN
@@ -22,7 +22,7 @@
 
 @NAME(getCurrentUserReceiptById)
     SELECT 
-        rd.id, rd.file_public_id, rd.insert_date_utc, ur.user_id
+        rd.id, rd.file_public_id, rd.insert_date_utc, ur.user_id, ur.location, ur.label
     FROM
         receipt_details rd
             LEFT JOIN
@@ -46,6 +46,20 @@
 @NAME(associateUserToReceipt)
     INSERT INTO user_receipts (`receipt_id`,`user_id`)
     VALUES (:id:, :userId:)
+
+@NAME(updateCurrentUserAssociation)
+    UPDATE user_receipts
+    SET
+        @IF(:location:)
+            location = :location:
+        @IF(:label: && :location:)
+            ,
+        @IF(:label:)
+            label = :label:
+    WHERE 
+        receipt_id = :id: 
+    AND 
+        user_id = :userId:
 
 @NAME(deleteReceiptRecords)
     DELETE FROM receipt_details

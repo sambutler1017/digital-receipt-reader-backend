@@ -98,6 +98,26 @@ public class ReceiptDao extends AbstractSqlDao {
     }
 
     /**
+     * This will update information for a users association for the given receipt id
+     * in in the request body.
+     * 
+     * @param receipt The receipt to be updated.
+     * @return {@link Receipt} of the updated receipt.
+     * @throws Exception
+     */
+    public void updateCurrentUserAssociation(Receipt receipt) throws Exception {
+        try {
+            sqlClient.update(getSql("updateCurrentUserAssociation"),
+                    params("location", receipt.getLocation()).addValue("label", receipt.getLabel())
+                            .addValue("id", receipt.getId()).addValue("userId", receipt.getUserId()));
+        } catch (Exception e) {
+            throw new Exception(String.format("User id %d does not have access to receipt id %d", receipt.getUserId(),
+                    receipt.getId()));
+        }
+
+    }
+
+    /**
      * Delete multiple receipt records at a time for the given list of receipts.
      * 
      * @param recs The receipts to be deleted.

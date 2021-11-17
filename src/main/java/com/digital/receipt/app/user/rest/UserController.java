@@ -44,7 +44,7 @@ public class UserController {
      */
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     @HasAccess(WebRole.ADMIN)
-    public List<User> getUsers(@RequestParam UserGetRequest request) throws Exception {
+    public List<User> getUsers(UserGetRequest request) throws Exception {
         return userService.getUsers(request);
     }
 

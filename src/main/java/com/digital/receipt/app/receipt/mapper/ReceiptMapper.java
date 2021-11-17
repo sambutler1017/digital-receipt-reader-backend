@@ -23,6 +23,8 @@ public class ReceiptMapper implements RowMapper<Receipt> {
         receipt.setUserId(rs.getInt("user_id"));
         receipt.setFilePublicId(rs.getString("file_public_id"));
         receipt.setInsertDate(rs.getDate("insert_date_utc"));
+        receipt.setLocation(rs.getString("location"));
+        receipt.setLabel(rs.getString("label"));
 
         return receipt;
     }

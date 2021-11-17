@@ -215,7 +215,7 @@ public class SqlBundler {
         if (value != null) {
             conditionValue = value.toString();
         }
-        return String.format("('%s' != null && '%s' != false)", conditionValue, conditionValue);
+        return String.format("(\"%s\" != null && \"%s\" != false)", conditionValue, conditionValue);
     }
 
     /**
@@ -277,7 +277,7 @@ public class SqlBundler {
                     .collect(Collectors.joining("OR"));
             return line.replace(String.format("LIKE :%s:", field), paramLikeList);
         } else {
-            String paramList = listValues.stream().map(v -> String.format("'%s'", v.toString()))
+            String paramList = listValues.stream().map(v -> String.format("\"%s\"", v.toString()))
                     .collect(Collectors.joining(","));
             return line.replace(String.format("= :%s:", field),
                     String.format("%s", String.format("IN (%s)", paramList)));
@@ -293,7 +293,7 @@ public class SqlBundler {
      * @return {@link String} of the line with the replaces param.
      */
     private String getReplacedSingleParam(String line, String field, Object value) {
-        return line.replace(String.format(":%s:", field), String.format("'%s'", value.toString()));
+        return line.replace(String.format(":%s:", field), String.format("\"%s\"", value.toString()));
     }
 
     /**

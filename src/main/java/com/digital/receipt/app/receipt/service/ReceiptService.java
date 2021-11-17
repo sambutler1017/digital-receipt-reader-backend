@@ -146,6 +146,24 @@ public class ReceiptService {
     }
 
     /**
+     * This will update information for a users association for the given receipt id
+     * in in the request body.
+     * 
+     * @param receipt The receipt to be updated.
+     * @return {@link Receipt} of the updated receipt.
+     * @throws Exception
+     */
+    public Receipt updateCurrentUserAssociation(Receipt receipt) throws Exception {
+        if (receipt.getLocation() == null && receipt.getLabel() == null)
+            throw new Exception("No data provided to update receipt.");
+
+        receipt.setUserId(jwtHolder.getRequiredUserId());
+        dao.updateCurrentUserAssociation(receipt);
+
+        return getCurrentUserReceiptById(receipt.getId());
+    }
+
+    /**
      * Delete the receipt for the given id.
      * 
      * @param receiptId The id of the receipt to be deleted.

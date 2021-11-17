@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -151,6 +152,20 @@ public class ReceiptController {
     @HasAccess(WebRole.USER)
     public Receipt associateCurrentUserToReceipt(@PathVariable int receiptId) throws Exception {
         return service.associateCurrentUserToReceipt(receiptId);
+    }
+
+    /**
+     * This will update information for a users association for the given receipt id
+     * in in the request body.
+     * 
+     * @param receipt The receipt to be updated.
+     * @return {@link Receipt} of the updated receipt.
+     * @throws Exception
+     */
+    @PutMapping(path = "/associate", produces = APPLICATION_JSON_VALUE)
+    @HasAccess(WebRole.USER)
+    public Receipt updateCurrentUserAssociation(@RequestBody Receipt receipt) throws Exception {
+        return service.updateCurrentUserAssociation(receipt);
     }
 
     /**
