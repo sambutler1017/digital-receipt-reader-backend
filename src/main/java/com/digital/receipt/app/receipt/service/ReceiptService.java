@@ -131,7 +131,8 @@ public class ReceiptService {
      * @throws Exception
      */
     public Receipt associateUserToReceipt(int receiptId, int userId) throws Exception {
-        return dao.associateUserToReceipt(receiptId, userId);
+        dao.associateUserToReceipt(receiptId, userId);
+        return getReceiptById(receiptId);
     }
 
     /**

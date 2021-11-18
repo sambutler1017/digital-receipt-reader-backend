@@ -92,9 +92,8 @@ public class ReceiptDao extends AbstractSqlDao {
      * @return {@link Receipt}
      * @throws Exception
      */
-    public Receipt associateUserToReceipt(int receiptId, int userId) throws Exception {
+    public void associateUserToReceipt(int receiptId, int userId) throws Exception {
         sqlClient.post(getSql("associateUserToReceipt"), params("id", receiptId).addValue("userId", userId));
-        return getReceiptById(receiptId);
     }
 
     /**
