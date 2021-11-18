@@ -2,7 +2,7 @@ package com.digital.receipt.app.receipt.dao;
 
 import static com.digital.receipt.app.receipt.mapper.ReceiptMapper.RECEIPT_MAPPER;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,7 +81,7 @@ public class ReceiptDao extends AbstractSqlDao {
      */
     public Receipt insertReceipt(String publicId) throws Exception {
         Optional<Integer> id = sqlClient.post(getSql("insertUserReceipt"), params("name", publicId));
-        return new Receipt(id.get(), publicId, new Date());
+        return new Receipt(id.get(), publicId, LocalDate.now());
     }
 
     /**

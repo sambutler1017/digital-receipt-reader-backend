@@ -101,7 +101,6 @@ public class JwtTokenValidator {
     private void hasCorrectFields(String token) throws IOException {
         try {
             jwtTokenUtil.getIdFromToken(token);
-            jwtTokenUtil.getExpirationDateFromToken(token);
             jwtTokenUtil.getAllClaimsFromToken(token);
         } catch (Exception e) {
             throw new BaseException("Could not process JWT token.");

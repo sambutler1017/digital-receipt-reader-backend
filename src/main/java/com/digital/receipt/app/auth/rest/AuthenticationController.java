@@ -2,6 +2,7 @@ package com.digital.receipt.app.auth.rest;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import com.digital.receipt.annotations.interfaces.RestApiController;
@@ -43,7 +44,7 @@ public class AuthenticationController {
         User user = authService.verifyUser(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 
         final String token = jwtTokenUtil.generateToken(user);
-        return ResponseEntity.ok(new DigitalReceiptToken(token, new Date(), user));
+        return ResponseEntity.ok(new DigitalReceiptToken(token, LocalDate.now(), user));
 
     }
 
@@ -58,6 +59,6 @@ public class AuthenticationController {
     public ResponseEntity<DigitalReceiptToken> reauthenticateUser() throws Exception {
         User user = authService.getUserToAuthenticate();
         final String token = jwtTokenUtil.generateToken(user);
-        return ResponseEntity.ok(new DigitalReceiptToken(token, new Date(), user));
+        return ResponseEntity.ok(new DigitalReceiptToken(token, LocalDate.now(), user));
     }
 }

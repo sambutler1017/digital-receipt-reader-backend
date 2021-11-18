@@ -1,5 +1,6 @@
 package com.digital.receipt.app.receipt.client.domain;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -25,17 +26,17 @@ public class Receipt {
 
     private String url;
 
-    private Date insertDate;
+    private LocalDate insertDate;
 
     public Receipt() {
     }
 
-    public Receipt(String filePublicId, Date insertDate) {
+    public Receipt(String filePublicId, LocalDate insertDate) {
         this.filePublicId = filePublicId;
         this.insertDate = insertDate;
     }
 
-    public Receipt(int id, String filePublicId, Date insertDate) {
+    public Receipt(int id, String filePublicId, LocalDate insertDate) {
         this.id = id;
         this.filePublicId = filePublicId;
         this.insertDate = insertDate;
@@ -89,11 +90,11 @@ public class Receipt {
         this.url = url;
     }
 
-    public Date getInsertDate() {
+    public LocalDate getInsertDate() {
         return insertDate;
     }
 
-    public void setInsertDate(Date insertDate) {
+    public void setInsertDate(LocalDate insertDate) {
         this.insertDate = insertDate;
     }
 }

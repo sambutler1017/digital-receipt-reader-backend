@@ -1,5 +1,6 @@
 package com.digital.receipt.app.auth.client.domain;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import com.digital.receipt.app.user.client.domain.User;
@@ -14,11 +15,11 @@ public class DigitalReceiptToken {
 
     private String token;
 
-    private Date createDate;
+    private LocalDate createDate;
 
     private User user;
 
-    public DigitalReceiptToken(String t, Date creation, User u) {
+    public DigitalReceiptToken(String t, LocalDate creation, User u) {
         token = t;
         createDate = creation;
         user = u;
@@ -32,11 +33,11 @@ public class DigitalReceiptToken {
         this.token = token;
     }
 
-    public Date getCreateDate() {
+    public LocalDate getCreateDate() {
         return createDate;
     }
 
-    public void setCreateDate(Date createDate) {
+    public void setCreateDate(LocalDate createDate) {
         this.createDate = createDate;
     }
 
