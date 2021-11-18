@@ -1,6 +1,6 @@
 @NAME(getReceiptById)
     SELECT 
-        rd.id, rd.file_public_id, rd.insert_date_utc, ur.user_id, ur.location, ur.label
+        rd.id, rd.file_public_id, ur.insert_date_utc, ur.user_id, ur.location, ur.label
     FROM
         receipt_details rd
             LEFT JOIN
@@ -10,7 +10,7 @@
 
 @NAME(getReceipts)
     SELECT 
-        rd.id, rd.file_public_id, rd.insert_date_utc, ur.user_id, ur.location, ur.label
+        rd.id, rd.file_public_id, ur.insert_date_utc, ur.user_id, ur.location, ur.label
     FROM
         receipt_details rd
             LEFT JOIN
@@ -22,7 +22,7 @@
 
 @NAME(getCurrentUserReceiptById)
     SELECT 
-        rd.id, rd.file_public_id, rd.insert_date_utc, ur.user_id, ur.location, ur.label
+        rd.id, rd.file_public_id, ur.insert_date_utc, ur.user_id, ur.location, ur.label
     FROM
         receipt_details rd
             LEFT JOIN
