@@ -2,7 +2,6 @@ package com.digital.receipt.app.user.mapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 
 import com.digital.receipt.app.user.client.domain.User;
 import com.digital.receipt.common.enums.WebRole;
@@ -25,7 +24,7 @@ public class UserMapper implements RowMapper<User> {
         user.setLastName(rs.getString("last_name"));
         user.setEmail(rs.getString("email"));
         user.setWebRole(WebRole.getRole(rs.getInt("web_role_id")));
-        user.setInsertDate(LocalDate.parse(rs.getDate("insert_date_utc").toString()));
+        user.setInsertDate(rs.getDate("insert_date_utc"));
 
         return user;
     }

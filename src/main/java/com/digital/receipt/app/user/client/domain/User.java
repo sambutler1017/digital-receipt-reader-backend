@@ -1,6 +1,6 @@
 package com.digital.receipt.app.user.client.domain;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import com.digital.receipt.common.enums.WebRole;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -29,7 +29,7 @@ public class User {
     @JsonInclude(Include.NON_DEFAULT)
     private long salt;
 
-    private LocalDate insertDate;
+    private Date insertDate;
 
     public int getId() {
         return id;
@@ -87,11 +87,11 @@ public class User {
         this.salt = salt;
     }
 
-    public LocalDate getInsertDate() {
+    public Date getInsertDate() {
         return insertDate;
     }
 
-    public void setInsertDate(LocalDate insertDate) {
+    public void setInsertDate(Date insertDate) {
         this.insertDate = insertDate;
     }
 }
