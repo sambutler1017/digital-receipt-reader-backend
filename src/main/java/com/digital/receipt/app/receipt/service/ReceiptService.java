@@ -155,7 +155,7 @@ public class ReceiptService {
      * @throws Exception
      */
     public Receipt updateCurrentUserAssociation(Receipt receipt) throws Exception {
-        if (receipt.getLocation() == null && receipt.getLabel() == null)
+        if (receipt.getLocation() == null && receipt.getLabel() == null && receipt.getNotes() == null)
             throw new Exception("No data provided to update receipt.");
 
         receipt.setUserId(jwtHolder.getRequiredUserId());

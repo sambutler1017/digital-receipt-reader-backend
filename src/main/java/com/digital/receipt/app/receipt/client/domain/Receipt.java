@@ -21,6 +21,8 @@ public class Receipt {
 
     private String label;
 
+    private String notes;
+
     private String filePublicId;
 
     private String url;
@@ -71,6 +73,14 @@ public class Receipt {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public String getFilePublicId() {

@@ -105,15 +105,16 @@ public class ReceiptDao extends AbstractSqlDao {
      * @throws Exception
      */
     public void updateCurrentUserAssociation(Receipt receipt) throws Exception {
-        try {
-            sqlClient.update(getSql("updateCurrentUserAssociation"),
-                    params("location", receipt.getLocation()).addValue("label", receipt.getLabel())
-                            .addValue("id", receipt.getId()).addValue("userId", receipt.getUserId()));
-        } catch (Exception e) {
-            throw new Exception(String.format("User id %d does not have access to receipt id %d", receipt.getUserId(),
-                    receipt.getId()));
-        }
-
+        // try {
+        sqlClient.update(getSql("updateCurrentUserAssociation"),
+                params("location", receipt.getLocation()).addValue("label", receipt.getLabel())
+                        .addValue("notes", receipt.getNotes()).addValue("id", receipt.getId())
+                        .addValue("userId", receipt.getUserId()));
+        // } catch (Exception e) {
+        // throw new Exception(String.format("User id %d does not have access to receipt
+        // id %d", receipt.getUserId(),
+        // receipt.getId()));
+        // }
     }
 
     /**

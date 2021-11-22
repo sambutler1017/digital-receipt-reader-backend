@@ -9,7 +9,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.jdbc.core.RowMapper;
 
 /**
- * Mapper class to map a User Profile Object {@link User}
+ * Mapper class to map a User Profile Object {@link Receipt}
  * 
  * @author Sam Butler
  * @since June 25, 2020
@@ -27,6 +27,7 @@ public class ReceiptMapper implements RowMapper<Receipt> {
                 rs.getDate("insert_date_utc") == null ? null : DateUtils.addDays(rs.getDate("insert_date_utc"), 1));
         receipt.setLocation(rs.getString("location"));
         receipt.setLabel(rs.getString("label"));
+        receipt.setNotes(rs.getString("notes"));
 
         return receipt;
     }
