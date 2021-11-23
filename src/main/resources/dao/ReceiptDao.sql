@@ -30,6 +30,7 @@
                 @OR(:location: || :label:)
                 ur.notes LIKE :notes:
         )
+    ORDER BY insert_date_utc DESC
 
 @NAME(getCurrentUserReceiptById)
     SELECT 
