@@ -62,15 +62,16 @@ public class ReceiptController {
     }
 
     /**
-     * This will get all of the currently logged in users receipts.
+     * This will get a list of all the receipts based on the
+     * {@link ReceiptGetRequest} and also append the current user ID to the request.
      * 
      * @return {@link List<Receipt>} associated to that user.
      * @throws Exception
      */
     @GetMapping(path = "/current-user", produces = APPLICATION_JSON_VALUE)
     @HasAccess(WebRole.USER)
-    public List<Receipt> getCurrentUserReceipts() throws Exception {
-        return service.getCurrentUserReceipts();
+    public List<Receipt> getCurrentUserReceipts(ReceiptGetRequest request) throws Exception {
+        return service.getCurrentUserReceipts(request);
     }
 
     /**

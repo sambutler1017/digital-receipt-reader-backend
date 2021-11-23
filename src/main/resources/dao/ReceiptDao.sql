@@ -19,6 +19,17 @@
         rd.id = :id:
     @AND(:userId:)
         ur.user_id = :userId:
+    @AND(:location: || :label: || :notes:)
+        (
+            @IF(:location:)
+                ur.location LIKE :location:
+            @IF(:label:)
+                @OR(:location:)
+                ur.label LIKE :label:
+            @IF(:notes:)
+                @OR(:location: || :label:)
+                ur.notes LIKE :notes:
+        )
 
 @NAME(getCurrentUserReceiptById)
     SELECT 

@@ -5,6 +5,7 @@ import java.util.Set;
 
 import com.digital.receipt.annotations.interfaces.Client;
 import com.digital.receipt.app.receipt.client.domain.Receipt;
+import com.digital.receipt.app.receipt.client.domain.request.ReceiptGetRequest;
 import com.digital.receipt.app.receipt.rest.ReceiptController;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,8 +40,8 @@ public class ReceiptClient {
      * @return {@link List<Receipt>} associated to that user.
      * @throws Exception
      */
-    public List<Receipt> getCurrentUserReceipts() throws Exception {
-        return controller.getCurrentUserReceipts();
+    public List<Receipt> getCurrentUserReceipts(ReceiptGetRequest request) throws Exception {
+        return controller.getCurrentUserReceipts(request);
     }
 
     /**

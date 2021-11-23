@@ -62,16 +62,15 @@ public class ReceiptService {
     }
 
     /**
-     * This will get all of the currently logged in users receipts.
+     * This will get a list of all the receipts based on the
+     * {@link ReceiptGetRequest} and also append the current user ID to the request.
      * 
      * @return {@link List<Receipt>} associated to that user.
      * @throws Exception
      */
-    public List<Receipt> getCurrentUserReceipts() throws Exception {
-        ReceiptGetRequest r = new ReceiptGetRequest();
-        r.setUserId(Sets.newHashSet(jwtHolder.getRequiredUserId()));
-
-        return getReceipts(r);
+    public List<Receipt> getCurrentUserReceipts(ReceiptGetRequest request) throws Exception {
+        request.setUserId(Sets.newHashSet(jwtHolder.getRequiredUserId()));
+        return getReceipts(request);
     }
 
     /**

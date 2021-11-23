@@ -41,7 +41,10 @@ public class ReceiptDao extends AbstractSqlDao {
      */
     public List<Receipt> getReceipts(ReceiptGetRequest request) throws Exception {
         return sqlClient.getPage(getSql("getReceipts"),
-                params("id", request.getId()).addValue("userId", request.getUserId()), RECEIPT_MAPPER);
+                params("id", request.getId()).addValue("userId", request.getUserId())
+                        .addValue("location", request.getLocation()).addValue("label", request.getLabel())
+                        .addValue("notes", request.getNotes()),
+                RECEIPT_MAPPER);
     }
 
     /**
@@ -105,16 +108,15 @@ public class ReceiptDao extends AbstractSqlDao {
      * @throws Exception
      */
     public void updateCurrentUserAssociation(Receipt receipt) throws Exception {
-        // try {
-        sqlClient.update(getSql("updateCurrentUserAssociation"),
-                params("location", receipt.getLocation()).addValue("label", receipt.getLabel())
-                        .addValue("notes", receipt.getNotes()).addValue("id", receipt.getId())
-                        .addValue("userId", receipt.getUserId()));
-        // } catch (Exception e) {
-        // throw new Exception(String.format("User id %d does not have access to receipt
-        // id %d", receipt.getUserId(),
-        // receipt.getId()));
-        // }
+        try {
+            sqlClient.update(getSql("updateCurrentUserAssociation"),
+                    params("location", receipt.getLocation()).addValue("label", receipt.getLabel())
+                            .addValue("notes", receipt.getNotes()).addValue("id", receipt.getId())
+                            .addValue("userId", receipt.getUserId()));
+        } catch (Exception e) {
+            throw new Exception(String.format("User id %d does not have access to receipt id %d", receipt.getUserId(),
+                    receipt.getId()));
+        }
     }
 
     /**
