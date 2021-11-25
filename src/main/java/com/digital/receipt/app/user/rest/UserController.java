@@ -140,8 +140,24 @@ public class UserController {
      */
     @PutMapping(path = "/password", produces = APPLICATION_JSON_VALUE)
     @HasAccess(WebRole.USER)
-    public User updatePassword(@RequestBody PasswordUpdate passUpdate) throws Exception {
-        return userService.updatePassword(passUpdate);
+    public User updateUserPassword(@RequestBody PasswordUpdate passUpdate) throws Exception {
+        return userService.updateUserPassword(passUpdate);
+    }
+
+    /**
+     * This will get called when a user has forgotten their password. This will
+     * allow them to reset it.
+     * 
+     * @param passUpdate Object the holds the current password and new user password
+     *                   to change it too.
+     * @return {@link User} object of the user that was updated.
+     * @throws Exception If the user can not be authenticated or it failed to hash
+     *                   the new password.
+     */
+    @PutMapping(path = "/password/reset", produces = APPLICATION_JSON_VALUE)
+    @HasAccess(WebRole.USER)
+    public User resetUserPassword(@RequestBody PasswordUpdate passUpdate) throws Exception {
+        return userService.resetUserPassword(passUpdate.getNewPassword());
     }
 
     /**

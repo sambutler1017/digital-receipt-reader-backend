@@ -102,8 +102,8 @@ public class UserClient {
      * @throws Exception If the user can not be authenticated or it failed to hash
      *                   the new password.
      */
-    public User updatePassword(PasswordUpdate passUpdate) throws Exception {
-        return controller.updatePassword(passUpdate);
+    public User updateUserPassword(PasswordUpdate passUpdate) throws Exception {
+        return controller.updateUserPassword(passUpdate);
     }
 
     /**
