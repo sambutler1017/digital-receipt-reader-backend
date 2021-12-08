@@ -92,4 +92,3 @@ Project Link: [https://github.com/sambutler1017/digital-receipt-reader-backend](
 
 * Seth Hancock
 * Luke Lengel
-* Miah Hale
