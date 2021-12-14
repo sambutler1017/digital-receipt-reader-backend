@@ -44,7 +44,6 @@ public class AuthenticationController {
 
         final String token = jwtTokenUtil.generateToken(user);
         return ResponseEntity.ok(new DigitalReceiptToken(token, new Date(), user));
-
     }
 
     /**
